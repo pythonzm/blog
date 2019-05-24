@@ -1,0 +1,20 @@
+---
+app:
+  timeFormat: "2006-01-02 15:04:05"
+  jwtSecret: "blog"
+  tokenTimeout: 3600 # 单位秒
+  pageSize: 10
+server:
+  runMode: "debug"
+  host: "10.1.19.10"
+  port: "8000"
+  readTimeout: 60
+  writeTimeout: 60
+database:
+  mode: "mysql"
+  host: "10.1.19.10"
+  port: "3306"
+  user: "root"
+  password: "123456"
+  dbName: "blog"
+  salt: "blog"
