@@ -7,20 +7,17 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-var db *sqlx.DB
+var DB *sqlx.DB
 
 func init() {
-	var err error
-	db, err = sqlx.Open(utils.DBInfo.Mode, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8",
+	DB = sqlx.MustConnect(utils.DBInfo.Mode, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8",
 		utils.DBInfo.User,
 		utils.DBInfo.Password,
 		utils.DBInfo.Host,
 		utils.DBInfo.Port,
 		utils.DBInfo.DBName,
 	))
-	if err != nil {
-		panic(fmt.Sprintf("数据库连接失败，err: %s", err))
-	}
-	db.SetMaxOpenConns(100)
-	db.SetMaxIdleConns(10)
+
+	DB.SetMaxOpenConns(100)
+	DB.SetMaxIdleConns(10)
 }

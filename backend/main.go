@@ -2,7 +2,7 @@ package main
 
 import (
 	"backend/middleware"
-	"backend/routers"
+	"backend/router"
 	"backend/utils"
 	"context"
 	"fmt"
@@ -17,13 +17,13 @@ import (
 
 func main() {
 	gin.SetMode(utils.ServerInfo.RunMode)
-	router := routers.InitRouter()
+	r := router.InitRouter()
 
 	defer middleware.CloseLogFile()
 
 	s := &http.Server{
 		Addr:           fmt.Sprintf("%s:%s", utils.ServerInfo.Host, utils.ServerInfo.Port),
-		Handler:        router,
+		Handler:        r,
 		ReadTimeout:    utils.ServerInfo.ReadTimeout,
 		WriteTimeout:   utils.ServerInfo.WriteTimeout,
 		MaxHeaderBytes: 1 << 20,

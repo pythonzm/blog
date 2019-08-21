@@ -1,38 +1,39 @@
 package utils
 
 const (
-	Success       = 200
-	InvalidParams = 400
-	AuthError     = 401
+	Success = 20000
 
-	TagExistError    = 10001
-	TagGetError      = 10002
-	TagNotExistError = 10003
-	TagGetAllError   = 10004
-	TagAddError      = 10006
-	TagEditError     = 10007
-	TagDeleteError   = 10008
+	InvalidParams = 40000
+	AuthError     = 40001
 
-	CategoryExistError    = 20001
-	CategoryGetError      = 20002
-	CategoryNotExistError = 20003
-	CategoryGetAllError   = 20004
-	CategoryAddError      = 20006
-	CategoryEditError     = 20007
-	CategoryDeleteError   = 20008
+	TokenCheckError   = 40002
+	TokenTimeoutError = 40003
+	TokenGenError     = 40004
 
-	ArticleExistError    = 30001
-	ArticleGetError      = 30002
-	ArticleNotExistError = 30003
-	ArticleGetAllError   = 30004
-	ArticleCountError    = 30005
-	ArticleAddError      = 30006
-	ArticleEditError     = 30007
-	ArticleDeleteError   = 30008
+	TagExistError    = 40005
+	TagGetError      = 40006
+	TagNotExistError = 40007
+	TagGetAllError   = 40008
+	TagCreateError   = 40009
+	TagEditError     = 40010
+	TagDeleteError   = 40011
 
-	TokenCheckError   = 40001
-	TokenTimeoutError = 40002
-	TokenGenError     = 40003
+	CategoryExistError    = 40012
+	CategoryGetError      = 40013
+	CategoryNotExistError = 40014
+	CategoryGetAllError   = 40015
+	CategoryCreateError   = 40016
+	CategoryEditError     = 40017
+	CategoryDeleteError   = 40018
+
+	ArticleExistError    = 40019
+	ArticleGetError      = 40020
+	ArticleNotExistError = 40021
+	ArticleGetAllError   = 40022
+	ArticleCountError    = 40023
+	ArticleCreateError   = 40024
+	ArticleEditError     = 40025
+	ArticleDeleteError   = 40026
 )
 
 var MsgFlags = map[int]string{
@@ -44,7 +45,7 @@ var MsgFlags = map[int]string{
 	TagGetError:      "标签获取失败",
 	TagNotExistError: "标签不存在",
 	TagGetAllError:   "获取所有标签失败",
-	TagAddError:      "添加标签失败",
+	TagCreateError:   "添加标签失败",
 	TagEditError:     "编辑标签失败",
 	TagDeleteError:   "删除标签失败",
 
@@ -52,7 +53,7 @@ var MsgFlags = map[int]string{
 	CategoryGetError:      "分类获取失败",
 	CategoryNotExistError: "分类不存在",
 	CategoryGetAllError:   "获取所有分类失败",
-	CategoryAddError:      "添加分类失败",
+	CategoryCreateError:   "添加分类失败",
 	CategoryEditError:     "编辑分类失败",
 	CategoryDeleteError:   "删除分类失败",
 
@@ -61,7 +62,7 @@ var MsgFlags = map[int]string{
 	ArticleNotExistError: "文章不存在",
 	ArticleGetAllError:   "获取所有文章失败",
 	ArticleCountError:    "统计文章失败",
-	ArticleAddError:      "添加文章失败",
+	ArticleCreateError:   "添加文章失败",
 	ArticleEditError:     "编辑文章失败",
 	ArticleDeleteError:   "删除文章失败",
 

@@ -9,7 +9,6 @@ type App struct {
 	TimeFormat   string `json:"time_format"`
 	JwtSecret    string `json:"jwt_secret"`
 	TokenTimeout int64  `json:"token_timeout"`
-	PageSize     int    `json:"page_size"`
 }
 
 type Server struct {
@@ -45,7 +44,6 @@ func init() {
 	AppInfo.TimeFormat = viper.GetString("app.timeFormat")
 	AppInfo.JwtSecret = viper.GetString("app.jwtSecret")
 	AppInfo.TokenTimeout = viper.GetInt64("app.tokenTimeout")
-	AppInfo.PageSize = viper.GetInt("app.pageSize")
 
 	ServerInfo.RunMode = viper.GetString("server.runMode")
 	ServerInfo.Host = viper.GetString("server.host")

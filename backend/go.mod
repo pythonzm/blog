@@ -15,6 +15,7 @@ replace (
 
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
+	github.com/cloudflare/tableflip v0.0.0-20190521150731-8ccd7b4aff9e // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.4.0
 	github.com/go-sql-driver/mysql v1.4.1

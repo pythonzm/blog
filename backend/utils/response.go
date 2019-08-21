@@ -1,31 +1,18 @@
 package utils
 
 import (
-	"github.com/gin-gonic/gin"
+	"fmt"
 )
 
-func DefaultResponse(c *gin.Context, httpCode, errCode int, err error, data interface{}) {
-	c.JSON(httpCode, gin.H{
-		"code": errCode,
-		"msg":  msg(errCode, err),
-		"data": data,
-	})
-}
-
-func Response(c *gin.Context, httpCode, errCode int, err error, data interface{}, total int) {
-	c.JSON(httpCode, gin.H{
-		"code":  errCode,
-		"msg":   msg(errCode, err),
-		"data":  data,
-		"total": total,
-	})
-}
-
-func msg(code int, e error) (r string) {
-	if code == Success || e == nil {
-		r = ErrorText(code)
-		return
+func GenResponse(code int, data interface{}, err error) map[string]interface{} {
+	res := make(map[string]interface{})
+	res["code"] = code
+	res["data"] = data
+	if err != nil {
+		res["msg"] = fmt.Sprintf("%v: %v", ErrorText(code), err)
+	} else {
+		res["msg"] = ErrorText(code)
 	}
-	r = ErrorText(code) + ": " + e.Error()
-	return
+
+	return res
 }
