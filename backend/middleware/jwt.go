@@ -16,9 +16,10 @@ func JWt() gin.HandlerFunc {
 		if token == "" {
 			code = utils.TokenCheckError
 		} else {
-			_, e := service.ParseToken(token)
+			e := service.ParseToken(token)
 
 			if e != nil {
+				code = utils.TokenCheckError
 				err = e
 			}
 		}

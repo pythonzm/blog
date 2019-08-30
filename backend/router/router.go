@@ -3,6 +3,7 @@ package router
 import (
 	"backend/api/v1"
 	"backend/middleware"
+	"backend/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -15,14 +16,21 @@ func InitRouter() *gin.Engine {
 		c.JSON(http.StatusMethodNotAllowed, gin.H{"result": false, "error": "Method Not Allowed"})
 		return
 	})
+	r.Static(utils.AppInfo.StaticBasePath, utils.AppInfo.UploadBasePath)
 	r.Use(middleware.CustomLogger())
+	r.Use(middleware.CorsMiddleware())
 	r.Use(gin.Recovery())
 
-	r.POST("/auth", v1.GetAuth)
-
 	apiv1 := r.Group("/api/v1")
-	apiv1.Use(middleware.JWt())
+
 	{
+		apiv1.POST("/user/login", v1.Login)
+		apiv1.POST("/user/logout", v1.Logout)
+
+		apiv1.Use(middleware.JWt())
+		apiv1.GET("/user/info", v1.GetUserInfo)
+		apiv1.PATCH("/user/edit", v1.EditUser)
+
 		apiv1.GET("/tags", v1.GetAllTags)
 		apiv1.POST("/tags", v1.CreateTag)
 		apiv1.PUT("/tags/:id", v1.EditTag)
@@ -38,6 +46,8 @@ func InitRouter() *gin.Engine {
 		apiv1.POST("/articles", v1.CreateArticle)
 		apiv1.DELETE("/articles/:id", v1.DeleteArticle)
 		apiv1.PUT("/articles/:id", v1.EditArticle)
+
+		apiv1.POST("/upload", v1.UploadImageAvatar)
 	}
 
 	return r

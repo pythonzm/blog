@@ -16,32 +16,22 @@ func (c *Category) Create() (Category, error) {
 
 func (c *Category) Delete() error {
 	_, e := db.Exec("delete from blog_category where id=?", c.ID)
-	if e != nil {
-		return e
-	}
-	return nil
+	return e
 }
 
 func (c *Category) Edit() error {
 	_, e := db.Exec("update blog_category set category_name=? where id=?", c.CategoryName, c.ID)
-	if e != nil {
-		return e
-	}
-	return nil
+	return e
 }
 
 func (c *Category) GetOne() (Category, error) {
 	var category Category
-	if e := db.Get(&category, "select * from blog_category where id=?", c.ID); e != nil {
-		return Category{}, e
-	}
-	return category, nil
+	e := db.Get(&category, "select * from blog_category where id=?", c.ID)
+	return category, e
 }
 
 func (c Category) GetAll() ([]Category, error) {
 	categories := make([]Category, 0)
-	if err := db.Select(&categories, "select * from blog_category"); err != nil {
-		return nil, err
-	}
-	return categories, nil
+	err := db.Select(&categories, "select * from blog_category")
+	return categories, err
 }

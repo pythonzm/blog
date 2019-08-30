@@ -5,7 +5,6 @@ import (
 	"backend/router"
 	"backend/utils"
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -22,7 +21,7 @@ func main() {
 	defer middleware.CloseLogFile()
 
 	s := &http.Server{
-		Addr:           fmt.Sprintf("%s:%s", utils.ServerInfo.Host, utils.ServerInfo.Port),
+		Addr:           utils.ServerInfo.ServerAddr,
 		Handler:        r,
 		ReadTimeout:    utils.ServerInfo.ReadTimeout,
 		WriteTimeout:   utils.ServerInfo.WriteTimeout,

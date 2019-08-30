@@ -12,48 +12,47 @@ import (
 func GetArticles(c *gin.Context) {
 	category := c.Query("category")
 	tag := c.Query("tag")
+	key := c.Query("key")
+	status := c.Query("status")
 	limit := c.Query("limit")
 	page := c.Query("page")
 
-	if limit == "" {
-		limit = "10"
-	}
-	if page == "" {
-		page = "1"
-	}
-
-	l, _ := strconv.Atoi(limit)
-	p, _ := strconv.Atoi(page)
-
 	if category != "" {
-		articles, total, e := service.GetArticlesByCategory(category, l, p)
+		data, e := service.GetArticlesByCategory(category, service.SetLimitPage(limit, page))
 		if e != nil {
 			c.JSON(http.StatusInternalServerError, utils.GenResponse(40022, nil, e))
 			return
 		}
-		data := map[string]interface{}{"total": total, "items": articles}
 		c.JSON(http.StatusOK, utils.GenResponse(20000, data, nil))
 		return
 	}
 
 	if tag != "" {
-		articles, total, e := service.GetArticlesByTag(tag, l, p)
+		data, e := service.GetArticlesByTag(tag, service.SetLimitPage(limit, page))
 		if e != nil {
 			c.JSON(http.StatusInternalServerError, utils.GenResponse(40022, nil, e))
 			return
 		}
-		data := map[string]interface{}{"total": total, "items": articles}
+		c.JSON(http.StatusOK, utils.GenResponse(20000, data, nil))
+		return
+	}
+
+	if key != "" || status != "" {
+		data, e := service.SearchArticle(key, status, service.SetLimitPage(limit, page), service.SetSearch(true))
+		if e != nil {
+			c.JSON(http.StatusInternalServerError, utils.GenResponse(40022, nil, e))
+			return
+		}
 		c.JSON(http.StatusOK, utils.GenResponse(20000, data, nil))
 		return
 	}
 
 	a := service.Article{}
-	articles, total, e := a.GetAll(l, p)
+	data, e := a.GetAll(service.SetLimitPage(limit, page))
 	if e != nil {
 		c.JSON(http.StatusInternalServerError, utils.GenResponse(40022, nil, e))
 		return
 	}
-	data := map[string]interface{}{"total": total, "items": articles}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, data, nil))
 	return
 }

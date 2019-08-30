@@ -2,18 +2,26 @@
 app:
   timeFormat: "2006-01-02 15:04:05"
   jwtSecret: "blog"
-  tokenTimeout: 3600 # 单位秒
+  tokenTimeout: 28800 # 单位秒，这里是8小时
+  schema: "http"
+  staticBasePath: "static"
+  uploadBasePath: "upload"
+  imageRelPath: "images"
+  avatarRelPath: "avatar"
 server:
   runMode: "debug"
-  host: "10.1.7.198"
-  port: "8080"
+  serverAddr: "127.0.0.1:8000"
   readTimeout: 60
   writeTimeout: 60
 database:
   mode: "mysql"
-  host: "10.1.7.198"
+  host: "localhost"
   port: "3306"
   user: "root"
   password: "123456"
   dbName: "blog"
-  salt: "blog"
+redis:
+  redisAddr: "47.99.139.44:7779"
+  password: "Aa123456!"
+  db: 0
+  cacheTime: 30  # 设置缓存时间，单位秒

@@ -34,6 +34,13 @@ const (
 	ArticleCreateError   = 40024
 	ArticleEditError     = 40025
 	ArticleDeleteError   = 40026
+
+	UserGetError  = 40027
+	UserEditError = 40028
+	RestPasswordError = 40031
+
+	GetUploadImageError = 40029
+	SaveUploadImageError = 40030
 )
 
 var MsgFlags = map[int]string{
@@ -69,6 +76,13 @@ var MsgFlags = map[int]string{
 	TokenCheckError:   "Token鉴权失败",
 	TokenTimeoutError: "Token已超时",
 	TokenGenError:     "Token生成失败",
+
+	UserGetError:  "用户信息获取失败",
+	UserEditError: "用户信息更新失败",
+	RestPasswordError: "修改密码失败",
+
+	GetUploadImageError: "获取上传文件信息失败",
+	SaveUploadImageError: "保存上传文件失败",
 }
 
 func ErrorText(code int) string {

@@ -16,32 +16,22 @@ func (t *Tag) Create() (Tag, error) {
 
 func (t *Tag) Delete() error {
 	_, e := db.Exec("delete from blog_tag where id=?", t.ID)
-	if e != nil {
-		return e
-	}
-	return nil
+	return e
 }
 
 func (t *Tag) Edit() error {
 	_, e := db.Exec("update blog_tag set tag_name=? where id=?", t.TagName, t.ID)
-	if e != nil {
-		return e
-	}
-	return nil
+	return e
 }
 
 func (t Tag) GetOne() (Tag, error) {
 	var tag Tag
-	if e := db.Get(&tag, "select * from blog_tag where id=?", t.ID); e != nil {
-		return Tag{}, e
-	}
-	return tag, nil
+	e := db.Get(&tag, "select * from blog_tag where id=?", t.ID)
+	return tag, e
 }
 
 func (t Tag) GetAll() ([]Tag, error) {
 	tags := make([]Tag, 0)
-	if err := db.Select(&tags, "select * from blog_tag"); err != nil {
-		return nil, err
-	}
-	return tags, nil
+	err := db.Select(&tags, "select * from blog_tag")
+	return tags, err
 }

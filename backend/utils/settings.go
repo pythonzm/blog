@@ -6,15 +6,19 @@ import (
 )
 
 type App struct {
-	TimeFormat   string `json:"time_format"`
-	JwtSecret    string `json:"jwt_secret"`
-	TokenTimeout int64  `json:"token_timeout"`
+	TimeFormat     string `json:"time_format"`
+	JwtSecret      string `json:"jwt_secret"`
+	TokenTimeout   int64  `json:"token_timeout"`
+	Schema         string `json:"schema"`
+	StaticBasePath string `json:"static_base_path"`
+	UploadBasePath string `json:"upload_base_path"`
+	ImageRelPath   string `json:"image_rel_path"`
+	AvatarRelPath  string `json:"avatar_rel_path"`
 }
 
 type Server struct {
 	RunMode      string        `json:"run_mode"`
-	Host         string        `json:"host"`
-	Port         string        `json:"port"`
+	ServerAddr   string        `json:"server_addr"`
 	ReadTimeout  time.Duration `json:"read_timeout"`
 	WriteTimeout time.Duration `json:"write_timeout"`
 }
@@ -26,12 +30,19 @@ type DataBase struct {
 	User     string `json:"user"`
 	Password string `json:"password"`
 	DBName   string `json:"db_name"`
-	Salt     string `json:"salt"`
+}
+
+type Redis struct {
+	RedisAddr string `json:"redis_addr"`
+	Password  string `json:"password"`
+	DB        int    `json:"db"`
+	CacheTime int    `json:"cache_time"`
 }
 
 var ServerInfo = &Server{}
 var DBInfo = &DataBase{}
 var AppInfo = &App{}
+var RedisInfo = &Redis{}
 
 func init() {
 	viper.AddConfigPath("conf")
@@ -44,10 +55,14 @@ func init() {
 	AppInfo.TimeFormat = viper.GetString("app.timeFormat")
 	AppInfo.JwtSecret = viper.GetString("app.jwtSecret")
 	AppInfo.TokenTimeout = viper.GetInt64("app.tokenTimeout")
+	AppInfo.Schema = viper.GetString("app.schema")
+	AppInfo.StaticBasePath = viper.GetString("app.staticBasePath")
+	AppInfo.UploadBasePath = viper.GetString("app.uploadBasePath")
+	AppInfo.ImageRelPath = viper.GetString("app.imageRelPath")
+	AppInfo.AvatarRelPath = viper.GetString("app.avatarRelPath")
 
 	ServerInfo.RunMode = viper.GetString("server.runMode")
-	ServerInfo.Host = viper.GetString("server.host")
-	ServerInfo.Port = viper.GetString("server.port")
+	ServerInfo.ServerAddr = viper.GetString("server.serverAddr")
 	ServerInfo.ReadTimeout = time.Duration(viper.GetInt("server.readTimeout")) * time.Second
 	ServerInfo.WriteTimeout = time.Duration(viper.GetInt("server.writeTimeout")) * time.Second
 
@@ -57,5 +72,9 @@ func init() {
 	DBInfo.User = viper.GetString("database.user")
 	DBInfo.Password = viper.GetString("database.password")
 	DBInfo.DBName = viper.GetString("database.dbName")
-	DBInfo.Salt = viper.GetString("database.salt")
+
+	RedisInfo.RedisAddr = viper.GetString("redis.redisAddr")
+	RedisInfo.Password = viper.GetString("redis.password")
+	RedisInfo.DB = viper.GetInt("redis.db")
+	RedisInfo.CacheTime = viper.GetInt("redis.cacheTime")
 }
