@@ -2,9 +2,12 @@
 
 ### 启动后端
 首先修改conf/config.yml中的配置信息
+  > cd backend
+  
   go run main.go：启动
   
 ### 启动管理
+  > cd admin
   1. npm install
   2. npm run dev
 ## TODO LIST
