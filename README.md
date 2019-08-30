@@ -2,9 +2,10 @@
 
 ### 启动后端
 首先修改conf/config.yml中的配置信息
-  1. go mod tidy：用于整理依赖关系
-  2. go run main.go：启动
+  go run main.go：启动
   
+### 启动管理
+  1. npm install
+  2. npm run dev
 ## TODO LIST
-  1. 使用vue编写后台管理平台
-  2. 使用vue编写页面展示
+  使用vue编写页面展示
