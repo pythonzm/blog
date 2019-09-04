@@ -22,7 +22,8 @@
    
 ### 启动后端
 首先修改conf/config.yml中的配置信息
-  `go run main.go`：启动
+
+`go run main.go`
   
 ### 启动管理
   > cd admin
