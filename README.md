@@ -17,7 +17,7 @@
   
   ```
   cd backend
-  bin/goose goose mysql "YOURUSER:YOURPASSWORD@tcp(YOURIP:YOURPORT)/blog?charset=utf8" up
+  bin/goose -dir migrations/ mysql "YOURUSER:YOURPASSWORD@tcp(YOURIP:YOURPORT)/blog?charset=utf8" up
   ```
    
 ### 启动后端
