@@ -31,3 +31,9 @@
   2. npm run dev
 ## TODO LIST
   使用vue编写页面展示
+
+### 添加文章
+![image](https://github.com/pythonzm/blog/blob/master/screenshots/add_article.png)
+
+### 文章列表
+![image](https://github.com/pythonzm/blog/blob/master/screenshots/article_list.png)
