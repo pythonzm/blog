@@ -1,8 +1,8 @@
 {
-  "name": "vue-admin-template",
-  "version": "4.2.1",
-  "description": "A vue admin template with Element UI & axios & iconfont & permission control & lint",
-  "author": "Pan <panfree23@gmail.com>",
+  "name": "vue-blog-template",
+  "version": "1.0.0",
+  "description": "A vue blog template with Element UI & axios & iconfont & permission control & lint",
+  "author": "pythonzm <https://github.com/pythonzm>",
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve --open",
