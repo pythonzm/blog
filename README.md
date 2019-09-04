@@ -1,10 +1,26 @@
-### 该项目是用于练习go语言以及vue学习，目前完成了后端api的编写，采用的是[gin](https://github.com/gin-gonic/gin)框架，参考了<https://github.com/EDDYCJY/go-gin-example>的教程
+### 该项目是用于练习go语言以及vue学习，目前完成了后端api的编写，采用的是[gin](https://github.com/gin-gonic/gin)框架
 
+### 准备
+  1. 安装mysql（略）
+  2. 安装redis（略）
+  3. 创建blog数据库
+  
+    ```
+      mysql>create database blog DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+      mysql>grant all privileges on blog.* to YOURUSER@'%' identified by 'YOUPASSWORD';
+      mysql>flush privileges;
+    ```
+  
+### 安装
+  1. go get github.com/pythonzm/blog
+  2. 生成数据表
+  
+    > cd backend
+    > bin/goose goose mysql "YOURUSER:YOURPASSWORD@tcp(YOURIP:YOURPORT)/blog?charset=utf8" up
+   
 ### 启动后端
 首先修改conf/config.yml中的配置信息
-  > cd backend
-  
-  go run main.go：启动
+  `go run main.go`：启动
   
 ### 启动管理
   > cd admin
