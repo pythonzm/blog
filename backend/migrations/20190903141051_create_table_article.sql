@@ -4,6 +4,7 @@ CREATE TABLE `blog_article` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(32) NOT NULL,
   `content` text NOT NULL,
+  `html` text NOT NULL,
   `category_id` int(10) unsigned NOT NULL,
   `created_time` varchar(32) NOT NULL,
   `updated_time` varchar(32) DEFAULT '',

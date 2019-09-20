@@ -2,7 +2,6 @@ package service
 
 import (
 	"backend/utils"
-	"errors"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"time"
@@ -18,7 +17,6 @@ type User struct {
 }
 
 var jwtSecret = []byte(utils.AppInfo.JwtSecret)
-var UserInfo = map[string]User{}
 
 type CustomClaims struct {
 	User
@@ -28,6 +26,7 @@ type CustomClaims struct {
 func (u User) CheckAuth() bool {
 	var count int
 	if e := db.Get(&count, "select count(1) from blog_user where username=? and password=?", u.Username, utils.EncodeMD5(u.Password)); e != nil {
+		utils.WriteErrorLog(e.Error())
 		return false
 	}
 	return count > 0
@@ -41,10 +40,6 @@ func (u User) GenToken() (string, error) {
 
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, e := tokenClaims.SignedString(jwtSecret)
-	if e == nil {
-		user, _ := u.getUser()
-		UserInfo[token] = user
-	}
 	return token, e
 }
 
@@ -53,34 +48,25 @@ func ParseToken(tokenString string) error {
 		return jwtSecret, nil
 	})
 
-	if _, ok := token.Claims.(*CustomClaims); ok && token.Valid {
-		return nil
-	} else {
-		return err
+	if token != nil {
+		if _, ok := token.Claims.(*CustomClaims); ok && token.Valid {
+			return nil
+		} else {
+			return err
+		}
 	}
 
+	return err
 }
 
-func GetUserInfo(t string) (User, error) {
-	value, ok := UserInfo[t]
-	if ok {
-		return value, nil
-	}
-	return User{}, errors.New("获取用户信息失败，token不存在或已过期")
-}
-
-func (u User) getUser() (User, error) {
+func GetUser() (User, error) {
 	var user User
-	e := db.Get(&user, "select * from blog_user where username=?", u.Username)
+	e := db.Get(&user, "select avatar,introduction,nickname from blog_user")
 	return user, e
 }
 
-func Logout() {
-	UserInfo = map[string]User{}
-}
-
 func (u User) EditUser() error {
-	_, e := db.Exec("update blog_user set introduction=?,avatar=?,nickname=? where username=?", u.Introduction, u.Avatar, u.Nickname, u.Username)
+	_, e := db.Exec("update blog_user set introduction=?,avatar=?,nickname=?", u.Introduction, u.Avatar, u.Nickname)
 	return e
 }
 

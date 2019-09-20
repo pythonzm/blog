@@ -31,15 +31,13 @@ func Login(c *gin.Context) {
 }
 
 func Logout(c *gin.Context) {
-	service.Logout()
 	c.JSON(http.StatusOK, utils.GenResponse(20000, nil, nil))
 }
 
 func GetUserInfo(c *gin.Context) {
-	token := c.Query("token")
-	userInfo, e := service.GetUserInfo(token)
+	userInfo, e := service.GetUser()
 	if e != nil {
-		c.JSON(http.StatusUnauthorized, utils.GenResponse(40027, nil, e))
+		c.JSON(http.StatusInternalServerError, utils.GenResponse(40027, nil, e))
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, userInfo, nil))
@@ -47,16 +45,10 @@ func GetUserInfo(c *gin.Context) {
 }
 
 func EditUser(c *gin.Context) {
-	token := c.Query("token")
-	userInfo, e := service.GetUserInfo(token)
-	if e != nil {
-		c.JSON(http.StatusUnauthorized, utils.GenResponse(40027, nil, e))
-		return
-	}
 
 	bytes, err := c.GetRawData()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, utils.GenResponse(40028, nil, e))
+		c.JSON(http.StatusInternalServerError, utils.GenResponse(40028, nil, err))
 		return
 	}
 
@@ -65,7 +57,7 @@ func EditUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, utils.GenResponse(40028, nil, e))
 		return
 	}
-	u.Username = userInfo.Username
+
 	if u.Password == "" {
 		if e := u.EditUser(); e != nil {
 			c.JSON(http.StatusInternalServerError, utils.GenResponse(40028, nil, e))

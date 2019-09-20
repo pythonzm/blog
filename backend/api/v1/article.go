@@ -6,19 +6,19 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 func GetArticles(c *gin.Context) {
-	category := c.Query("category")
-	tag := c.Query("tag")
-	key := c.Query("key")
-	status := c.Query("status")
 	limit := c.Query("limit")
 	page := c.Query("page")
+	category := c.DefaultQuery("category", "")
+	tag := c.DefaultQuery("tag", "")
+	key := c.DefaultQuery("key", "")
+	status := c.DefaultQuery("status", "")
+	admin := c.DefaultQuery("admin", "")
 
 	if category != "" {
-		data, e := service.GetArticlesByCategory(category, service.SetLimitPage(limit, page))
+		data, e := service.GetArticlesByCategory(category, service.SetLimitPageAdmin(limit, page, admin), service.SetCategory(category))
 		if e != nil {
 			c.JSON(http.StatusInternalServerError, utils.GenResponse(40022, nil, e))
 			return
@@ -28,7 +28,7 @@ func GetArticles(c *gin.Context) {
 	}
 
 	if tag != "" {
-		data, e := service.GetArticlesByTag(tag, service.SetLimitPage(limit, page))
+		data, e := service.GetArticlesByTag(tag, service.SetLimitPageAdmin(limit, page, admin), service.SetTag(tag))
 		if e != nil {
 			c.JSON(http.StatusInternalServerError, utils.GenResponse(40022, nil, e))
 			return
@@ -38,7 +38,7 @@ func GetArticles(c *gin.Context) {
 	}
 
 	if key != "" || status != "" {
-		data, e := service.SearchArticle(key, status, service.SetLimitPage(limit, page), service.SetSearch(true))
+		data, e := service.SearchArticle(key, status, service.SetLimitPageAdmin(limit, page, admin), service.SetSearch(true))
 		if e != nil {
 			c.JSON(http.StatusInternalServerError, utils.GenResponse(40022, nil, e))
 			return
@@ -48,7 +48,7 @@ func GetArticles(c *gin.Context) {
 	}
 
 	a := service.Article{}
-	data, e := a.GetAll(service.SetLimitPage(limit, page))
+	data, e := a.GetAll(service.SetLimitPageAdmin(limit, page, admin))
 	if e != nil {
 		c.JSON(http.StatusInternalServerError, utils.GenResponse(40022, nil, e))
 		return
@@ -61,12 +61,12 @@ func GetArticle(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	r := service.Article{ID: id}
 
-	article, e := r.GetOne()
+	articleDetail, e := r.GetOne()
 	if e != nil {
 		c.JSON(http.StatusNotFound, utils.GenResponse(40020, nil, e))
 		return
 	}
-	c.JSON(http.StatusOK, utils.GenResponse(20000, article, nil))
+	c.JSON(http.StatusOK, utils.GenResponse(20000, articleDetail, nil))
 	return
 }
 
@@ -90,9 +90,10 @@ func DeleteArticle(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	r := service.Article{ID: id}
 
-	article, _ := r.GetOne()
+	articleDetail, _ := r.GetOne()
+	article := articleDetail.A
 
-	if e := article.Delete(); e != nil {
+	if e := r.Delete(); e != nil {
 		c.JSON(http.StatusInternalServerError, utils.GenResponse(40026, nil, e))
 		return
 	}
@@ -104,13 +105,13 @@ func EditArticle(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	r := service.Article{ID: id}
 
-	article, _ := r.GetOne()
+	articleDetail, _ := r.GetOne()
+	article := articleDetail.A
 
 	if e := c.ShouldBindJSON(&article); e != nil {
 		c.JSON(http.StatusBadRequest, utils.GenResponse(40024, nil, e))
 		return
 	}
-	article.UpdatedTime = time.Now().Format(utils.AppInfo.TimeFormat)
 
 	if e := article.Edit(); e != nil {
 		c.JSON(http.StatusInternalServerError, utils.GenResponse(40025, nil, e))

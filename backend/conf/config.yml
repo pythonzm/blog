@@ -22,6 +22,6 @@ database:
   dbName: "blog"
 redis:
   redisAddr: "47.99.139.44:7779"
-  password: "Aa123456!"
+  password: "Aa123456"
   db: 0
   cacheTime: 30  # 设置缓存时间，单位秒
