@@ -42,3 +42,6 @@
 
 ### 前台首页
 ![image](https://github.com/pythonzm/blog/blob/master/screenshots/home.png)
+
+### 文章详情页
+![image](https://github.com/pythonzm/blog/blob/master/screenshots/article.png)
