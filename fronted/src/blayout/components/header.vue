@@ -34,7 +34,6 @@ export default {
         { label: '关于', index: '/about' }
       ],
       activeIndex: '/',
-      b_color: 'false'
     };
   },
   created () {

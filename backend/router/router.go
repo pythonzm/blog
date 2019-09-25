@@ -31,6 +31,7 @@ func InitRouter() *gin.Engine {
 		apiv1.GET("/categories", v1.GetAllCategories)
 		apiv1.GET("/articles", v1.GetArticles)
 		apiv1.GET("/articles/:id", v1.GetArticle)
+		apiv1.GET("/soup/random", v1.GetRandSoup)
 
 		apiv1.Use(middleware.JWt())
 		apiv1.PATCH("/user/edit", v1.EditUser)
@@ -47,6 +48,11 @@ func InitRouter() *gin.Engine {
 		apiv1.POST("/articles", v1.CreateArticle)
 		apiv1.DELETE("/articles/:id", v1.DeleteArticle)
 		apiv1.PUT("/articles/:id", v1.EditArticle)
+
+		apiv1.POST("/soups", v1.CreateSoup)
+		apiv1.DELETE("/soups/:id", v1.DeleteSoup)
+		apiv1.PUT("/soups/:id", v1.EditSoup)
+		apiv1.GET("/soups", v1.GetAllSoups)
 
 		apiv1.POST("/upload", v1.UploadImageAvatar)
 	}

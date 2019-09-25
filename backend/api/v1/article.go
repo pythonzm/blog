@@ -9,8 +9,8 @@ import (
 )
 
 func GetArticles(c *gin.Context) {
-	limit := c.Query("limit")
-	page := c.Query("page")
+	limit := c.DefaultQuery("limit", "")
+	page := c.DefaultQuery("page", "")
 	category := c.DefaultQuery("category", "")
 	tag := c.DefaultQuery("tag", "")
 	key := c.DefaultQuery("key", "")
@@ -18,7 +18,7 @@ func GetArticles(c *gin.Context) {
 	admin := c.DefaultQuery("admin", "")
 
 	if category != "" {
-		data, e := service.GetArticlesByCategory(category, service.SetLimitPageAdmin(limit, page, admin), service.SetCategory(category))
+		data, e := service.GetArticlesByCategory(category, service.SetLimitPage(limit, page), service.SetAdmin(admin), service.SetCategory(category))
 		if e != nil {
 			c.JSON(http.StatusInternalServerError, utils.GenResponse(40022, nil, e))
 			return
@@ -28,7 +28,7 @@ func GetArticles(c *gin.Context) {
 	}
 
 	if tag != "" {
-		data, e := service.GetArticlesByTag(tag, service.SetLimitPageAdmin(limit, page, admin), service.SetTag(tag))
+		data, e := service.GetArticlesByTag(tag, service.SetLimitPage(limit, page), service.SetAdmin(admin), service.SetTag(tag))
 		if e != nil {
 			c.JSON(http.StatusInternalServerError, utils.GenResponse(40022, nil, e))
 			return
@@ -38,7 +38,7 @@ func GetArticles(c *gin.Context) {
 	}
 
 	if key != "" || status != "" {
-		data, e := service.SearchArticle(key, status, service.SetLimitPageAdmin(limit, page, admin), service.SetSearch(true))
+		data, e := service.SearchArticle(key, status, service.SetLimitPage(limit, page), service.SetAdmin(admin), service.SetSearch(true))
 		if e != nil {
 			c.JSON(http.StatusInternalServerError, utils.GenResponse(40022, nil, e))
 			return
@@ -48,7 +48,7 @@ func GetArticles(c *gin.Context) {
 	}
 
 	a := service.Article{}
-	data, e := a.GetAll(service.SetLimitPageAdmin(limit, page, admin))
+	data, e := a.GetAll(service.SetLimitPage(limit, page), service.SetAdmin(admin))
 	if e != nil {
 		c.JSON(http.StatusInternalServerError, utils.GenResponse(40022, nil, e))
 		return
@@ -59,9 +59,10 @@ func GetArticles(c *gin.Context) {
 
 func GetArticle(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
+	admin := c.DefaultQuery("admin", "")
 	r := service.Article{ID: id}
 
-	articleDetail, e := r.GetOne()
+	articleDetail, e := r.GetOne(service.SetAdmin(admin))
 	if e != nil {
 		c.JSON(http.StatusNotFound, utils.GenResponse(40020, nil, e))
 		return
@@ -88,9 +89,10 @@ func CreateArticle(c *gin.Context) {
 
 func DeleteArticle(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
+	admin := c.DefaultQuery("admin", "")
 	r := service.Article{ID: id}
 
-	articleDetail, _ := r.GetOne()
+	articleDetail, _ := r.GetOne(service.SetAdmin(admin))
 	article := articleDetail.A
 
 	if e := r.Delete(); e != nil {
@@ -103,9 +105,10 @@ func DeleteArticle(c *gin.Context) {
 
 func EditArticle(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
+	admin := c.DefaultQuery("admin", "")
 	r := service.Article{ID: id}
 
-	articleDetail, _ := r.GetOne()
+	articleDetail, _ := r.GetOne(service.SetAdmin(admin))
 	article := articleDetail.A
 
 	if e := c.ShouldBindJSON(&article); e != nil {

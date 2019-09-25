@@ -1,33 +1,13 @@
 <template>
   <el-card>
-    <div slot="header" class="clearfix">
-      <span>关于我</span>
-    </div>
-
-    <div class="user-profile">
-      <div class="box-center">
-        <pan-thumb
-          :image="user.avatar"
-          :height="'100px'"
-          :width="'100px'"
-          :hoverable="false"
-        >
-          {{ user.nickname }}
-        </pan-thumb>
-      </div>
-      <div class="box-center">
-        <div class="user-name text-center">{{ user.nickname }}</div>
-      </div>
-    </div>
-
     <div class="user-bio">
       <div class="user-education user-bio-section">
         <div class="user-bio-section-header">
-          <svg-icon icon-class="education" />
+          <svg-icon icon-class="education" /><span>每日一汤</span>
         </div>
         <div class="user-bio-section-body">
           <div class="text-muted">
-            {{ user.introduction }}
+            {{ soup.content }}
           </div>
         </div>
       </div>
@@ -36,24 +16,19 @@
 </template>
 
 <script>
-import PanThumb from '@/components/PanThumb'
 
 export default {
   name: 'Aside',
-  components: { PanThumb },
   props: {
-    user: {
+    soup: {
       type: Object,
       default: () => {
         return {
-          nickname: '',
-          avatar: '',
-          introduction: ''
+          content: '',
         }
       }
     }
-  }
-
+  },
 }
 </script>
 
@@ -71,6 +46,8 @@ export default {
 
 .text-muted {
   color: #777;
+  white-space: pre-line;
+  line-height: 1.5em;
 }
 
 .user-profile {

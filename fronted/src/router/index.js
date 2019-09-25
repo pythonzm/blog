@@ -178,6 +178,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: "/admin/soup",
+    component: Layout,
+    children: [
+      {
+        path: "list",
+        name: "Soup",
+        component: () => import("@/views/admin/soup/index"),
+        meta: { title: "鸡汤管理", icon: "table" }
+      }
+    ]
+  },
 
   {
     path: "/admin/profile",

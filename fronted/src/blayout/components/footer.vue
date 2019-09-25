@@ -1,8 +1,8 @@
 <template>
   <div class="footer">
-    <div>
+    <p>
       <span>© 2019 <a href="/">PoorOPS</a></span>
-    </div>
+    </p>
   </div>
 </template>
 
@@ -14,10 +14,7 @@ export default {
 
 <style scoped>
 .footer {
-  width: 100%;
-  min-width: 350px;
   font-size: 14px;
   color: #999;
-  text-align: center;
 }
 </style>

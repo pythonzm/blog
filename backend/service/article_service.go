@@ -1,8 +1,8 @@
 package service
 
 import (
-	"backend/cache"
 	"backend/models"
+	"backend/tools"
 	"backend/utils"
 	"encoding/json"
 	"errors"
@@ -29,9 +29,10 @@ type Articles struct {
 }
 
 type ArticleDetail struct {
-	A    Article  `json:"article"`
-	C    Category `json:"category"`
-	Tags []Tag    `json:"tags"`
+	A     Article  `json:"article"`
+	C     Category `json:"category"`
+	Tags  []Tag    `json:"tags"`
+	Views uint8    `json:"views"`
 }
 
 type Options struct {
@@ -65,7 +66,7 @@ func newOptions(opts ...Option) Options {
 	return opt
 }
 
-func SetLimitPageAdmin(limit, page, admin string) Option {
+func SetLimitPage(limit, page string) Option {
 	return func(o *Options) {
 		if limit != "" && page != "" {
 			p, _ := strconv.Atoi(page)
@@ -73,6 +74,11 @@ func SetLimitPageAdmin(limit, page, admin string) Option {
 			o.Limit = l
 			o.Page = p
 		}
+	}
+}
+
+func SetAdmin(admin string) Option {
+	return func(o *Options) {
 		if admin != "" {
 			o.Admin = true
 		}
@@ -103,7 +109,7 @@ var db = models.DB
 func (a *Article) Create() (Article, error) {
 	createTime := time.Now().Format(utils.AppInfo.TimeFormat)
 
-	r, e := db.Exec("insert into blog_article (title,content,html,category_id,created_time,status) values (?,?,?,?,?,?)", a.Title, a.Content, a.Html,a.CategoryID, createTime, a.Status)
+	r, e := db.Exec("insert into blog_article (title,content,html,category_id,created_time,status) values (?,?,?,?,?,?)", a.Title, a.Content, a.Html, a.CategoryID, createTime, a.Status)
 	if e != nil {
 		return Article{}, e
 	}
@@ -116,7 +122,7 @@ func (a *Article) Create() (Article, error) {
 			}
 		}
 	}
-	return Article{int(articleID), a.Title, a.Content, a.Html,a.CategoryID, a.TagID, createTime, a.UpdatedTime, a.Status}, nil
+	return Article{int(articleID), a.Title, a.Content, a.Html, a.CategoryID, a.TagID, createTime, a.UpdatedTime, a.Status}, nil
 }
 
 func (a *Article) Delete() error {
@@ -125,6 +131,12 @@ func (a *Article) Delete() error {
 	}
 	if _, e := db.Exec("delete from blog_article where id=?", a.ID); e != nil {
 		return e
+	}
+
+	// 删除阅读量
+	viewKey := a.ViewKey()
+	if e := tools.DelKey(viewKey); e != nil {
+		utils.WriteErrorLog(fmt.Sprintf("[ %s ] 删除阅读量失败, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
 	}
 	return nil
 }
@@ -151,20 +163,38 @@ func (a *Article) Edit() error {
 	return nil
 }
 
-func (a Article) GetOne() (ArticleDetail, error) {
+func (a Article) GetOne(opts ...Option) (ArticleDetail, error) {
+	options := newOptions(opts...)
 	var one Article
 	if e := db.Get(&one, "select * from blog_article where id=?", a.ID); e != nil {
 		return ArticleDetail{}, e
 	}
 	category, _ := GetCategoryByID(one.CategoryID)
 	tags, _ := GetTagsByArticleID(a.ID)
-	return ArticleDetail{one, category, tags}, nil
+
+	viewKey := one.ViewKey()
+	n, err := getViews(viewKey)
+	if err != nil {
+		utils.WriteErrorLog(fmt.Sprintf("[ %s ] 获取阅读量失败, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), err))
+	}
+
+	if !options.Admin {
+		if e := addView(viewKey); e != nil {
+			utils.WriteErrorLog(fmt.Sprintf("[ %s ] 添加阅读量失败, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+		}
+	}
+	return ArticleDetail{one, category, tags, n}, nil
 }
 
 func (a Article) GetAll(opts ...Option) (data Articles, err error) {
 	baseSql := "select %s from blog_article a"
 	data, err = genArticles(baseSql, opts...)
 	return
+}
+
+func (a Article) ViewKey() string {
+	viewKey := a.Title + ":view"
+	return viewKey
 }
 
 func GetArticlesByCategory(name string, opts ...Option) (data Articles, err error) {
@@ -181,11 +211,11 @@ func GetArticlesByTag(name string, opts ...Option) (data Articles, err error) {
 
 func genArticles(baseSql string, opts ...Option) (data Articles, err error) {
 	options := newOptions(opts...)
-	key := cache.ArticleKey(options.Limit, options.Page, options.Admin, options.C, options.T)
+	key := articleCacheKey(options)
 	if !options.Search {
-		cacheData, e := getCache(key)
+		cacheData, e := getArticleCache(key)
 		if e != nil {
-			utils.WriteErrorLog(fmt.Sprintf("[ %s ] 读取缓存失败, %v", time.Now().Format(utils.AppInfo.TimeFormat), e))
+			utils.WriteErrorLog(fmt.Sprintf("[ %s ] 读取缓存失败, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
 		}
 		if cacheData.Total != 0 {
 			return cacheData, nil
@@ -214,8 +244,8 @@ func genArticles(baseSql string, opts ...Option) (data Articles, err error) {
 	data.Items = articles
 
 	if !options.Search {
-		if e := setCache(key, data); e != nil {
-			utils.WriteErrorLog(fmt.Sprintf("[ %s ] 写入缓存失败, %v", time.Now().Format(utils.AppInfo.TimeFormat), e))
+		if e := setArticleCache(key, data); e != nil {
+			utils.WriteErrorLog(fmt.Sprintf("[ %s ] 写入缓存失败, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
 		}
 	}
 
@@ -250,11 +280,18 @@ func SearchArticle(key, status string, opts ...Option) (data Articles, err error
 	return
 }
 
-func getCache(key string) (Articles, error) {
-	a := Articles{}
-	data, err := cache.GetKey(key)
-	if err != nil || data == nil {
-		return a, err
+func articleCacheKey(opts Options) string {
+	if opts.Admin {
+		return fmt.Sprintf("article_%d_%d_%s_%s_%s", opts.Limit, opts.Page, "admin", opts.C, opts.T)
+	} else {
+		return fmt.Sprintf("article_%d_%d_%s_%s", opts.Limit, opts.Page, opts.C, opts.T)
+	}
+}
+
+func getArticleCache(key string) (a Articles, err error) {
+	data, e := tools.GetKey(key)
+	if e != nil || data == nil {
+		return a, e
 	}
 
 	v, ok := data.([]uint8)
@@ -268,8 +305,30 @@ func getCache(key string) (Articles, error) {
 	}
 }
 
-func setCache(key string, value Articles) error {
+func setArticleCache(key string, value Articles) error {
 	marshal, _ := json.Marshal(value)
-	e := cache.SetKey(key, marshal)
+	e := tools.SetKey(key, marshal, tools.SetTimeout(true))
 	return e
+}
+
+func addView(key string) error {
+	e := tools.INCRKey(key)
+	return e
+}
+
+func getViews(key string) (n uint8, err error) {
+	data, e := tools.GetKey(key)
+	if e != nil || data == nil {
+		return n, e
+	}
+
+	v, ok := data.([]uint8)
+	if ok {
+		if e := json.Unmarshal([]byte(v[:]), &n); e != nil {
+			return n, e
+		}
+		return n, nil
+	} else {
+		return n, errors.New("返回数据类型有误，json无法解析")
+	}
 }

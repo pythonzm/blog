@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container style="height:100%">
     <el-header>
       <div class="fix-header">
         <Header />
@@ -9,17 +9,17 @@
     <el-main>
       <div class="main">
         <BlogMain />
-        <Aside :user="user" />
+        <Aside :soup="soup" />
       </div>
     </el-main>
-    <el-footer>
+    <el-footer style="display:flex">
       <Footer />
     </el-footer>
   </el-container>
 </template>
 
 <script>
-import { getInfo } from '@/api/user'
+import { fetchRandSoup } from '@/api/soup'
 import Header from './components/header'
 import BlogMain from './components/BlogMain'
 import Aside from './components/aside'
@@ -34,20 +34,16 @@ export default {
   },
   data () {
     return {
-      user: {},
+      soup: {},
     }
   },
   mounted () {
-    this.getUser()
+    this.getSoup()
   },
   methods: {
-    getUser () {
-      getInfo().then(response => {
-        this.user = {
-          nickname: response.data.nickname,
-          avatar: response.data.avatar,
-          introduction: response.data.introduction,
-        }
+    getSoup () {
+      fetchRandSoup().then(response => {
+        this.soup = response.data
       })
     }
   }
@@ -55,8 +51,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/styles/mixin.scss";
-@import "~@/styles/variables.scss";
 .fix-header {
   width: 80%;
   margin-left: auto;
@@ -98,8 +92,9 @@ export default {
   width: 30%;
 }
 .el-footer {
-  position: fixed;
-  width: 100%;
-  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000000;
 }
 </style>

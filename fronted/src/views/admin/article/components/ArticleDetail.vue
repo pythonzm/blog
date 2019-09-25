@@ -170,7 +170,7 @@ export default {
   },
   methods: {
     fetchData (id) {
-      fetchArticle(id)
+      fetchArticle(id, { admin: true })
         .then(response => {
           const ids = []
           this.postForm = response.data.article
