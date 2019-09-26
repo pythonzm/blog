@@ -26,10 +26,15 @@
 
 `go run main.go`
   
-### 启动管理
+### 启动前端
   > cd fronted
   1. npm install
   2. npm run dev
+
+### 访问
+  前台界面：$YOURIP:9528/#/
+  
+  后台界面: $YOURIP:9528/#/admin     默认用户名密码：admin/12346
   
 ## TODO LIST
   美化界面
