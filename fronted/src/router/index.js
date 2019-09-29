@@ -190,6 +190,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: "/admin/about",
+    component: Layout,
+    children: [
+      {
+        path: "",
+        name: "Aabout",
+        component: () => import("@/views/admin/about/index"),
+        meta: { title: "编辑关于页", icon: "about" }
+      }
+    ]
+  },
 
   {
     path: "/admin/profile",

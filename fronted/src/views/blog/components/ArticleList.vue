@@ -1,14 +1,17 @@
 <template>
   <div class="dashboard-container">
-    <div class="title-article list-card" v-for="item in list" :key="item.id">
-      <router-link
-        :to="{
-          name: 'CTArticle',
-          query: { id: item.id }
-        }"
-        ><h1>{{ item.title }}</h1></router-link
-      >
-      <hr />
+    <div class="title-article">
+      <div class="list-card" v-for="item in list" :key="item.id">
+        <router-link
+          class="pan-btn blue-btn"
+          :to="{
+            name: 'CTArticle',
+            query: { id: item.id }
+          }"
+        >
+          {{ item.title }}<span>{{ item.created_time | formatDate }}</span>
+        </router-link>
+      </div>
     </div>
 
     <pagination
@@ -24,9 +27,15 @@
 <script>
 import { fetchList } from '@/api/article'
 import Pagination from '@/components/Pagination'
+import { parseTime } from '@/utils'
 export default {
   name: "ArticleList",
   components: { Pagination },
+  filters: {
+    formatDate (time) {
+      return time.slice(0, time.indexOf(" "))
+    },
+  },
   props: {
     searchType: {
       type: String,
@@ -76,20 +85,32 @@ export default {
 
 <style scoped>
 .title-article {
-  overflow: hidden;
-  position: relative;
+  border: 1px solid #ebeef5;
+  background-color: #fff;
+  color: #303133;
+  transition: 0.3s;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
+a {
+  width: 100%;
+}
+span {
+  position: absolute;
+  right: 0.2rem;
+}
+.pan-btn {
+  font-size: 25px;
+  font-weight: 900;
+  color: #000000;
+}
+.blue-btn {
+  background: unset;
+}
+
 .list-card {
   border-radius: 6px;
-}
-.list-card:hover {
-  background: #dcdfe6;
-}
-.title-article .title-msg {
-  margin-bottom: 10px;
-}
-.title-article .title-msg span {
-  color: #999;
-  margin-right: 10px;
+  text-align: left;
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 </style>

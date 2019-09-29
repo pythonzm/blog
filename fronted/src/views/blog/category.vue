@@ -2,6 +2,11 @@
   <div>
     <div class="ca" v-for="category in list" :key="category.id">
       <router-link
+        class="pan-btn blue-btn"
+        :style="{
+          fontSize: category.category_name.length * 2 + 13 + 'px',
+          background: getColor(category.category_name.length)
+        }"
         :to="{
           name: 'CTArticle',
           query: { category: category.category_name }
@@ -32,6 +37,21 @@ export default {
       this.list = data
       this.listLoading = false
     },
+    getColor (count) {
+      let alpha = 0.2
+      if (count < 5) {
+        alpha = 0.2
+      } else if (count < 10) {
+        alpha = 0.4
+      } else if (count < 15) {
+        alpha = 0.6
+      } else if (count < 25) {
+        alpha = 0.8
+      } else {
+        alpha = 1
+      }
+      return 'rgba(38, 42, 48, ' + alpha + ')'
+    },
   }
 }
 </script>
@@ -40,10 +60,17 @@ export default {
 .ca {
   display: inline-block;
   margin: 10px;
-  color: #555;
+  padding: 5px 10px;
+  color: #fff;
+  border-radius: 5px;
+  /* border: 1px solid #eee; */
   text-decoration: none;
   outline: none;
-  border-bottom: 1px solid #999;
   word-wrap: break-word;
+  transition: all 0.3s;
 }
+/* .ca:hover {
+  background-color: #000;
+  color: #fff;
+} */
 </style>

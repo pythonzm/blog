@@ -24,8 +24,6 @@ export default {
 .blog-main {
   /*50 = navbar  */
   width: 70%;
-  position: relative;
-  overflow: hidden;
   float: left;
 }
 .fixed-header + .blog-main {

@@ -30,3 +30,10 @@ export function editUser(data, params) {
     params
   });
 }
+
+export function getAbout() {
+  return request({
+    url: "/user/about",
+    method: "get"
+  });
+}

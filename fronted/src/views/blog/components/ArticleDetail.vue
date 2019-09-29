@@ -1,6 +1,6 @@
 <template>
   <div id="article">
-    <div class="article-warp">
+    <div class="article-wrap">
       <div class="article-message">
         <p class="article-title">
           {{ article.title }}
@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="article-view">
-        <div v-html="article.html" v-mhighlight></div>
+        <div v-html="article.html" class="md-body" v-mhighlight></div>
       </div>
 
       <div class="tags">
@@ -46,8 +46,7 @@
 <script>
 
 import { fetchArticle } from '@/api/article'
-import hljs from "highlight.js";
-import "highlight.js/styles/monokai-sublime.css";
+import '@/assets/md.css'
 export default {
   name: 'ArticleDetail',
   data () {
@@ -62,6 +61,7 @@ export default {
     const id = this.$route.query && this.$route.query.id
     this.fetchData(id)
   },
+
   methods: {
     fetchData (id) {
       fetchArticle(id)
@@ -74,17 +74,8 @@ export default {
         .catch(err => {
           console.log(err)
         })
-    }
+    },
   },
-  directives: {
-    'mhighlight': function (el) {
-      let blocks = el.querySelectorAll("pre code");
-      blocks.forEach(block => {
-        hljs.highlightBlock(block);
-      });
-    }
-  }
-
 }
 </script>
 
@@ -159,5 +150,45 @@ svg {
   cursor: pointer;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   margin-right: 5px;
+}
+.cl-wrapper {
+  position: relative;
+}
+
+.cl-wrapper ul,
+.cl-wrapper li {
+  margin: 0;
+  -moz-padding-start: 12px;
+  -webkit-padding-start: 12px;
+  list-style: none;
+}
+
+.cl-wrapper li > .cl-link.cl-link-active {
+  color: rgba(66, 185, 131, 0.9);
+  transition: 0.5s;
+}
+
+.cl-wrapper li > .cl-transform.cl-link-active {
+  transform: translate(3px);
+}
+
+.cl-wrapper .cl-link {
+  cursor: pointer;
+  color: rgba(52, 73, 94, 0.5);
+  font-size: 13px;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.cl-wrapper .cl-marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.cl-wrapper .cl-marker path {
+  transition: all 0.3s ease;
 }
 </style>

@@ -44,6 +44,16 @@ func GetUserInfo(c *gin.Context) {
 	return
 }
 
+func GetUserAbout(c *gin.Context) {
+	about, e := service.GetAbout()
+	if e != nil {
+		c.JSON(http.StatusInternalServerError, utils.GenResponse(40027, nil, e))
+		return
+	}
+	c.JSON(http.StatusOK, utils.GenResponse(20000, about, nil))
+	return
+}
+
 func EditUser(c *gin.Context) {
 
 	bytes, err := c.GetRawData()
@@ -58,13 +68,18 @@ func EditUser(c *gin.Context) {
 		return
 	}
 
-	if u.Password == "" {
-		if e := u.EditUser(); e != nil {
+	if u.Password != "" {
+		if e := u.ResetPassword(); e != nil {
+			c.JSON(http.StatusInternalServerError, utils.GenResponse(40028, nil, e))
+			return
+		}
+	} else if u.About != "" {
+		if e := u.EditAbout(); e != nil {
 			c.JSON(http.StatusInternalServerError, utils.GenResponse(40028, nil, e))
 			return
 		}
 	} else {
-		if e := u.ResetPassword(); e != nil {
+		if e := u.EditUser(); e != nil {
 			c.JSON(http.StatusInternalServerError, utils.GenResponse(40028, nil, e))
 			return
 		}

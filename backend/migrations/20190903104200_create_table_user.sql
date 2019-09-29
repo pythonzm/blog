@@ -7,6 +7,7 @@ CREATE TABLE `blog_user` (
   `avatar` varchar(255) DEFAULT NULL,
   `introduction` varchar(255) DEFAULT NULL,
   `nickname` varchar(32) DEFAULT NULL,
+  `about` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 -- +goose StatementEnd

@@ -27,6 +27,7 @@ func InitRouter() *gin.Engine {
 		apiv1.POST("/user/logout", v1.Logout)
 		// GET方法没有使用JWT认证
 		apiv1.GET("/user/info", v1.GetUserInfo)
+		apiv1.GET("/user/about", v1.GetUserAbout)
 		apiv1.GET("/tags", v1.GetAllTags)
 		apiv1.GET("/categories", v1.GetAllCategories)
 		apiv1.GET("/articles", v1.GetArticles)

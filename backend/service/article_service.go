@@ -229,7 +229,7 @@ func genArticles(baseSql string, opts ...Option) (data Articles, err error) {
 		f = " WHERE a.`status`='published'"
 	}
 	offset := (options.Page - 1) * options.Limit
-	selectSql := fmt.Sprintf(baseSql, "a.id, a.title, a.created_time, a.updated_time, a.`status`") + f + fmt.Sprintf(" ORDER BY a.id DESC limit %d offset %d", options.Limit, offset)
+	selectSql := fmt.Sprintf(baseSql, "a.id, a.title, a.created_time, a.`status`") + f + fmt.Sprintf(" ORDER BY a.id DESC limit %d offset %d", options.Limit, offset)
 
 	if err = db.Select(&articles, selectSql); err != nil {
 		return

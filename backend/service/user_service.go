@@ -14,6 +14,7 @@ type User struct {
 	Introduction string `json:"introduction" db:"introduction" form:"introduction"`
 	Avatar       string `json:"avatar" db:"avatar" form:"avatar"`
 	Nickname     string `json:"nickname" db:"nickname" form:"nickname"`
+	About        string `json:"about" db:"about" form:"about"`
 }
 
 var jwtSecret = []byte(utils.AppInfo.JwtSecret)
@@ -73,4 +74,15 @@ func (u User) EditUser() error {
 func (u User) ResetPassword() error {
 	_, e := db.Exec("update blog_user set password=? where username=?", utils.EncodeMD5(u.Password), u.Username)
 	return e
+}
+
+func (u User) EditAbout() error {
+	_, e := db.Exec("update blog_user set about=?", u.About)
+	return e
+}
+
+func GetAbout() (string, error) {
+	var a string
+	e := db.Get(&a, "select about from blog_user")
+	return a, e
 }
