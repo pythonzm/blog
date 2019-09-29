@@ -1,4 +1,4 @@
-### 该项目是用于练习go语言以及vue学习，后端API使用[gin](https://github.com/gin-gonic/gin)编写，前端页面使用element-ui，直接借鉴了这个大佬的项目：https://github.com/PanJiaChen/vue-admin-template， 目前大致的框架都有了，后台管理，前台展示，包括首页，详情页等（目前只是有基础框架，没有美化处理，也就是说界面很丑。。。）
+### 该项目是用于练习go语言以及vue学习，后端API使用[gin](https://github.com/gin-gonic/gin)编写，前端页面使用element-ui，直接借鉴了这个大佬的项目：https://github.com/PanJiaChen/vue-admin-template， 目前大致的框架都有了，后台管理，前台展示，包括首页，详情页等
 
 ### 准备
   1. 安装mysql（略）
