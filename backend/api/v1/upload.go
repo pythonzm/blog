@@ -17,6 +17,7 @@ func UploadImageAvatar(c *gin.Context) {
 	}
 
 	imageInfo, err := service.UploadImageAvatarService(file, t)
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, utils.GenResponse(40029, nil, err))
 		return

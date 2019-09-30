@@ -13,9 +13,11 @@ func UploadImageAvatarService(file *multipart.FileHeader, t string) (info utils.
 
 	info = utils.GenImageAvatarInfo(t, filename)
 	relPath := filepath.Dir(info.AvatarRelPath)
-	if relPath == "" {
+	// If the path is empty, Dir returns ".".
+	if relPath == "." {
 		relPath = filepath.Dir(info.ImageRelPath)
 	}
+
 	if err = utils.IsNotExistMkDir(relPath); err != nil {
 		return
 	}

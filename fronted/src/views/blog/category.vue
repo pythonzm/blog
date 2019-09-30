@@ -63,14 +63,9 @@ export default {
   padding: 5px 10px;
   color: #fff;
   border-radius: 5px;
-  /* border: 1px solid #eee; */
   text-decoration: none;
   outline: none;
   word-wrap: break-word;
   transition: all 0.3s;
 }
-/* .ca:hover {
-  background-color: #000;
-  color: #fff;
-} */
 </style>

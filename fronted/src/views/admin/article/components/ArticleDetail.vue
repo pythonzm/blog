@@ -12,11 +12,11 @@
           style="margin-left: 10px;"
           type="success"
           @click="submitForm"
-          >发布</el-button
-        >
+          >发布
+        </el-button>
         <el-button v-loading="loading" type="warning" @click="draftForm"
-          >存草稿</el-button
-        >
+          >存草稿
+        </el-button>
       </sticky>
 
       <div class="createPost-main-container">
@@ -28,8 +28,8 @@
                 :maxlength="100"
                 name="name"
                 required
-                >标题</MDinput
-              >
+                >标题
+              </MDinput>
             </el-form-item>
 
             <div class="postInfo-container">
@@ -85,7 +85,11 @@
           <markdown-editor
             ref="editor"
             v-model="postForm.content"
-            :options="{ hideModeSwitch: true, previewStyle: 'tab' }"
+            :options="{
+              hideModeSwitch: true,
+              previewStyle: 'tab',
+              hooks: { addImageBlobHook: onAddImageBlob }
+            }"
             height="1000px"
           />
         </el-form-item>
@@ -98,7 +102,7 @@
 import MarkdownEditor from '@/components/MarkdownEditor'
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
-import { fetchArticle, createArticle, editArticle } from '@/api/article'
+import { fetchArticle, createArticle, editArticle, uploadImage } from '@/api/article'
 import { fetchCategoryList } from '@/api/category'
 import { fetchTagList } from '@/api/tag'
 
@@ -155,7 +159,7 @@ export default {
         content: [
           { required: true, message: '文章内容不能为空', trigger: 'blur' }
         ]
-      }
+      },
     }
   },
   created () {
@@ -174,7 +178,7 @@ export default {
         .then(response => {
           const ids = []
           this.postForm = response.data.article
-          for (let tag of response.data.tags) {
+          for (const tag of response.data.tags) {
             ids.push(tag.id)
           }
           this.postForm.tag_id = ids
@@ -254,6 +258,17 @@ export default {
     },
     getHtml () {
       this.postForm.html = this.$refs.editor.getHtml()
+    },
+    onAddImageBlob (blob, callback) {
+      let formData = new FormData();
+
+      formData.append('file', blob);
+      formData.set('t', 'image')
+      uploadImage(formData).then(response => {
+        callback(response.data.ImageFullUrl, blob.name);
+      }).catch(error => {
+        console.log(error);
+      });
     }
   }
 }

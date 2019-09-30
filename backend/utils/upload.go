@@ -49,20 +49,14 @@ func CheckExist(src string) bool {
 }
 
 func IsNotExistMkDir(src string) error {
-	if exist := CheckExist(src); exist {
-		if err := MkDir(src); err != nil {
-			return err
-		}
+	if CheckExist(src) {
+		e := MkDir(src)
+		return e
 	}
-
 	return nil
 }
 
 func MkDir(src string) error {
 	err := os.MkdirAll(src, os.ModeDir)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
