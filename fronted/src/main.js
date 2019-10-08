@@ -14,6 +14,8 @@ import router from "./router";
 import "@/icons"; // icon
 import "@/permission"; // permission control
 import Highlight from "@/directive/mhighlight";
+import "viewerjs/dist/viewer.css"; // 用于文章图片放大预览
+import Viewer from "v-viewer";
 
 /**
  * If you don't want to use mock-server
@@ -26,6 +28,7 @@ import Highlight from "@/directive/mhighlight";
 
 Vue.use(ElementUI);
 Vue.use(Highlight);
+Vue.use(Viewer);
 
 Vue.config.productionTip = false;
 

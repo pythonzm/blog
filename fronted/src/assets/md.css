@@ -34,8 +34,20 @@ h6 {
 
 .md-body *:not(table) {
   line-height: 160%;
+  box-sizing: content-box;
 }
 .md-body p {
   margin: 10px 0;
   color: #555;
+}
+
+.md-body img {
+  margin: 4px 0 10px;
+  box-sizing: border-box;
+  vertical-align: top;
+  max-width: 100%;
+}
+
+.md-body img:hover {
+  cursor: pointer;
 }

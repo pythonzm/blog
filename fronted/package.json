@@ -17,12 +17,14 @@
   "dependencies": {
     "axios": "0.18.1",
     "element-ui": "2.7.2",
+    "highlight.js": "^9.15.10",
     "js-cookie": "2.2.0",
     "marked": "^0.7.0",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
     "path-to-regexp": "2.4.0",
     "tui-editor": "^1.4.6",
+    "v-viewer": "^1.4.2",
     "vue": "2.6.10",
     "vue-router": "3.0.6",
     "vuex": "3.1.0"

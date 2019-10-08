@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="article-view">
-        <div v-html="article.html" class="md-body" v-mhighlight></div>
+        <div v-html="article.html" class="md-body" v-mhighlight v-viewer></div>
       </div>
 
       <div class="tags">
@@ -85,7 +85,6 @@ export default {
 }
 .article-wrap {
   position: relative;
-  animation: show-data-v-ce9b41d0 0.8s;
   padding: 30px;
   width: 100%;
   background-color: #fff;
