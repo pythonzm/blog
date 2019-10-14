@@ -33,7 +33,8 @@ type DataBase struct {
 }
 
 type Redis struct {
-	RedisAddr string `json:"redis_addr"`
+	Host      string `json:"host"`
+	Port      string `json:"port"`
 	Password  string `json:"password"`
 	DB        int    `json:"db"`
 	CacheTime int    `json:"cache_time"`
@@ -73,8 +74,10 @@ func init() {
 	DBInfo.Password = viper.GetString("database.password")
 	DBInfo.DBName = viper.GetString("database.dbName")
 
-	RedisInfo.RedisAddr = viper.GetString("redis.redisAddr")
+	RedisInfo.Host = viper.GetString("redis.host")
+	RedisInfo.Port = viper.GetString("redis.port")
 	RedisInfo.Password = viper.GetString("redis.password")
 	RedisInfo.DB = viper.GetInt("redis.db")
 	RedisInfo.CacheTime = viper.GetInt("redis.cacheTime")
 }
+

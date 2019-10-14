@@ -68,6 +68,7 @@ func GetRandSoup(c *gin.Context) {
 	soup, e := service.Soup{}.GetRandOne()
 	if e != nil {
 		c.JSON(http.StatusInternalServerError, utils.GenResponse(40008, nil, e))
+		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, soup, nil))
 }

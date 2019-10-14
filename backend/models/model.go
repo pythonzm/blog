@@ -24,9 +24,10 @@ func init() {
 	DB.SetMaxOpenConns(100)
 	DB.SetMaxIdleConns(10)
 
+	redisAddr := fmt.Sprintf("%s:%s", utils.RedisInfo.Host, utils.RedisInfo.Port)
 	RedisPool = &redis.Pool{
 		Dial: func() (conn redis.Conn, e error) {
-			return redis.Dial("tcp", utils.RedisInfo.RedisAddr, redis.DialPassword(utils.RedisInfo.Password), redis.DialDatabase(utils.RedisInfo.DB), redis.DialConnectTimeout(time.Second*5))
+			return redis.Dial("tcp", redisAddr, redis.DialPassword(utils.RedisInfo.Password), redis.DialDatabase(utils.RedisInfo.DB), redis.DialConnectTimeout(time.Second*5))
 		},
 		MaxIdle:     20,
 		MaxActive:   1000,
@@ -40,3 +41,4 @@ func init() {
 		},
 	}
 }
+
