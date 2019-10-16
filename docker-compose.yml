@@ -1,0 +1,51 @@
+version: "3.7"
+services:
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379"
+    networks:
+      - blog
+    restart: always
+
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306"
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - /data/mysql:/var/lib/mysql
+      - ./backend/db.sql:/docker-entrypoint-initdb.d/db.sql
+    networks:
+      - blog
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+
+  gin:
+    build:
+      context: ./backend
+    ports:
+      - "8000"
+    networks:
+      - blog
+    depends_on:
+      - mysql
+      - redis
+    restart: always
+
+  nginx:
+    build:
+      context: ./fronted
+    ports:
+      - "80:80"
+    volumes:
+      - ./fronted/nginx.vh.default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - blog
+    depends_on:
+      - gin
+
+networks:
+  blog:

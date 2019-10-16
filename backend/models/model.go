@@ -13,7 +13,7 @@ var DB *sqlx.DB
 var RedisPool *redis.Pool
 
 func init() {
-	DB = sqlx.MustConnect(utils.DBInfo.Mode, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8",
+	DB = sqlx.MustConnect(utils.DBInfo.Mode, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4",
 		utils.DBInfo.User,
 		utils.DBInfo.Password,
 		utils.DBInfo.Host,
