@@ -33,15 +33,17 @@ services:
     depends_on:
       - mysql
       - redis
-    restart: always
 
   nginx:
     build:
       context: ./fronted
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./fronted/nginx.vh.default.conf:/etc/nginx/conf.d/default.conf
+      - ./fronted/cert/poorops.com.key:/etc/nginx/poorops.com.key
+      - ./fronted/cert/poorops.com.pem:/etc/nginx/poorops.com.pem
     networks:
       - blog
     depends_on:
