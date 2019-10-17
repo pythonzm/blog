@@ -72,7 +72,7 @@ func (u User) EditUser() error {
 }
 
 func (u User) ResetPassword() error {
-	_, e := db.Exec("update blog_user set password=? where username=?", utils.EncodeMD5(u.Password), u.Username)
+	_, e := db.Exec("update blog_user set password=?", utils.EncodeMD5(u.Password))
 	return e
 }
 
