@@ -1,5 +1,6 @@
 ### 该项目是用于练习go语言以及vue学习，后端API使用[gin](https://github.com/gin-gonic/gin)编写，前端页面使用element-ui，直接借鉴了这个大佬的项目：https://github.com/PanJiaChen/vue-admin-template
 
+### [线上地址](https://www.poorops.com)
 
 ## [Docker快速部署](https://github.com/pythonzm/blog/wiki/Docker-部署)
 
