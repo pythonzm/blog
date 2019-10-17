@@ -36,6 +36,9 @@
   > cd fronted
   1. npm install
   2. npm run dev
+  
+  #### 构建生产环境
+  npm run build:prod
 
 ### 访问
   前台界面：$YOURIP:9528/#/
