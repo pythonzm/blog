@@ -51,3 +51,24 @@ h6 {
 .md-body img:hover {
   cursor: pointer;
 }
+
+.md-body blockquote {
+  border-left: 4px solid #dddddd;
+  padding: 0 15px;
+  color: #777777;
+  margin: 15px 0;
+}
+
+.md-body blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.md-body blockquote > :first-child {
+  margin-top: 0;
+}
+
+.md-body ul li,
+.md-body ol li {
+  position: relative;
+}
+
