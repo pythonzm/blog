@@ -96,7 +96,7 @@ a {
 }
 span {
   position: absolute;
-  right: 0.2rem;
+  right: 36px;
 }
 .pan-btn {
   font-size: 25px;

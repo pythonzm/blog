@@ -53,6 +53,13 @@
                       />
                     </el-select>
                   </el-form-item>
+                  <el-button
+                    type="info"
+                    plain
+                    icon="el-icon-plus"
+                    style="margin-left: 5px;"
+                    @click="createCT('category')"
+                  ></el-button>
                 </el-col>
 
                 <el-col :span="8">
@@ -75,6 +82,13 @@
                       />
                     </el-select>
                   </el-form-item>
+                  <el-button
+                    type="info"
+                    plain
+                    icon="el-icon-plus"
+                    style="margin-left: 5px;"
+                    @click="createCT('tag')"
+                  ></el-button>
                 </el-col>
               </el-row>
             </div>
@@ -95,6 +109,31 @@
         </el-form-item>
       </div>
     </el-form>
+    <el-dialog :title="ctTile[ct]" :visible.sync="dialogFormVisible">
+      <el-form
+        :model="category"
+        label-position="left"
+        label-width="70px"
+        style="width: 400px; margin-left:50px;"
+      >
+        <el-form-item :label="ctLable[ct]">
+          <el-input
+            v-if="ct === 'category'"
+            v-model="category.category_name"
+            required
+          />
+          <el-input v-else-if="ct === 'tag'" v-model="tag.tag_name" required />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button
+          type="primary"
+          @click="ct === 'category' ? newCategory() : newTag()"
+          >确认</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -103,9 +142,8 @@ import MarkdownEditor from '@/components/MarkdownEditor'
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { fetchArticle, createArticle, editArticle, uploadImage } from '@/api/article'
-import { fetchCategoryList } from '@/api/category'
-import { fetchTagList } from '@/api/tag'
-
+import { fetchCategoryList, createCategory } from '@/api/category'
+import { fetchTagList, createTag } from '@/api/tag'
 const defaultForm = {
   status: 'draft',
   title: '', // 文章题目
@@ -115,7 +153,6 @@ const defaultForm = {
   html: '', // 文章html内容
   id: undefined
 }
-
 export default {
   name: 'ArticleDetail',
   components: {
@@ -142,7 +179,6 @@ export default {
         ],
         category_id: [
           {
-            type: 'number',
             required: true,
             message: '请选择分类',
             trigger: 'change'
@@ -160,6 +196,22 @@ export default {
           { required: true, message: '文章内容不能为空', trigger: 'blur' }
         ]
       },
+      category: {
+        category_name: ''
+      },
+      tag: {
+        tag_name: ''
+      },
+      ct: '',
+      dialogFormVisible: false,
+      ctTile: {
+        category: '添加分类',
+        tag: '添加标签'
+      },
+      ctLable: {
+        category: '分类名称',
+        tag: '标签名称'
+      }
     }
   },
   created () {
@@ -187,7 +239,6 @@ export default {
           console.log(err)
         })
     },
-
     submitForm () {
       this.$refs.postForm.validate(valid => {
         if (valid) {
@@ -261,7 +312,6 @@ export default {
     },
     onAddImageBlob (blob, callback) {
       let formData = new FormData();
-
       formData.append('file', blob);
       formData.set('t', 'image')
       uploadImage(formData).then(response => {
@@ -269,6 +319,43 @@ export default {
       }).catch(error => {
         console.log(error);
       });
+    },
+    resetTemp () {
+      this.category = {
+        category_name: ''
+      }
+      this.tag = {
+        tag_name: ''
+      }
+    },
+    createCT (ct) {
+      this.resetTemp()
+      this.dialogFormVisible = true
+      this.ct = ct
+    },
+    newCategory () {
+      createCategory(this.category).then(response => {
+        this.categories.push(response.data)
+        this.dialogFormVisible = false
+        this.$notify({
+          title: 'Success',
+          message: '添加分类成功',
+          type: 'success',
+          duration: 2000
+        })
+      })
+    },
+    newTag () {
+      createTag(this.tag).then(response => {
+        this.tags.push(response.data)
+        this.dialogFormVisible = false
+        this.$notify({
+          title: 'Success',
+          message: '添加标签成功',
+          type: 'success',
+          duration: 2000
+        })
+      })
     }
   }
 }
@@ -276,24 +363,19 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@/styles/mixin.scss";
-
 .createPost-container {
   position: relative;
-
   .createPost-main-container {
     padding: 40px 45px 20px 50px;
-
     .postInfo-container {
       position: relative;
       @include clearfix;
       margin-bottom: 10px;
-
       .postInfo-container-item {
         float: left;
       }
     }
   }
-
   .word-counter {
     width: 40px;
     position: absolute;
@@ -301,7 +383,6 @@ export default {
     top: 0px;
   }
 }
-
 .article-textarea /deep/ {
   textarea {
     padding-right: 40px;
