@@ -3,11 +3,11 @@ app:
   timeFormat: "2006-01-02 15:04:05"
   jwtSecret: "blog"
   tokenTimeout: 28800 # 单位秒，这里是8小时
-  schema: "http"
   staticBasePath: "static"
   uploadBasePath: "upload"
   imageRelPath: "images"
   avatarRelPath: "avatar"
+  apiBaseUrl: "/api/v1"
 server:
   runMode: "debug"
   serverAddr: "127.0.0.1:8000"

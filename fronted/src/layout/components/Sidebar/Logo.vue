@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import logo from '@/assets/img/logo.png'
 export default {
   name: 'SidebarLogo',
   props: {
@@ -30,8 +31,7 @@ export default {
   data () {
     return {
       title: this.$store.state.settings.title,
-      logo:
-        'http://127.0.0.1:8000/static/684c84896826a60613338ae2ef20337b.jpg'
+      logo: logo
     }
   }
 }
@@ -86,3 +86,4 @@ export default {
   }
 }
 </style>
+

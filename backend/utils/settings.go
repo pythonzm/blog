@@ -9,11 +9,11 @@ type App struct {
 	TimeFormat     string `json:"time_format"`
 	JwtSecret      string `json:"jwt_secret"`
 	TokenTimeout   int64  `json:"token_timeout"`
-	Schema         string `json:"schema"`
 	StaticBasePath string `json:"static_base_path"`
 	UploadBasePath string `json:"upload_base_path"`
 	ImageRelPath   string `json:"image_rel_path"`
 	AvatarRelPath  string `json:"avatar_rel_path"`
+	ApiBaseUrl     string `json:"api_base_url"`
 }
 
 type Server struct {
@@ -56,11 +56,11 @@ func init() {
 	AppInfo.TimeFormat = viper.GetString("app.timeFormat")
 	AppInfo.JwtSecret = viper.GetString("app.jwtSecret")
 	AppInfo.TokenTimeout = viper.GetInt64("app.tokenTimeout")
-	AppInfo.Schema = viper.GetString("app.schema")
 	AppInfo.StaticBasePath = viper.GetString("app.staticBasePath")
 	AppInfo.UploadBasePath = viper.GetString("app.uploadBasePath")
 	AppInfo.ImageRelPath = viper.GetString("app.imageRelPath")
 	AppInfo.AvatarRelPath = viper.GetString("app.avatarRelPath")
+	AppInfo.ApiBaseUrl = viper.GetString("app.apiBaseUrl")
 
 	ServerInfo.RunMode = viper.GetString("server.runMode")
 	ServerInfo.ServerAddr = viper.GetString("server.serverAddr")

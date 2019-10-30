@@ -8,6 +8,10 @@
         <div class="article-info">
           <svg-icon icon-class="calendar" />
           发表于 {{ article.created_time }} •
+          <span v-if="article.updated_time !== ''"
+            ><svg-icon icon-class="calendar" /> 更新于
+            {{ article.updated_time }} •</span
+          >
           <svg-icon icon-class="category" />
           <span class="classify"
             ><router-link

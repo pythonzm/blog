@@ -26,10 +26,10 @@ func GenImageAvatarInfo(t, n string) (i ImageAvatarInfo) {
 		i.ImageRelPath = ""
 		i.ImageFullUrl = ""
 		i.AvatarRelPath = filepath.Join(AppInfo.UploadBasePath, AppInfo.AvatarRelPath, n)
-		i.AvatarFullUrl = fmt.Sprintf(`%s://%s/%s/%s/%s`, AppInfo.Schema, ServerInfo.ServerAddr, AppInfo.StaticBasePath, AppInfo.AvatarRelPath, n)
+		i.AvatarFullUrl = fmt.Sprintf(`%s/%s/%s/%s`, AppInfo.ApiBaseUrl, AppInfo.StaticBasePath, AppInfo.AvatarRelPath, n)
 	} else if t == "image" {
 		i.ImageRelPath = filepath.Join(AppInfo.UploadBasePath, AppInfo.ImageRelPath, today(), n)
-		i.ImageFullUrl = fmt.Sprintf(`%s://%s/%s/%s/%s/%s`, AppInfo.Schema, ServerInfo.ServerAddr, AppInfo.StaticBasePath, AppInfo.ImageRelPath, today(), n)
+		i.ImageFullUrl = fmt.Sprintf(`%s/%s/%s/%s/%s`, AppInfo.ApiBaseUrl, AppInfo.StaticBasePath, AppInfo.ImageRelPath, today(), n)
 		i.AvatarRelPath = ""
 		i.AvatarFullUrl = ""
 	}
@@ -60,3 +60,4 @@ func MkDir(src string) error {
 	err := os.MkdirAll(src, os.ModeDir)
 	return err
 }
+

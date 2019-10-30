@@ -16,13 +16,13 @@ func InitRouter() *gin.Engine {
 		c.JSON(http.StatusMethodNotAllowed, gin.H{"result": false, "error": "Method Not Allowed"})
 		return
 	})
-	r.Static(utils.AppInfo.StaticBasePath, utils.AppInfo.UploadBasePath)
 	r.Use(middleware.CustomLogger(), middleware.CorsMiddleware())
 	r.Use(gin.Recovery())
 
-	apiv1 := r.Group("/api/v1")
+	apiv1 := r.Group(utils.AppInfo.ApiBaseUrl)
 
 	{
+		apiv1.Static(utils.AppInfo.StaticBasePath, utils.AppInfo.UploadBasePath)
 		apiv1.POST("/user/login", v1.Login)
 		apiv1.POST("/user/logout", v1.Logout)
 		// GET方法没有使用JWT认证
@@ -60,3 +60,4 @@ func InitRouter() *gin.Engine {
 
 	return r
 }
+

@@ -315,7 +315,7 @@ export default {
       formData.append('file', blob);
       formData.set('t', 'image')
       uploadImage(formData).then(response => {
-        callback(response.data.ImageFullUrl, blob.name);
+        callback(window.location.protocol + '//' + window.location.host + response.data.ImageFullUrl, blob.name);
       }).catch(error => {
         console.log(error);
       });
