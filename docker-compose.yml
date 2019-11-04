@@ -5,9 +5,12 @@ services:
     image: redis:alpine
     ports:
       - "6379"
+    volumes:
+      - /data/redis:/data
     networks:
       - blog
     restart: always
+    container_name: blog_redis
 
   mysql:
     image: mysql:latest
@@ -22,17 +25,21 @@ services:
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=123456
+    container_name: blog_db
 
   gin:
     build:
       context: ./backend
     ports:
       - "8000"
+    volumes:
+      - /data/gin/upload:/go/src/upload
     networks:
       - blog
     depends_on:
       - mysql
       - redis
+    container_name: blog_gin
 
   nginx:
     build:
@@ -49,6 +56,7 @@ services:
       - blog
     depends_on:
       - gin
+    container_name: blog_nginx
 
 networks:
   blog:
