@@ -7,7 +7,7 @@
       :default-active="activeIndex"
       class="el-menu-demo"
       mode="horizontal"
-      active-text-color="rgb(241, 234, 11)"
+      active-text-color="rgb(255, 255, 255)"
       router
     >
       <el-menu-item
