@@ -1,12 +1,20 @@
 import { login, logout, getInfo } from "@/api/user";
-import { getToken, setToken, removeToken } from "@/utils/auth";
+import {
+  getToken,
+  setToken,
+  removeToken,
+  getAuthor,
+  setAuthor,
+  removeAuthor
+} from "@/utils/auth";
 import { resetRouter } from "@/router";
 
 const state = {
   token: getToken(),
   nickname: "",
   avatar: "",
-  introduction: ""
+  introduction: "",
+  isAuthor: getAuthor()
 };
 
 const mutations = {
@@ -21,6 +29,9 @@ const mutations = {
   },
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction;
+  },
+  SET_ISAUTHOR: (state, isAuthor) => {
+    state.isAuthor = isAuthor;
   }
 };
 
@@ -33,7 +44,9 @@ const actions = {
         .then(response => {
           const { data } = response;
           commit("SET_TOKEN", data.token);
+          commit("SET_ISAUTHOR", true);
           setToken(data.token);
+          setAuthor(true);
           resolve();
         })
         .catch(error => {
@@ -72,7 +85,9 @@ const actions = {
       logout(state.token)
         .then(() => {
           commit("SET_TOKEN", "");
+          commit("SET_ISAUTHOR", false);
           removeToken();
+          removeAuthor();
           resetRouter();
           resolve();
         })
@@ -86,7 +101,9 @@ const actions = {
   resetToken({ commit }) {
     return new Promise(resolve => {
       commit("SET_TOKEN", "");
+      commit("SET_ISAUTHOR", false);
       removeToken();
+      removeAuthor();
       resolve();
     });
   }

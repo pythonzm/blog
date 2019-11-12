@@ -25,7 +25,7 @@ func InitRouter() *gin.Engine {
 		apiv1.Static(utils.AppInfo.StaticBasePath, utils.AppInfo.UploadBasePath)
 		apiv1.POST("/user/login", v1.Login)
 		apiv1.POST("/user/logout", v1.Logout)
-		// GET方法没有使用JWT认证
+		// GET方法和添加评论没有使用JWT认证
 		apiv1.GET("/user/info", v1.GetUserInfo)
 		apiv1.GET("/user/about", v1.GetUserAbout)
 		apiv1.GET("/tags", v1.GetAllTags)
@@ -33,6 +33,8 @@ func InitRouter() *gin.Engine {
 		apiv1.GET("/articles", v1.GetArticles)
 		apiv1.GET("/articles/:id", v1.GetArticle)
 		apiv1.GET("/soup/random", v1.GetRandSoup)
+		apiv1.GET("/comments/:id", v1.GetArticleComments)
+		apiv1.POST("/comments", v1.CreateComment)
 
 		apiv1.Use(middleware.JWt())
 		apiv1.PATCH("/user/edit", v1.EditUser)
@@ -45,7 +47,6 @@ func InitRouter() *gin.Engine {
 		apiv1.PUT("/categories/:id", v1.EditCategory)
 		apiv1.DELETE("/categories/:id", v1.DeleteCategory)
 
-
 		apiv1.POST("/articles", v1.CreateArticle)
 		apiv1.DELETE("/articles/:id", v1.DeleteArticle)
 		apiv1.PUT("/articles/:id", v1.EditArticle)
@@ -55,9 +56,11 @@ func InitRouter() *gin.Engine {
 		apiv1.PUT("/soups/:id", v1.EditSoup)
 		apiv1.GET("/soups", v1.GetAllSoups)
 
+		apiv1.GET("/comments", v1.GetAllComments)
+		apiv1.DELETE("/comments/:id", v1.DeleteComment)
+
 		apiv1.POST("/upload", v1.UploadImageAvatar)
 	}
 
 	return r
 }
-

@@ -186,6 +186,12 @@ func (a Article) GetOne(opts ...Option) (ArticleDetail, error) {
 	return ArticleDetail{one, category, tags, n}, nil
 }
 
+func (a Article) GetArticle() (Article, error) {
+	var article Article
+	e := db.Get(&article, "select id,title from blog_article where id=?", a.ID)
+	return article, e
+}
+
 func (a Article) GetAll(opts ...Option) (data Articles, err error) {
 	baseSql := "select %s from blog_article a"
 	data, err = genArticles(baseSql, opts...)
@@ -229,7 +235,7 @@ func genArticles(baseSql string, opts ...Option) (data Articles, err error) {
 		f = " WHERE a.`status`='published'"
 	}
 	offset := (options.Page - 1) * options.Limit
-	selectSql := fmt.Sprintf(baseSql, "a.id, a.title, a.created_time, a.`status`") + f + fmt.Sprintf(" ORDER BY a.id DESC limit %d offset %d", options.Limit, offset)
+	selectSql := fmt.Sprintf(baseSql, "a.id, a.title, a.created_time, a.updated_time, a.`status`") + f + fmt.Sprintf(" ORDER BY a.id DESC limit %d offset %d", options.Limit, offset)
 
 	if err = db.Select(&articles, selectSql); err != nil {
 		return

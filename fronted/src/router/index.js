@@ -191,6 +191,18 @@ export const constantRoutes = [
     ]
   },
   {
+    path: "/admin/comment",
+    component: Layout,
+    children: [
+      {
+        path: "list",
+        name: "Comment",
+        component: () => import("@/views/admin/comment/index"),
+        meta: { title: "评论管理", icon: "comment" }
+      }
+    ]
+  },
+  {
     path: "/admin/about",
     component: Layout,
     children: [

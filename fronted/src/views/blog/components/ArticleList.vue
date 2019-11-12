@@ -14,20 +14,21 @@
       </div>
     </div>
 
-    <pagination
-      :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.limit"
-      layout="prev, pager, next"
-      @pagination="getList"
-    />
+    <div class="page">
+      <pagination
+        :total="total"
+        :page.sync="listQuery.page"
+        :limit.sync="listQuery.limit"
+        layout="prev, pager, next"
+        @pagination="getList"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import { fetchList } from '@/api/article'
 import Pagination from '@/components/Pagination'
-import { parseTime } from '@/utils'
 export default {
   name: "ArticleList",
   components: { Pagination },
@@ -78,8 +79,11 @@ export default {
 </script>
 
 <style>
-.el-pagination.is-background .el-pager li:not(.disabled).active {
+.page .el-pagination.is-background .el-pager li:not(.disabled).active {
   background-color: #000000 !important;
+}
+.page .el-pagination.is-background .el-pager li:hover {
+  color: #777;
 }
 </style>
 

@@ -43,6 +43,7 @@
           {{ tag.tag_name }}
         </div>
       </div>
+      <Comments />
     </div>
   </div>
 </template>
@@ -50,9 +51,13 @@
 <script>
 
 import { fetchArticle } from '@/api/article'
+import Comments from './comment'
 import '@/assets/md.css'
 export default {
   name: 'ArticleDetail',
+  components: {
+    Comments
+  },
   data () {
     return {
       article: {},
