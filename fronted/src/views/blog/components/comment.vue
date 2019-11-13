@@ -127,7 +127,7 @@ export default {
     getList (id) {
       fetchList(id)
         .then(response => {
-          this.comments = response.data.items
+          this.comments = response.data.total === 0 ? [] : response.data.items
           this.count = response.data.total
         })
         .catch(err => {
@@ -143,11 +143,18 @@ export default {
       createComment(this.temp).then(response => {
         if (this.replyUserName === '') {
           response.data['children'] = []
+          if (this.count === 0) {
+            this.count = 1
+          }
           this.comments.push(response.data)
         } else {
           const comment = this.comments.find(item => item.id === response.data.root_id.Int64);
           comment.children.push(response.data);
           this.replyUserName = ''
+          this.temp.parent_id.Int64 = 0
+          this.temp.parent_id.Valid = false
+          this.temp.root_id.Int64 = 0
+          this.temp.root_id.Valid = false
         }
         this.$message({
           message: '评论添加成功',
