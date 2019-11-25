@@ -58,5 +58,19 @@ services:
       - gin
     container_name: blog_nginx
 
+  elasticsearch:
+    image: elasticsearch:7.4.2
+    ports:
+      - "9200"
+    volumes:
+      - /data/elasticsearch:/usr/share/elasticsearch/data
+    networks:
+      - blog
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    container_name: blog_elasticsearch
+
 networks:
   blog:

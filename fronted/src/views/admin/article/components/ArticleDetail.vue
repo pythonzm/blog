@@ -43,6 +43,7 @@
                   >
                     <el-select
                       v-model="postForm.category_id"
+                      filterable
                       placeholder="请选择分类"
                     >
                       <el-option
@@ -72,6 +73,7 @@
                     <el-select
                       v-model="postForm.tag_id"
                       multiple
+                      filterable
                       placeholder="请选择标签"
                     >
                       <el-option
@@ -111,7 +113,7 @@
     </el-form>
     <el-dialog :title="ctTile[ct]" :visible.sync="dialogFormVisible">
       <el-form
-        :model="category"
+        :model="ct === 'category' ? category : tag"
         label-position="left"
         label-width="70px"
         style="width: 400px; margin-left:50px;"

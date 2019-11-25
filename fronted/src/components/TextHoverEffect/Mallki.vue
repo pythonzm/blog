@@ -3,7 +3,7 @@
     <router-link
       :style="{ fontSize: text.length * 2 + 13 + 'px' }"
       :to="{
-        name: 'CTArticle',
+        name: 'CTQArticle',
         query: { tag: text }
       }"
       >{{ text }}<span :data-letters="text"/> <span :data-letters="text"

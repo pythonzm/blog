@@ -1,15 +1,15 @@
 <template>
   <div class="dashboard-container">
-    <div v-html="about" class="md-body" style="text-align:left"></div>
+    <div class="md-body" style="text-align:left" v-html="about" />
   </div>
 </template>
 
 <script>
 import { getAbout } from '@/api/user'
-import marked from 'marked';
+import marked from 'marked'
 import '@/assets/md.css'
 export default {
-  name: "About",
+  name: 'About',
   data () {
     return {
       about: ''
@@ -25,9 +25,8 @@ export default {
       sanitize: false,
       smartLists: true,
       smartypants: false
-    });
+    })
     this.fetchData()
-
   },
   methods: {
     fetchData () {
@@ -38,7 +37,7 @@ export default {
         .catch(err => {
           console.log(err)
         })
-    },
+    }
   }
 }
 </script>

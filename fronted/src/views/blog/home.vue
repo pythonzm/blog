@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import ArticleList from './components/ArticleList'
+import ArticleList from './article/components/ArticleList'
 
 export default {
   name: 'Home',

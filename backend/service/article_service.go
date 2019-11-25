@@ -4,10 +4,14 @@ import (
 	"backend/models"
 	"backend/tools"
 	"backend/utils"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/elastic/go-elasticsearch/v8/esapi"
+	"github.com/elastic/go-elasticsearch/v8/esutil"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -42,6 +46,7 @@ type Options struct {
 	Admin  bool   `json:"admin"`
 	C      string `json:"c"` // category
 	T      string `json:"t"` // tag
+	Q      string `json:"q"` // 搜索的关键字
 }
 
 var defaultOptions = Options{
@@ -49,6 +54,7 @@ var defaultOptions = Options{
 	Page:   1,
 	C:      "",
 	T:      "",
+	Q:      "",
 	Search: false, // 搜索文章结果不进行缓存
 	Admin:  false, // 是否是admin页面请求，如果不是，文章就不包括草稿文章
 }
@@ -97,6 +103,12 @@ func SetTag(t string) Option {
 	}
 }
 
+func SetQ(q string) Option {
+	return func(o *Options) {
+		o.Q = q
+	}
+}
+
 func SetSearch(search bool) Option {
 	return func(o *Options) {
 		o.Search = search
@@ -105,6 +117,7 @@ func SetSearch(search bool) Option {
 }
 
 var db = models.DB
+var es = models.ESClient
 
 func (a *Article) Create() (Article, error) {
 	createTime := time.Now().Format(utils.AppInfo.TimeFormat)
@@ -122,7 +135,14 @@ func (a *Article) Create() (Article, error) {
 			}
 		}
 	}
-	return Article{int(articleID), a.Title, a.Content, a.Html, a.CategoryID, a.TagID, createTime, a.UpdatedTime, a.Status}, nil
+	article := Article{int(articleID), a.Title, a.Content, a.Html, a.CategoryID, a.TagID, createTime, a.UpdatedTime, a.Status}
+	if article.Status == "published" {
+		if e := article.IndexBlog(); e != nil {
+			utils.WriteErrorLog(fmt.Sprintf("[ %s ] 存入elastic出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+		}
+	}
+
+	return article, nil
 }
 
 func (a *Article) Delete() error {
@@ -137,6 +157,10 @@ func (a *Article) Delete() error {
 	viewKey := a.ViewKey()
 	if e := tools.DelKey(viewKey); e != nil {
 		utils.WriteErrorLog(fmt.Sprintf("[ %s ] 删除阅读量失败, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+	}
+	// 从ES中删除
+	if e := a.DeleteFromES(); e != nil {
+		utils.WriteErrorLog(fmt.Sprintf("[ %s ] 从elastic中删除出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
 	}
 	return nil
 }
@@ -159,7 +183,15 @@ func (a *Article) Edit() error {
 			}
 		}
 	}
-
+	if a.Status == "published" {
+		if e := a.IndexBlog(); e != nil {
+			utils.WriteErrorLog(fmt.Sprintf("[ %s ] 从elastic更新出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+		}
+	} else {
+		if e := a.DeleteFromES(); e != nil {
+			utils.WriteErrorLog(fmt.Sprintf("[ %s ] 从elastic删除出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+		}
+	}
 	return nil
 }
 
@@ -203,14 +235,16 @@ func (a Article) ViewKey() string {
 	return viewKey
 }
 
-func GetArticlesByCategory(name string, opts ...Option) (data Articles, err error) {
-	baseSql := "SELECT %s FROM blog_article a INNER JOIN blog_category c ON a.category_id=c.id AND c.category_name=" + "'" + name + "'" + ""
+func GetArticlesByCategory(opts ...Option) (data Articles, err error) {
+	options := newOptions(opts...)
+	baseSql := "SELECT %s FROM blog_article a INNER JOIN blog_category c ON a.category_id=c.id AND c.category_name=" + "'" + options.C + "'" + ""
 	data, err = genArticles(baseSql, opts...)
 	return
 }
 
-func GetArticlesByTag(name string, opts ...Option) (data Articles, err error) {
-	baseSql := "SELECT %s FROM blog_article a  INNER JOIN blog_tag_article ta ON a.id=ta.article_id INNER JOIN blog_tag t ON ta.tag_id=t.id AND t.tag_name=" + "'" + name + "'" + ""
+func GetArticlesByTag(opts ...Option) (data Articles, err error) {
+	options := newOptions(opts...)
+	baseSql := "SELECT %s FROM blog_article a  INNER JOIN blog_tag_article ta ON a.id=ta.article_id INNER JOIN blog_tag t ON ta.tag_id=t.id AND t.tag_name=" + "'" + options.T + "'" + ""
 	data, err = genArticles(baseSql, opts...)
 	return
 }
@@ -338,3 +372,110 @@ func getViews(key string) (n uint8, err error) {
 		return n, errors.New("返回数据类型有误，json无法解析")
 	}
 }
+
+func (a Article) IndexBlog() error {
+	req := esapi.IndexRequest{
+		Index:      utils.ESInfo.Index,
+		DocumentID: strconv.Itoa(a.ID),
+		Body:       esutil.NewJSONReader(a),
+		Refresh:    "true",
+	}
+
+	res, err := req.Do(context.Background(), es)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	if res.IsError() {
+		var e map[string]interface{}
+		if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
+			return err
+		}
+		return fmt.Errorf("[%s] %s: %s", res.Status(), e["error"].(map[string]interface{})["type"], e["error"].(map[string]interface{})["reason"])
+	}
+	return nil
+}
+
+func SearchFromES(opts ...Option) (articles Articles, e error) {
+
+	const searchMatch = `{"query" : {
+    "multi_match": {
+      "fields":  [ "content", "title" ],
+      "query":     "%s",
+      "fuzziness": "AUTO"
+    }
+} }`
+	var (
+		r     map[string]interface{}
+		items []Article
+		total int
+	)
+
+	options := newOptions(opts...)
+	offset := (options.Page - 1) * options.Limit
+
+	res, err := es.Search(
+		es.Search.WithContext(context.Background()),
+		es.Search.WithIndex(utils.ESInfo.Index),
+		es.Search.WithBody(strings.NewReader(fmt.Sprintf(searchMatch, options.Q))),
+		es.Search.WithTrackTotalHits(true),
+		es.Search.WithSize(options.Limit),
+		es.Search.WithFrom(offset),
+	)
+	if err != nil {
+		return articles, fmt.Errorf("error getting response: %s", err)
+	}
+	defer res.Body.Close()
+
+	if res.IsError() {
+		var e map[string]interface{}
+		if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
+			return articles, fmt.Errorf("error parsing the response body: %s", err)
+		} else {
+			return articles, fmt.Errorf("[%s] %s: %s", res.Status(), e["error"].(map[string]interface{})["type"], e["error"].(map[string]interface{})["reason"])
+		}
+	}
+
+	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
+		return articles, fmt.Errorf("error parsing the response body: %s", err)
+	}
+
+	for _, hit := range r["hits"].(map[string]interface{})["hits"].([]interface{}) {
+		source, _ := json.Marshal(hit.(map[string]interface{})["_source"])
+		var a Article
+		if err := json.Unmarshal(source, &a); err != nil {
+			return articles, fmt.Errorf("error parsing the response body: %s", err)
+		}
+		items = append(items, a)
+	}
+	total = int(r["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64))
+
+	articles.Items = items
+	articles.Total = total
+	return articles, nil
+}
+
+func (a Article) DeleteFromES() error {
+	req := esapi.DeleteRequest{
+		Index:      utils.ESInfo.Index,
+		DocumentID: strconv.Itoa(a.ID),
+		Refresh:    "true",
+	}
+
+	res, err := req.Do(context.Background(), es)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	if res.IsError() {
+		var e map[string]interface{}
+		if err := json.NewDecoder(res.Body).Decode(&e); err != nil {
+			return err
+		}
+		return fmt.Errorf("[%s] %s: %s", res.Status(), e["error"].(map[string]interface{})["type"], e["error"].(map[string]interface{})["reason"])
+	}
+	return nil
+}
+

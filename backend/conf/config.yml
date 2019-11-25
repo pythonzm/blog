@@ -26,3 +26,7 @@ redis:
   password: "123456" # 无密码则填写""
   db: 0
   cacheTime: 30  # 设置缓存时间，单位秒
+es:
+  host: "127.0.0.1"
+  port: "9200"
+  index: "blog"

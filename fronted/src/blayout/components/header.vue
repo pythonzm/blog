@@ -3,6 +3,9 @@
     <div class="logo">
       <a href="/">{{ logo }}</a>
     </div>
+
+    <search id="header-search" />
+
     <el-menu
       :default-active="activeIndex"
       class="el-menu-demo"
@@ -22,8 +25,12 @@
 </template>
 
 <script>
+import Search from '@/components/HeaderSearch'
 export default {
   name: 'Header',
+  components: {
+    Search
+  },
   data () {
     return {
       logo: 'PoorOPS',
@@ -31,7 +38,7 @@ export default {
         { label: '首页', index: '/' },
         { label: '分类', index: '/category' },
         { label: '标签', index: '/tag' },
-        { label: '关于', index: '/about' }
+        { label: '关于', index: '/about' },
       ],
       activeIndex: '/',
     };
@@ -52,6 +59,14 @@ export default {
 }
 </script>
 
+<style>
+.header-search-select .el-input__inner {
+  font-size: 13px;
+  height: 25px;
+  line-height: 25px;
+}
+</style>
+
 <style scoped>
 .logo {
   left: 10px;
@@ -59,6 +74,10 @@ export default {
   color: #fff;
   text-decoration: none;
   float: left;
+}
+.header-search {
+  float: right;
+  padding: 0 20px;
 }
 .header-container ul {
   float: right;

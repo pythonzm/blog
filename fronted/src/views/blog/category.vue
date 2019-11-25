@@ -8,7 +8,7 @@
           background: getColor(category.category_name.length)
         }"
         :to="{
-          name: 'CTArticle',
+          name: 'CTQArticle',
           query: { category: category.category_name }
         }"
         >{{ category.category_name }}</router-link

@@ -43,6 +43,7 @@ const (
 	SaveUploadImageError = 40030
 
 	CommentGetAllError = 40032
+	SearchArticleError = 40033
 )
 
 var MsgFlags = map[int]string{
@@ -87,8 +88,10 @@ var MsgFlags = map[int]string{
 	SaveUploadImageError: "保存上传文件失败",
 
 	CommentGetAllError: "获取所有评论失败",
+	SearchArticleError: "搜索文章失败",
 }
 
 func ErrorText(code int) string {
 	return MsgFlags[code]
 }
+

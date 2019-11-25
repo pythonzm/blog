@@ -16,7 +16,7 @@
           <span class="classify"
             ><router-link
               :to="{
-                name: 'CTArticle',
+                name: 'CTQArticle',
                 query: { category: category.category_name }
               }"
               >{{ category.category_name }}</router-link
@@ -36,7 +36,7 @@
           :key="index"
           class="tag"
           @click="
-            $router.push({ name: 'CTArticle', query: { tag: tag.tag_name } })
+            $router.push({ name: 'CTQArticle', query: { tag: tag.tag_name } })
           "
         >
           <svg-icon icon-class="tag" />

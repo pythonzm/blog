@@ -62,9 +62,9 @@ export const constantRoutes = [
     children: [
       {
         path: "",
-        name: "CTArticle",
+        name: "CTQArticle",
         hidden: true,
-        component: () => import("@/views/blog/article"),
+        component: () => import("@/views/blog/article/article"),
         meta: { title: "文章列表" }
       }
     ]

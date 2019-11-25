@@ -40,10 +40,17 @@ type Redis struct {
 	CacheTime int    `json:"cache_time"`
 }
 
+type ES struct {
+	Host  string `json:"host"`
+	Port  string `json:"port"`
+	Index string `json:"index"`
+}
+
 var ServerInfo = &Server{}
 var DBInfo = &DataBase{}
 var AppInfo = &App{}
 var RedisInfo = &Redis{}
+var ESInfo = &ES{}
 
 func init() {
 	viper.AddConfigPath("conf")
@@ -79,5 +86,9 @@ func init() {
 	RedisInfo.Password = viper.GetString("redis.password")
 	RedisInfo.DB = viper.GetInt("redis.db")
 	RedisInfo.CacheTime = viper.GetInt("redis.cacheTime")
+
+	ESInfo.Host = viper.GetString("es.host")
+	ESInfo.Port = viper.GetString("es.port")
+	ESInfo.Index = viper.GetString("es.index")
 }
 

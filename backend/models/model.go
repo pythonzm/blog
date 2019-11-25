@@ -3,6 +3,7 @@ package models
 import (
 	"backend/utils"
 	"fmt"
+	"github.com/elastic/go-elasticsearch/v8"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gomodule/redigo/redis"
 	"github.com/jmoiron/sqlx"
@@ -11,6 +12,7 @@ import (
 
 var DB *sqlx.DB
 var RedisPool *redis.Pool
+var ESClient *elasticsearch.Client
 
 func init() {
 	DB = sqlx.MustConnect(utils.DBInfo.Mode, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4",
@@ -40,5 +42,12 @@ func init() {
 			return err
 		},
 	}
+
+	esAddr := fmt.Sprintf("http://%s:%s", utils.ESInfo.Host, utils.ESInfo.Port)
+	ESClient, _ = elasticsearch.NewClient(elasticsearch.Config{
+		Addresses: []string{
+			esAddr,
+		},
+	})
 }
 

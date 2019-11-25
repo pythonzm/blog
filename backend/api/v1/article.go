@@ -12,13 +12,14 @@ func GetArticles(c *gin.Context) {
 	limit := c.DefaultQuery("limit", "")
 	page := c.DefaultQuery("page", "")
 	category := c.DefaultQuery("category", "")
+	q := c.DefaultQuery("q", "")
 	tag := c.DefaultQuery("tag", "")
 	key := c.DefaultQuery("key", "")
 	status := c.DefaultQuery("status", "")
 	admin := c.DefaultQuery("admin", "")
 
 	if category != "" {
-		data, e := service.GetArticlesByCategory(category, service.SetLimitPage(limit, page), service.SetAdmin(admin), service.SetCategory(category))
+		data, e := service.GetArticlesByCategory(service.SetLimitPage(limit, page), service.SetAdmin(admin), service.SetCategory(category))
 		if e != nil {
 			c.JSON(http.StatusInternalServerError, utils.GenResponse(40022, nil, e))
 			return
@@ -28,7 +29,7 @@ func GetArticles(c *gin.Context) {
 	}
 
 	if tag != "" {
-		data, e := service.GetArticlesByTag(tag, service.SetLimitPage(limit, page), service.SetAdmin(admin), service.SetTag(tag))
+		data, e := service.GetArticlesByTag(service.SetLimitPage(limit, page), service.SetAdmin(admin), service.SetTag(tag))
 		if e != nil {
 			c.JSON(http.StatusInternalServerError, utils.GenResponse(40022, nil, e))
 			return
@@ -44,6 +45,15 @@ func GetArticles(c *gin.Context) {
 			return
 		}
 		c.JSON(http.StatusOK, utils.GenResponse(20000, data, nil))
+		return
+	}
+	if q != "" {
+		articles, e := service.SearchFromES(service.SetQ(q), service.SetLimitPage(limit, page))
+		if e != nil {
+			c.JSON(http.StatusInternalServerError, utils.GenResponse(40033, nil, e))
+			return
+		}
+		c.JSON(http.StatusOK, utils.GenResponse(20000, articles, nil))
 		return
 	}
 
@@ -123,3 +133,4 @@ func EditArticle(c *gin.Context) {
 	c.JSON(http.StatusOK, utils.GenResponse(20000, article, nil))
 	return
 }
+
