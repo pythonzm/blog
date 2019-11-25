@@ -1,8 +1,9 @@
-### 该项目是用于练习go语言以及vue学习，后端API使用[gin](https://github.com/gin-gonic/gin)编写，前端页面使用element-ui，直接借鉴了这个大佬的项目：https://github.com/PanJiaChen/vue-admin-template
+### 后端API使用[gin](https://github.com/gin-gonic/gin)编写，前端页面使用element-ui，前端直接借鉴了这个大佬的项目：https://github.com/PanJiaChen/vue-admin-template
 
 > 整体就是以黑白为主，不会做手机适配，所以手机浏览布局会有问题，如果哪位大佬感兴趣做一下手机适配就非常感谢了
 
-## [线上地址](https://www.poorops.com)
+## [线上地址](https://www.poorops.com)  
+## 搜索功能使用elastic做的全文检索，由于租的机器内存比较小，elastic装上跑着有点儿费劲，线上就没有使用搜索功能
 
 ## [Docker快速部署(生产环境)](https://github.com/pythonzm/blog/wiki/Docker-部署)
 
@@ -11,6 +12,7 @@
 ### 准备
   1. 安装mysql（略）
   2. 安装redis（略）
+  3. 安装elastic（略），主要用于全文检索功能，如果不用全文检索可以不安装
   3. 创建blog数据库
   
   ```
