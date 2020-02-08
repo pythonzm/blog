@@ -71,13 +71,11 @@ a {
   margin-top: -20px;
 }
 .fix-header {
-  width: 80%;
   margin-left: auto;
   margin-right: auto;
 }
 
 .main {
-  width: 80%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -104,7 +102,8 @@ a {
   min-height: 100vh;
 }
 .blog-main {
-  width: 70%;
+  width: 75%;
+  float: left;
 }
 .el-aside {
   width: 30%;

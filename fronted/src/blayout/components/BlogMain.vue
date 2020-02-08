@@ -21,11 +21,6 @@ export default {
 </script>
 
 <style scoped>
-.blog-main {
-  /*50 = navbar  */
-  width: 70%;
-  float: left;
-}
 .fixed-header + .blog-main {
   padding-top: 50px;
 }

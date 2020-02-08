@@ -35,9 +35,9 @@ export default {
 <style lang="scss" scoped>
 .el-card {
   float: right;
-  width: 25%;
+  width: 24%;
   position: fixed;
-  left: 70%;
+  left: 75%;
 }
 .box-center {
   margin: 0 auto;

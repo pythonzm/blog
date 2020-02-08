@@ -69,7 +69,7 @@ export default {
 
 <style scoped>
 .logo {
-  left: 10px;
+  padding-left: 20px;
   font-size: 1.4em;
   color: #fff;
   text-decoration: none;
