@@ -38,7 +38,6 @@ h6 {
 }
 .md-body p {
   margin: 10px 0;
-  color: #555;
 }
 
 .md-body img {
@@ -55,8 +54,10 @@ h6 {
 .md-body blockquote {
   border-left: 4px solid #dddddd;
   padding: 0 15px;
-  color: #777777;
   margin: 15px 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #718096;
 }
 
 .md-body blockquote > :last-child {
@@ -70,4 +71,44 @@ h6 {
 .md-body ul li,
 .md-body ol li {
   position: relative;
+}
+
+.md-body code[data-backticks] {
+  background-color: hsla(0,0%,92.5%,.5);
+  color: #37474f;
+  direction: ltr;
+  margin: 0 .29412em;
+  padding: .07353em 0;
+  border-radius: .1rem;
+  box-shadow: 0.29412em 0 0 hsla(0,0%,92.5%,.5), -0.29412em 0 0 hsla(0,0%,92.5%,.5);
+  word-break: break-word;
+}
+
+.md-body table {
+  margin: 2px 0 14px;
+  color: #555;
+  width: auto;
+  border-collapse: collapse;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.md-body table th {
+  border: 1px solid #72777b;
+  border-top: 0;
+  background-color: #7b8184;
+  font-weight: 300;
+  color: #fff;
+  padding-top: 6px;
+  text-align: center;
+}
+
+.md-body table th,
+.md-body table td {
+  height: 32px;
+  padding: 5px 14px 5px 12px;
+}
+
+.md-body table td {
+  border: 1px solid #eaeaea;
 }
