@@ -15,7 +15,7 @@ server:
   writeTimeout: 60
 database:
   mode: "mysql"
-  host: "10.1.7.198"
+  host: "127.0.0.1"
   port: "3306"
   user: "root"
   password: "123456"
