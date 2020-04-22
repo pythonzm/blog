@@ -7,18 +7,16 @@
     </el-header>
 
     <el-main>
-      <a
-        href="https://github.com/pythonzm"
-        target="_blank"
-        style="position: fixed;"
-        ><img
+      <a href="https://github.com/pythonzm" target="_blank" style="position: fixed;">
+        <img
           width="149"
           height="149"
           src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149"
           class="attachment-full size-full"
           alt="Fork me on GitHub"
           data-recalc-dims="1"
-      /></a>
+        />
+      </a>
       <div class="main">
         <BlogMain />
         <Aside :soup="soup" />
@@ -45,16 +43,16 @@ export default {
     Aside,
     Footer
   },
-  data () {
+  data() {
     return {
-      soup: {},
+      soup: {}
     }
   },
-  mounted () {
+  mounted() {
     this.getSoup()
   },
   methods: {
-    getSoup () {
+    getSoup() {
       fetchRandSoup().then(response => {
         this.soup = response.data
       })

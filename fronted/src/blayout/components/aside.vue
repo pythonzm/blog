@@ -1,22 +1,35 @@
 <template>
-  <el-card>
-    <div class="user-bio">
-      <div class="user-education user-bio-section">
-        <div class="user-bio-section-header">
-          <svg-icon icon-class="education" /><span>每日一汤</span>
-        </div>
-        <div class="user-bio-section-body">
-          <div class="text-muted">
-            {{ soup.content }}
+  <div>
+    <el-card ref="ele">
+      <div class="user-bio">
+        <div class="user-education user-bio-section">
+          <div class="user-bio-section-header">
+            <svg-icon icon-class="education" />
+            <span>每日一汤</span>
+          </div>
+          <div class="user-bio-section-body">
+            <div class="text-muted">{{ soup.content }}</div>
           </div>
         </div>
       </div>
-    </div>
-  </el-card>
+
+      <div class="user-bio">
+        <div class="user-education user-bio-section">
+          <div class="user-bio-section-header">
+            <svg-icon icon-class="wx" />
+            <span>扫不出吃亏，扫不出上当</span>
+          </div>
+          <div class="user-bio-section-body">
+            <img :src="poorops" />
+          </div>
+        </div>
+      </div>
+    </el-card>
+  </div>
 </template>
 
 <script>
-
+import poorops from '@/assets/img/poorops.jpg'
 export default {
   name: 'Aside',
   props: {
@@ -24,11 +37,16 @@ export default {
       type: Object,
       default: () => {
         return {
-          content: '',
+          content: ''
         }
       }
     }
   },
+  data() {
+    return {
+      poorops: poorops
+    }
+  }
 }
 </script>
 
