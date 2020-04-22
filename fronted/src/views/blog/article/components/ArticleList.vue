@@ -17,7 +17,10 @@
               query: { id: item.id }
             }"
           >
-            {{ item.title }}<span>{{ item.created_time | formatDate }}</span>
+            {{ item.title
+            }}<span v-if="device === 'mobile'">{{
+              item.created_time | formatDate
+            }}</span>
           </router-link>
         </div>
       </div>
@@ -36,17 +39,17 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
-import Pagination from '@/components/Pagination'
+import { fetchList } from "@/api/article";
+import Pagination from "@/components/Pagination";
 export default {
   name: "ArticleList",
   components: { Pagination },
   filters: {
-    formatDate (time) {
-      return time.slice(0, time.indexOf(" "))
-    },
+    formatDate(time) {
+      return time.slice(0, time.indexOf(" "));
+    }
   },
-  data () {
+  data() {
     return {
       list: null,
       total: 0,
@@ -57,32 +60,33 @@ export default {
         category: undefined,
         tag: undefined,
         q: undefined
-      }
-    }
+      },
+      device: this.$store.state.app.device
+    };
   },
-  created () {
-    if (this.$route.query.hasOwnProperty('category')) {
-      this.listQuery.category = this.$route.query.category
+  created() {
+    if (this.$route.query.hasOwnProperty("category")) {
+      this.listQuery.category = this.$route.query.category;
     }
-    if (this.$route.query.hasOwnProperty('tag')) {
-      this.listQuery.tag = this.$route.query.tag
+    if (this.$route.query.hasOwnProperty("tag")) {
+      this.listQuery.tag = this.$route.query.tag;
     }
-    if (this.$route.query.hasOwnProperty('q')) {
-      this.listQuery.q = this.$route.query.q
+    if (this.$route.query.hasOwnProperty("q")) {
+      this.listQuery.q = this.$route.query.q;
     }
-    this.getList()
+    this.getList();
   },
   methods: {
-    getList () {
-      this.listLoading = true
+    getList() {
+      this.listLoading = true;
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
-        this.listLoading = false
-      })
-    },
+        this.list = response.data.items;
+        this.total = response.data.total;
+        this.listLoading = false;
+      });
+    }
   }
-}
+};
 </script>
 
 <style>

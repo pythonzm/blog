@@ -2,12 +2,16 @@
   <el-container>
     <el-header>
       <div class="fix-header">
-        <Header />
+        <Header :mobile="mobile" />
       </div>
     </el-header>
 
     <el-main>
-      <a href="https://github.com/pythonzm" target="_blank" style="position: fixed;">
+      <a
+        href="https://github.com/pythonzm"
+        target="_blank"
+        style="position: fixed;"
+      >
         <img
           width="149"
           height="149"
@@ -18,8 +22,10 @@
         />
       </a>
       <div class="main">
-        <BlogMain />
-        <Aside :soup="soup" />
+        <BlogMain :style="{ width: widthVar }" />
+        <div v-if="device !== 'mobile'">
+          <Aside :soup="soup" />
+        </div>
       </div>
     </el-main>
     <el-footer>
@@ -29,36 +35,51 @@
 </template>
 
 <script>
-import { fetchRandSoup } from '@/api/soup'
-
-import Header from './components/header'
-import BlogMain from './components/BlogMain'
-import Aside from './components/aside'
-import Footer from './components/footer'
+import { fetchRandSoup } from "@/api/soup";
+import Header from "./components/header";
+import BlogMain from "./components/BlogMain";
+import Aside from "./components/aside";
+import Footer from "./components/footer";
+import ResizeMixin from "./mixin/ResizeHandler";
 export default {
-  name: 'Blayout',
+  name: "Blayout",
   components: {
     Header,
     BlogMain,
     Aside,
     Footer
   },
-  data() {
-    return {
-      soup: {}
+  mixins: [ResizeMixin],
+  computed: {
+    device() {
+      return this.$store.state.app.device;
+    },
+    classObj() {
+      return {
+        mobile: this.device === "mobile"
+      };
     }
   },
+  data() {
+    return {
+      soup: {},
+      widthVar: "75%",
+      mobile: false
+    };
+  },
   mounted() {
-    this.getSoup()
+    this.getSoup();
+    this.widthVar = this.device === "mobile" ? "100%" : "75%";
+    this.mobile = this.device === "mobile" ? true : false;
   },
   methods: {
     getSoup() {
       fetchRandSoup().then(response => {
-        this.soup = response.data
-      })
+        this.soup = response.data;
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -100,7 +121,6 @@ a {
   min-height: 100vh;
 }
 .blog-main {
-  width: 75%;
   float: left;
 }
 .el-aside {
