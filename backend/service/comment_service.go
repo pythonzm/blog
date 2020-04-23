@@ -49,13 +49,15 @@ func (c *Comment) Create() (Comment, error) {
 		isAuthor = 1
 	} else {
 		isAuthor = 0
-		go func() {
-			article, _ := Article{ID: int(c.ArticleID)}.GetOne(SetAdmin("true"))
-			title := article.A.Title
-			if e := utils.MailNotice(title); e != nil {
-				utils.WriteErrorLog(fmt.Sprintf("[ %s ] 评论发送邮件通知失败, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+		go func(articleId uint) {
+			if utils.MailInfo.Enable {
+				article, _ := Article{ID: int(articleId)}.GetOne(SetAdmin("true"))
+				title := article.A.Title
+				if e := utils.MailNotice(title); e != nil {
+					utils.WriteErrorLog(fmt.Sprintf("[ %s ] 评论发送邮件通知失败, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+				}
 			}
-		}()
+		}(c.ArticleID)
 	}
 	comment, e := db.Exec("insert into blog_comment (username,is_author,parent_id,root_id,article_id,content, created_time) values (?,?,?,?,?,?,?)", c.UserName, isAuthor, c.ParentID, c.RootID, c.ArticleID, c.Content, createTime)
 	if e != nil {
