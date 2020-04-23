@@ -17,7 +17,8 @@
               query: { id: item.id }
             }"
           >
-            {{ item.title }}<span>{{ item.created_time | formatDate }}</span>
+            {{ item.title
+            }}<span v-if="!mobile">{{ item.created_time | formatDate }}</span>
           </router-link>
         </div>
       </div>
@@ -36,17 +37,29 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
-import Pagination from '@/components/Pagination'
+import { fetchList } from "@/api/article";
+import Pagination from "@/components/Pagination";
+import ResizeMixin from "@/blayout/mixin/ResizeHandler";
 export default {
   name: "ArticleList",
   components: { Pagination },
-  filters: {
-    formatDate (time) {
-      return time.slice(0, time.indexOf(" "))
+  mixins: [ResizeMixin],
+  computed: {
+    device() {
+      return this.$store.state.app.device;
     },
+    classObj() {
+      return {
+        mobile: this.device === "mobile"
+      };
+    }
   },
-  data () {
+  filters: {
+    formatDate(time) {
+      return time.slice(0, time.indexOf(" "));
+    }
+  },
+  data() {
     return {
       list: null,
       total: 0,
@@ -57,32 +70,34 @@ export default {
         category: undefined,
         tag: undefined,
         q: undefined
-      }
-    }
+      },
+      mobile: false
+    };
   },
-  created () {
-    if (this.$route.query.hasOwnProperty('category')) {
-      this.listQuery.category = this.$route.query.category
+  created() {
+    if (this.$route.query.hasOwnProperty("category")) {
+      this.listQuery.category = this.$route.query.category;
     }
-    if (this.$route.query.hasOwnProperty('tag')) {
-      this.listQuery.tag = this.$route.query.tag
+    if (this.$route.query.hasOwnProperty("tag")) {
+      this.listQuery.tag = this.$route.query.tag;
     }
-    if (this.$route.query.hasOwnProperty('q')) {
-      this.listQuery.q = this.$route.query.q
+    if (this.$route.query.hasOwnProperty("q")) {
+      this.listQuery.q = this.$route.query.q;
     }
-    this.getList()
+    this.getList();
+    this.mobile = this.device === "mobile" ? true : false;
   },
   methods: {
-    getList () {
-      this.listLoading = true
+    getList() {
+      this.listLoading = true;
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
-        this.listLoading = false
-      })
-    },
+        this.list = response.data.items;
+        this.total = response.data.total;
+        this.listLoading = false;
+      });
+    }
   }
-}
+};
 </script>
 
 <style>
