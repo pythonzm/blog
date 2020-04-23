@@ -30,3 +30,10 @@ es:
   host: "127.0.0.1"
   port: "9200"
   index: "blog"
+mail:
+  enable: true  # 是否开启评论邮件通知
+  host: "smtp.163.com"
+  port: 25
+  user: "zm_world@163.com"
+  pass: "QMHZAOFPZMMYRJWA"
+  receiver: "zm_world@163.com"

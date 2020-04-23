@@ -49,6 +49,13 @@ func (c *Comment) Create() (Comment, error) {
 		isAuthor = 1
 	} else {
 		isAuthor = 0
+		go func() {
+			article, _ := Article{ID: int(c.ArticleID)}.GetOne(SetAdmin("true"))
+			title := article.A.Title
+			if e := utils.MailNotice(title); e != nil {
+				utils.WriteErrorLog(fmt.Sprintf("[ %s ] 评论发送邮件通知失败, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+			}
+		}()
 	}
 	comment, e := db.Exec("insert into blog_comment (username,is_author,parent_id,root_id,article_id,content, created_time) values (?,?,?,?,?,?,?)", c.UserName, isAuthor, c.ParentID, c.RootID, c.ArticleID, c.Content, createTime)
 	if e != nil {
@@ -123,7 +130,7 @@ func GetCommentsByArticleName(articleName string) (data AllComments, err error) 
 		return
 	}
 	for _, value := range comments {
-		allComments = append(allComments, CommentAndArticle{value, Article{ID: int(value.ArticleID), Title:articleName}})
+		allComments = append(allComments, CommentAndArticle{value, Article{ID: int(value.ArticleID), Title: articleName}})
 	}
 	data = AllComments{allComments, uint(len(comments))}
 	return

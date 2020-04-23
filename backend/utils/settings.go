@@ -46,11 +46,21 @@ type ES struct {
 	Index string `json:"index"`
 }
 
+type Mail struct {
+	Enable   bool   `json:"enable"`
+	Host     string `json:"host"`
+	Port     int    `json:"port"`
+	User     string `json:"user"`
+	Pass     string `json:"pass"`
+	Receiver string `json:"receiver"`
+}
+
 var ServerInfo = &Server{}
 var DBInfo = &DataBase{}
 var AppInfo = &App{}
 var RedisInfo = &Redis{}
 var ESInfo = &ES{}
+var MailInfo = &Mail{}
 
 func init() {
 	viper.AddConfigPath("conf")
@@ -90,5 +100,11 @@ func init() {
 	ESInfo.Host = viper.GetString("es.host")
 	ESInfo.Port = viper.GetString("es.port")
 	ESInfo.Index = viper.GetString("es.index")
-}
 
+	MailInfo.Enable = viper.GetBool("mail.enable")
+	MailInfo.Host = viper.GetString("mail.host")
+	MailInfo.Port = viper.GetInt("mail.port")
+	MailInfo.User = viper.GetString("mail.user")
+	MailInfo.Pass = viper.GetString("mail.pass")
+	MailInfo.Receiver = viper.GetString("mail.receiver")
+}
