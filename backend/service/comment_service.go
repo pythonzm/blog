@@ -53,7 +53,7 @@ func (c *Comment) Create() (Comment, error) {
 			if utils.MailInfo.Enable {
 				article, _ := Article{ID: int(articleId)}.GetOne(SetAdmin("true"))
 				title := article.A.Title
-				if e := utils.MailNotice(title); e != nil {
+				if e := utils.MailNotice(title, articleId); e != nil {
 					utils.WriteErrorLog(fmt.Sprintf("[ %s ] 评论发送邮件通知失败, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
 				}
 			}
