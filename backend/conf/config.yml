@@ -34,6 +34,6 @@ mail:
   enable: true  # 是否开启评论邮件通知
   host: "smtp.163.com"
   port: 25
-  user: "XXXX@163.com"
+  user: "XXXXX@163.com"
   pass: "PASSWORD"
-  receiver: "XXXX@163.com"
+  receiver: "XXXXX@163.com"
