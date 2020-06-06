@@ -18,5 +18,8 @@ func MailNotice(title string, articleID uint) error {
 
 	d := gomail.NewDialer(MailInfo.Host, MailInfo.Port, MailInfo.User, MailInfo.Pass)
 
-	return d.DialAndSend(m)
+	if err := d.DialAndSend(m); err != nil {
+		return err
+	}
+	return nil
 }
