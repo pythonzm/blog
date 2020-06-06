@@ -15,7 +15,7 @@
         <img
           width="149"
           height="149"
-          src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149"
+          :src="forkme"
           class="attachment-full size-full"
           alt="Fork me on GitHub"
           data-recalc-dims="1"
@@ -41,6 +41,7 @@ import BlogMain from "./components/BlogMain";
 import Aside from "./components/aside";
 import Footer from "./components/footer";
 import ResizeMixin from "./mixin/ResizeHandler";
+import forkme from "@/assets/img/forkme.png";
 export default {
   name: "Blayout",
   components: {
@@ -64,7 +65,8 @@ export default {
     return {
       soup: {},
       widthVar: "75%",
-      mobile: false
+      mobile: false,
+      forkme: forkme
     };
   },
   mounted() {
