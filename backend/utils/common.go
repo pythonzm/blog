@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func EncodeMD5(value string) string {
@@ -19,4 +20,15 @@ func WriteErrorLog(s string) {
 	if e != nil {
 		fmt.Println(e)
 	}
+}
+
+func IfContainStr(s string, substrs []string) bool {
+	r := false
+	for _, substr := range substrs {
+		if strings.Contains(s, substr) {
+			r = true
+			break
+		}
+	}
+	return r
 }

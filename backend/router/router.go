@@ -16,7 +16,7 @@ func InitRouter() *gin.Engine {
 		c.JSON(http.StatusMethodNotAllowed, gin.H{"result": false, "error": "Method Not Allowed"})
 		return
 	})
-	r.Use(middleware.CustomLogger(), middleware.CorsMiddleware())
+	r.Use(middleware.CustomLogger(), middleware.CorsMiddleware(), middleware.Visitor())
 	r.Use(gin.Recovery())
 
 	apiv1 := r.Group(utils.AppInfo.ApiBaseUrl)
@@ -60,6 +60,11 @@ func InitRouter() *gin.Engine {
 		apiv1.DELETE("/comments/:id", v1.DeleteComment)
 
 		apiv1.POST("/upload", v1.UploadImageAvatar)
+
+		apiv1.GET("/count/article", v1.GetArticleCount)
+		apiv1.GET("/count/category", v1.GetCategoryCount)
+		apiv1.GET("/count/tag", v1.GetTagCount)
+		apiv1.GET("/count/visitor", v1.GetVisitorCount)
 	}
 
 	return r

@@ -87,3 +87,13 @@ CREATE TABLE `blog_comment` (
   CONSTRAINT `article` FOREIGN KEY (`article_id`) REFERENCES `blog_article` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `parent` FOREIGN KEY (`parent_id`) REFERENCES `blog_comment` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `blog_visitor` (
+    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+    `uri` varchar(255) NOT NULL COMMENT '访问路径',
+    `referer` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+    `ua` varchar(255) NOT NULL COMMENT 'user_agent',
+    `ip` varchar(64) NOT NULL,
+    `visit_time` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '访问时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

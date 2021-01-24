@@ -16,6 +16,14 @@ export function fetchArticle(id, params) {
   });
 }
 
+export function fetchArticleCount(params) {
+  return request({
+    url: "/count/article",
+    method: "get",
+    params
+  });
+}
+
 export function createArticle(data) {
   return request({
     url: `/articles`,

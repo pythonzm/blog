@@ -81,6 +81,17 @@ func GetArticle(c *gin.Context) {
 	return
 }
 
+func GetArticleCount(c *gin.Context) {
+	a := service.Article{}
+	count, e := a.GetArticleCount()
+	if e != nil {
+		c.JSON(http.StatusInternalServerError, utils.GenResponse(40034, nil, e))
+		return
+	}
+	c.JSON(http.StatusOK, utils.GenResponse(20000, count, nil))
+	return
+}
+
 func CreateArticle(c *gin.Context) {
 	article := &service.Article{}
 	if e := c.ShouldBindJSON(article); e != nil {
@@ -133,4 +144,3 @@ func EditArticle(c *gin.Context) {
 	c.JSON(http.StatusOK, utils.GenResponse(20000, article, nil))
 	return
 }
-

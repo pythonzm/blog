@@ -230,6 +230,11 @@ func (a Article) GetAll(opts ...Option) (data Articles, err error) {
 	return
 }
 
+func (a Article) GetArticleCount() (count int8, e error) {
+	e = db.Get(&count, "select count('id') from blog_article")
+	return
+}
+
 func (a Article) ViewKey() string {
 	viewKey := a.Title + ":view"
 	return viewKey
@@ -478,4 +483,3 @@ func (a Article) DeleteFromES() error {
 	}
 	return nil
 }
-

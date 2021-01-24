@@ -16,6 +16,17 @@ func GetAllTags(c *gin.Context) {
 	c.JSON(http.StatusOK, utils.GenResponse(20000, tags, nil))
 }
 
+func GetTagCount(c *gin.Context) {
+	a := service.Tag{}
+	count, e := a.GetTagCount()
+	if e != nil {
+		c.JSON(http.StatusInternalServerError, utils.GenResponse(40036, nil, e))
+		return
+	}
+	c.JSON(http.StatusOK, utils.GenResponse(20000, count, nil))
+	return
+}
+
 func CreateTag(c *gin.Context) {
 	tag := &service.Tag{}
 	if e := c.ShouldBindJSON(tag); e != nil {
