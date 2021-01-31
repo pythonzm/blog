@@ -62,6 +62,10 @@ npm run build:prod
 
 美化界面
 
+### 概览
+
+![image](https://github.com/pythonzm/blog/blob/master/screenshots/dash.png)
+
 ### 添加文章
 
 ![image](https://github.com/pythonzm/blog/blob/master/screenshots/add_article.png)
