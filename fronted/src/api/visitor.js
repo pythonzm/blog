@@ -7,3 +7,19 @@ export function fetchVisitorCount(params) {
     params
   });
 }
+
+export function fetchCountByDate(params) {
+  return request({
+    url: "/count/date",
+    method: "get",
+    params
+  });
+}
+
+export function fetchCountByUa(params) {
+  return request({
+    url: "/count/ua",
+    method: "get",
+    params
+  });
+}

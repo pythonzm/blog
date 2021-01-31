@@ -62,9 +62,13 @@ func InitRouter() *gin.Engine {
 		apiv1.POST("/upload", v1.UploadImageAvatar)
 
 		apiv1.GET("/count/article", v1.GetArticleCount)
+		apiv1.GET("/count/article_by_category", v1.GetArticleCountByCategory)
+		apiv1.GET("/count/article_by_tag", v1.GetArticleCountByTag)
 		apiv1.GET("/count/category", v1.GetCategoryCount)
 		apiv1.GET("/count/tag", v1.GetTagCount)
 		apiv1.GET("/count/visitor", v1.GetVisitorCount)
+		apiv1.GET("/count/date", v1.GetCountByDate)
+		apiv1.GET("/count/ua", v1.GetCountByUA)
 	}
 
 	return r

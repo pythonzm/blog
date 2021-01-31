@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "axios": "0.18.1",
+    "echarts": "^4.2.1",
     "element-ui": "2.7.2",
     "highlight.js": "^9.15.10",
     "js-cookie": "2.2.0",
@@ -26,6 +27,7 @@
     "tui-editor": "^1.4.6",
     "v-viewer": "^1.4.2",
     "vue": "2.6.10",
+    "vue-count-to": "^1.0.13",
     "vue-router": "3.0.6",
     "vuex": "3.1.0"
   },
