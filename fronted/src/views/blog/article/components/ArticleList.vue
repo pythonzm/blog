@@ -17,7 +17,8 @@
               query: { id: item.id }
             }"
           >
-            {{ item.title }}<span>{{ item.created_time | formatDate }}</span>
+            {{ item.title
+            }}<span v-if="!mobile">{{ item.created_time | formatDate }}</span>
           </router-link>
         </div>
       </div>
@@ -38,9 +39,21 @@
 <script>
 import { fetchList } from "@/api/article";
 import Pagination from "@/components/Pagination";
+import ResizeMixin from "@/blayout/mixin/ResizeHandler";
 export default {
   name: "ArticleList",
   components: { Pagination },
+  mixins: [ResizeMixin],
+  computed: {
+    device() {
+      return this.$store.state.app.device;
+    },
+    classObj() {
+      return {
+        mobile: this.device === "mobile"
+      };
+    }
+  },
   filters: {
     formatDate(time) {
       return time.slice(0, time.indexOf(" "));
@@ -57,7 +70,8 @@ export default {
         category: undefined,
         tag: undefined,
         q: undefined
-      }
+      },
+      mobile: false
     };
   },
   created() {
@@ -71,6 +85,7 @@ export default {
       this.listQuery.q = this.$route.query.q;
     }
     this.getList();
+    this.mobile = this.device === "mobile" ? true : false;
   },
   methods: {
     getList() {

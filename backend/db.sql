@@ -89,12 +89,12 @@ CREATE TABLE `blog_comment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `blog_visitor` (
-`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-`uri` varchar(255) NOT NULL COMMENT '访问路径',
-`referer` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-`ua` varchar(255) NOT NULL COMMENT 'user_agent',
-`ip` varchar(64) NOT NULL,
-`visit_date` varchar(64) NOT NULL,
-`visit_time` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '访问时间',
-PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+    `uri` varchar(255) NOT NULL COMMENT '访问路径',
+    `referer` varchar(255) DEFAULT '',
+    `ua` varchar(255) NOT NULL COMMENT 'user_agent',
+    `ip` varchar(64) NOT NULL,
+    `visit_date` varchar(64) NOT NULL,
+    `visit_time` varchar(255) NOT NULL COMMENT '访问时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
