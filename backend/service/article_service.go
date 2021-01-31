@@ -39,6 +39,11 @@ type ArticleDetail struct {
 	Views uint8    `json:"views"`
 }
 
+type ArticleCount struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
+}
+
 type Options struct {
 	Limit  int    `json:"limit"`
 	Page   int    `json:"page"`
@@ -228,6 +233,61 @@ func (a Article) GetAll(opts ...Option) (data Articles, err error) {
 	baseSql := "select %s from blog_article a"
 	data, err = genArticles(baseSql, opts...)
 	return
+}
+
+func (a Article) GetArticleCount() (count int8, e error) {
+	e = db.Get(&count, "select count('id') from blog_article")
+	return
+}
+
+func (a Article) GetArticleCountByCategory() ([]ArticleCount, error) {
+	sql := `
+	SELECT
+		c.category_name AS name,
+		COUNT(a.id) AS value
+	FROM
+		blog_article a
+	RIGHT JOIN blog_category c ON a.category_id = c.id
+	GROUP BY
+		c.id`
+	rows, e := db.Queryx(sql)
+
+	if e != nil {
+		return nil, e
+	}
+	res := make([]ArticleCount, 0)
+	for rows.Next() {
+		var r ArticleCount
+		e = rows.StructScan(&r)
+		res = append(res, r)
+	}
+
+	return res, e
+}
+
+func (a Article) GetArticleCountByTag() ([]ArticleCount, error) {
+	sql := `
+SELECT
+	t.tag_name AS name,
+	COUNT(a.id) AS value
+FROM
+	blog_tag_article a
+RIGHT JOIN blog_tag t ON a.tag_id = t.id
+GROUP BY
+	t.id`
+	rows, e := db.Queryx(sql)
+
+	if e != nil {
+		return nil, e
+	}
+	res := make([]ArticleCount, 0)
+	for rows.Next() {
+		var r ArticleCount
+		e = rows.StructScan(&r)
+		res = append(res, r)
+	}
+
+	return res, e
 }
 
 func (a Article) ViewKey() string {
@@ -478,4 +538,3 @@ func (a Article) DeleteFromES() error {
 	}
 	return nil
 }
-

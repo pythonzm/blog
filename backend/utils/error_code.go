@@ -44,6 +44,13 @@ const (
 
 	CommentGetAllError = 40032
 	SearchArticleError = 40033
+
+	ArticleCountGetError  = 40034
+	CategoryCountGetError = 40035
+	TagCountGetError      = 40036
+	VisitorCountGetError  = 40037
+
+	InsertVisitorError = 40038
 )
 
 var MsgFlags = map[int]string{
@@ -89,9 +96,15 @@ var MsgFlags = map[int]string{
 
 	CommentGetAllError: "获取所有评论失败",
 	SearchArticleError: "搜索文章失败",
+
+	ArticleCountGetError:  "获取文章总数失败",
+	CategoryCountGetError: "获取分类总数失败",
+	TagCountGetError:      "获取标签总数失败",
+	VisitorCountGetError:  "获取访客总数失败",
+
+	InsertVisitorError: "添加访客失败",
 }
 
 func ErrorText(code int) string {
 	return MsgFlags[code]
 }
-

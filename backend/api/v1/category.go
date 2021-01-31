@@ -16,6 +16,17 @@ func GetAllCategories(c *gin.Context) {
 	c.JSON(http.StatusOK, utils.GenResponse(20000, categories, nil))
 }
 
+func GetCategoryCount(c *gin.Context) {
+	a := service.Category{}
+	count, e := a.GetCategoryCount()
+	if e != nil {
+		c.JSON(http.StatusInternalServerError, utils.GenResponse(40035, nil, e))
+		return
+	}
+	c.JSON(http.StatusOK, utils.GenResponse(20000, count, nil))
+	return
+}
+
 func CreateCategory(c *gin.Context) {
 	category := &service.Category{}
 	if e := c.ShouldBindJSON(category); e != nil {

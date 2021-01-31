@@ -35,3 +35,8 @@ func (t Tag) GetAll() ([]Tag, error) {
 	err := db.Select(&tags, "select * from blog_tag")
 	return tags, err
 }
+
+func (t Tag) GetTagCount() (count int8, e error) {
+	e = db.Get(&count, "select count('id') from blog_tag")
+	return
+}

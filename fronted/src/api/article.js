@@ -16,6 +16,30 @@ export function fetchArticle(id, params) {
   });
 }
 
+export function fetchArticleCount(params) {
+  return request({
+    url: "/count/article",
+    method: "get",
+    params
+  });
+}
+
+export function fetchArticleCountByCategory(params) {
+  return request({
+    url: "/count/article_by_category",
+    method: "get",
+    params
+  });
+}
+
+export function fetchArticleCountByTag(params) {
+  return request({
+    url: "/count/article_by_tag",
+    method: "get",
+    params
+  });
+}
+
 export function createArticle(data) {
   return request({
     url: `/articles`,

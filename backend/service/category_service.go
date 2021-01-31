@@ -35,3 +35,8 @@ func (c Category) GetAll() ([]Category, error) {
 	err := db.Select(&categories, "select * from blog_category")
 	return categories, err
 }
+
+func (c Category) GetCategoryCount() (count int8, e error) {
+	e = db.Get(&count, "select count('id') from blog_category")
+	return
+}
