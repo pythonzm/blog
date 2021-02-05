@@ -114,6 +114,17 @@ func GetArticleCountByTag(c *gin.Context) {
 	return
 }
 
+func GetArticleRank(c *gin.Context) {
+	a := service.Article{}
+	count, e := a.GetArticleRank()
+	if e != nil {
+		c.JSON(http.StatusInternalServerError, utils.GenResponse(40039, nil, e))
+		return
+	}
+	c.JSON(http.StatusOK, utils.GenResponse(20000, count, nil))
+	return
+}
+
 func CreateArticle(c *gin.Context) {
 	article := &service.Article{}
 	if e := c.ShouldBindJSON(article); e != nil {

@@ -63,18 +63,39 @@ func (v Visitor) GetCountByDate() (map[string][]string, error) {
 	return data, rows.Err()
 }
 
-func (v Visitor) GetCountByUA() ([]CountByUA, error) {
+func (v Visitor) GetCountByUA() ([]map[string]string, error) {
 	rows, e := db.Queryx("SELECT ua AS name,COUNT(id) AS value FROM blog_visitor GROUP BY ua")
 
 	if e != nil {
 		return nil, e
 	}
-	res := make([]CountByUA, 0)
+	res := make([]map[string]string, 0)
 	for rows.Next() {
 		var r CountByUA
 		e = rows.StructScan(&r)
-		res = append(res, r)
+		res = append(res, r.getClient())
 	}
 
 	return res, e
+}
+
+func (u *CountByUA) getClient() map[string]string {
+	switch {
+	case strings.Contains(u.Name, "Trident"):
+		return map[string]string{"name": "IE", "value": u.Value}
+	case strings.Contains(u.Name, "Presto"):
+		return map[string]string{"name": "Opera", "value": u.Value}
+	case strings.Contains(u.Name, "Chrome"):
+		return map[string]string{"name": "Chrome", "value": u.Value}
+	case strings.Contains(u.Name, "Firefox"):
+		return map[string]string{"name": "Firefox", "value": u.Value}
+	case strings.Contains(u.Name, "Android"):
+		return map[string]string{"name": "Android", "value": u.Value}
+	case strings.Contains(u.Name, "iPhone"):
+		return map[string]string{"name": "iPhone", "value": u.Value}
+	case strings.Contains(u.Name, "MicroMessenger"):
+		return map[string]string{"name": "WeChat", "value": u.Value}
+	default:
+		return map[string]string{"name": u.Name, "value": u.Value}
+	}
 }

@@ -61,6 +61,7 @@ func InitRouter() *gin.Engine {
 
 		apiv1.POST("/upload", v1.UploadImageAvatar)
 
+		// 概览界面的路由
 		apiv1.GET("/count/article", v1.GetArticleCount)
 		apiv1.GET("/count/article_by_category", v1.GetArticleCountByCategory)
 		apiv1.GET("/count/article_by_tag", v1.GetArticleCountByTag)
@@ -69,6 +70,8 @@ func InitRouter() *gin.Engine {
 		apiv1.GET("/count/visitor", v1.GetVisitorCount)
 		apiv1.GET("/count/date", v1.GetCountByDate)
 		apiv1.GET("/count/ua", v1.GetCountByUA)
+		apiv1.GET("/article/rank", v1.GetArticleRank)
+		apiv1.GET("/comment/recent", v1.GetRencentComments)
 	}
 
 	return r

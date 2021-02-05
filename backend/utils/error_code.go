@@ -50,7 +50,8 @@ const (
 	TagCountGetError      = 40036
 	VisitorCountGetError  = 40037
 
-	InsertVisitorError = 40038
+	InsertVisitorError  = 40038
+	GetArticleRankError = 40039
 )
 
 var MsgFlags = map[int]string{
@@ -102,7 +103,8 @@ var MsgFlags = map[int]string{
 	TagCountGetError:      "获取标签总数失败",
 	VisitorCountGetError:  "获取访客总数失败",
 
-	InsertVisitorError: "添加访客失败",
+	InsertVisitorError:  "添加访客失败",
+	GetArticleRankError: "获取文章排行榜失败",
 }
 
 func ErrorText(code int) string {

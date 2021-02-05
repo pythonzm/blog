@@ -23,6 +23,14 @@ export function fetchAll(params) {
   });
 }
 
+export function fetchRecentComments(params) {
+  return request({
+    url: `/comment/recent`,
+    method: "get",
+    params
+  });
+}
+
 export function deleteComment(id) {
   return request({
     url: `/comments/${id}`,

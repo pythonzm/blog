@@ -40,6 +40,14 @@ export function fetchArticleCountByTag(params) {
   });
 }
 
+export function fetchArticleRank(params) {
+  return request({
+    url: "/article/rank",
+    method: "get",
+    params
+  });
+}
+
 export function createArticle(data) {
   return request({
     url: `/articles`,
