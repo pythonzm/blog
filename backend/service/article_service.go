@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
 	"github.com/elastic/go-elasticsearch/v8/esutil"
+	"github.com/gomodule/redigo/redis"
 	"strconv"
 	"strings"
 	"time"
@@ -36,7 +37,7 @@ type ArticleDetail struct {
 	A     Article  `json:"article"`
 	C     Category `json:"category"`
 	Tags  []Tag    `json:"tags"`
-	Views uint8    `json:"views"`
+	Views int      `json:"views"`
 }
 
 type ArticleCount struct {
@@ -218,6 +219,9 @@ func (a Article) GetOne(opts ...Option) (ArticleDetail, error) {
 	if !options.Admin {
 		if e := addView(viewKey); e != nil {
 			utils.WriteErrorLog(fmt.Sprintf("[ %s ] 添加阅读量失败, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+		}
+		if e := one.addArticleRank(n + 1); e != nil {
+			utils.WriteErrorLog(fmt.Sprintf("[ %s ] 添加排行榜失败, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
 		}
 	}
 	return ArticleDetail{one, category, tags, n}, nil
@@ -407,30 +411,39 @@ func getArticleCache(key string) (a Articles, err error) {
 
 func setArticleCache(key string, value Articles) error {
 	marshal, _ := json.Marshal(value)
-	e := tools.SetKey(key, marshal, tools.SetTimeout(true))
-	return e
+	return tools.SetKey(key, marshal, tools.SetTimeout(true))
 }
 
 func addView(key string) error {
-	e := tools.INCRKey(key)
-	return e
+	return tools.INCRKey(key)
 }
 
-func getViews(key string) (n uint8, err error) {
-	data, e := tools.GetKey(key)
-	if e != nil || data == nil {
-		return n, e
-	}
+func getViews(key string) (n int, err error) {
+	return redis.Int(tools.GetKey(key))
+}
 
-	v, ok := data.([]uint8)
-	if ok {
-		if e := json.Unmarshal([]byte(v[:]), &n); e != nil {
-			return n, e
-		}
-		return n, nil
-	} else {
-		return n, errors.New("返回数据类型有误，json无法解析")
+func (a Article) addArticleRank(score int) error {
+	return tools.ZADDKey("article", a.Title, score)
+}
+
+func (a Article) GetArticleRank() (data []map[string]string, err error) {
+	res, err := tools.ZREVRANGE("article")
+	if err != nil {
+		return
 	}
+	bytes, _ := redis.ByteSlices(res, err)
+
+	for key, value := range bytes {
+		if key%2 == 0 {
+			data = append(data, map[string]string{"title": string(value[:]), "views": string(bytes[key+1][:])})
+		}
+	}
+	return
+}
+
+func (a Article) GetTitleByID() (title string, err error) {
+	err = db.Get(&title, "SELECT title FROM blog_article WHERE id=?", a.ID)
+	return
 }
 
 func (a Article) IndexBlog() error {

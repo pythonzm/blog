@@ -75,3 +75,14 @@ func DeleteComment(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, comment, nil))
 }
+
+func GetRencentComments(c *gin.Context) {
+	comment := service.Comment{}
+	data, e := comment.GetRecentComments()
+	if e != nil {
+		c.JSON(http.StatusNotFound, utils.GenResponse(40020, nil, e))
+		return
+	}
+	c.JSON(http.StatusOK, utils.GenResponse(20000, data, nil))
+	return
+}

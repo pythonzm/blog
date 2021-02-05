@@ -5,7 +5,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-func MailNotice(title string, articleID uint) error {
+func MailNotice(title string, articleID int) error {
 	articleUrl := fmt.Sprintf("https://www.poorops.com/#/articles/?id=%d", articleID)
 	aTag := fmt.Sprintf("<a href=" + articleUrl + ">" + articleUrl + "</a>")
 	htmlMsg := "<h2>有人评论了文章： " + title + "，快去看看吧：" + aTag + "</h2>"

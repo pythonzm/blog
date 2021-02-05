@@ -84,3 +84,25 @@ func INCRKey(key string) error {
 	_, err := conn.Do("INCR", key)
 	return err
 }
+
+func ZADDKey(rankKey, member string, score int) error {
+	conn := models.RedisPool.Get()
+	defer func() {
+		if e := conn.Close(); e != nil {
+			return
+		}
+	}()
+	_, err := conn.Do("ZADD", rankKey, score, member)
+	return err
+}
+
+func ZREVRANGE(rankKey string) (data interface{}, err error) {
+	conn := models.RedisPool.Get()
+	defer func() {
+		if e := conn.Close(); e != nil {
+			return
+		}
+	}()
+	data, err = conn.Do("ZREVRANGE", rankKey, 0, 9, "WITHSCORES")
+	return
+}

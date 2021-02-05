@@ -17,7 +17,7 @@ type Comment struct {
 	IsAuthor    bool          `json:"is_author" db:"is_author"`
 	ParentID    sql.NullInt64 `json:"parent_id" db:"parent_id"` // 回复某条评论的ID
 	RootID      sql.NullInt64 `json:"root_id" db:"root_id"`     // 根评论ID
-	ArticleID   uint          `json:"article_id" db:"article_id" binding:"required"`
+	ArticleID   int           `json:"article_id" db:"article_id" binding:"required"`
 	Content     string        `json:"content" db:"content" binding:"required"`
 	CreatedTime string        `json:"created_time" db:"created_time"`
 }
@@ -49,7 +49,7 @@ func (c *Comment) Create() (Comment, error) {
 		isAuthor = 1
 	} else {
 		isAuthor = 0
-		go func(articleId uint) {
+		go func(articleId int) {
 			if utils.MailInfo.Enable {
 				article, _ := Article{ID: int(articleId)}.GetOne(SetAdmin("true"))
 				title := article.A.Title
@@ -201,4 +201,17 @@ func setCommentCache(key string, value AllComments) error {
 	marshal, _ := json.Marshal(value)
 	e := tools.SetKey(key, marshal, tools.SetTimeout(true))
 	return e
+}
+
+func (c Comment) GetRecentComments() (data []map[string]string, err error) {
+	var comments []Comment
+	if err = db.Select(&comments, "SELECT * FROM blog_comment ORDER BY id DESC LIMIT 10"); err != nil {
+		return
+	}
+	for _, comment := range comments {
+		a := Article{ID: comment.ArticleID}
+		title, _ := a.GetTitleByID()
+		data = append(data, map[string]string{"title": title, "content": comment.Content, "create_time": comment.CreatedTime})
+	}
+	return
 }
