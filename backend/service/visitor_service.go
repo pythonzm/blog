@@ -2,6 +2,7 @@ package service
 
 import (
 	"backend/utils"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -13,17 +14,12 @@ type Visitor struct {
 	Ua        string `json:"ua" db:"ua" binding:"required"`
 	IP        string `json:"ip" db:"ip"`
 	VisitDate string `json:"visit_date" db:"visit_date"`
-	VisitTime int    `json:"visit_time" db:"visit_time"`
+	VisitTime string `json:"visit_time" db:"visit_time"`
 }
 
 type CountByDate struct {
 	Count string
 	Date  string
-}
-
-type CountByUA struct {
-	Name  string `json:"name"`
-	Value string `json:"value"`
 }
 
 func (v Visitor) NewVisitor() error {
@@ -63,39 +59,39 @@ func (v Visitor) GetCountByDate() (map[string][]string, error) {
 	return data, rows.Err()
 }
 
-func (v Visitor) GetCountByUA() ([]map[string]string, error) {
-	rows, e := db.Queryx("SELECT ua AS name,COUNT(id) AS value FROM blog_visitor GROUP BY ua")
+func (v Visitor) GetCountByUA() (data []map[string]string, e error) {
+	visitors := make([]Visitor, 0)
 
-	if e != nil {
-		return nil, e
+	if e = db.Select(&visitors, "SELECT * FROM blog_visitor"); e != nil {
+		return
 	}
-	res := make([]map[string]string, 0)
-	for rows.Next() {
-		var r CountByUA
-		e = rows.StructScan(&r)
-		res = append(res, r.getClient())
+	uas := map[string]int{"IE": 0, "Opera": 0, "Chrome": 0, "Firefox": 0, "Android": 0, "iPhone": 0, "WeChat": 0}
+
+	for _, visitor := range visitors {
+		switch {
+		case strings.Contains(visitor.Ua, "Trident"):
+			uas["IE"] += 1
+		case strings.Contains(visitor.Ua, "Presto"):
+			uas["Opera"] += 1
+		case strings.Contains(visitor.Ua, "Chrome"):
+			uas["Chrome"] += 1
+		case strings.Contains(visitor.Ua, "Firefox"):
+			uas["Firefox"] += 1
+		case strings.Contains(visitor.Ua, "Android"):
+			uas["Android"] += 1
+		case strings.Contains(visitor.Ua, "iPhone"):
+			uas["iPhone"] += 1
+		case strings.Contains(visitor.Ua, "MicroMessenger"):
+			uas["WeChat"] += 1
+		default:
+			uas[visitor.Ua] += 1
+		}
 	}
 
-	return res, e
-}
-
-func (u *CountByUA) getClient() map[string]string {
-	switch {
-	case strings.Contains(u.Name, "Trident"):
-		return map[string]string{"name": "IE", "value": u.Value}
-	case strings.Contains(u.Name, "Presto"):
-		return map[string]string{"name": "Opera", "value": u.Value}
-	case strings.Contains(u.Name, "Chrome"):
-		return map[string]string{"name": "Chrome", "value": u.Value}
-	case strings.Contains(u.Name, "Firefox"):
-		return map[string]string{"name": "Firefox", "value": u.Value}
-	case strings.Contains(u.Name, "Android"):
-		return map[string]string{"name": "Android", "value": u.Value}
-	case strings.Contains(u.Name, "iPhone"):
-		return map[string]string{"name": "iPhone", "value": u.Value}
-	case strings.Contains(u.Name, "MicroMessenger"):
-		return map[string]string{"name": "WeChat", "value": u.Value}
-	default:
-		return map[string]string{"name": u.Name, "value": u.Value}
+	for key, value := range uas {
+		if value != 0 {
+			data = append(data, map[string]string{"name": key, "value": strconv.Itoa(value)})
+		}
 	}
+	return
 }
