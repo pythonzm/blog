@@ -40,6 +40,10 @@
   > cd fronted
   1. npm install
   2. npm run dev
+  > 如果出现类似 Command failed: git clone --mirror -q git://github.com/adobe-webplatform/eve.git
+  > npm ERR! fatal: read error: Invalid argument 的报错
+  > 首先将本地git版本升级到最新的，如果还有问题则执行如下命令
+  > git config --global url."https://".insteadOf git:// 
   
   #### 构建生产环境
   npm run build:prod

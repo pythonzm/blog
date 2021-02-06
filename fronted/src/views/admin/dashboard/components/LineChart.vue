@@ -3,25 +3,25 @@
 </template>
 
 <script>
-import { fetchCountByDate } from "@/api/visitor";
-import echarts from "echarts";
-require("echarts/theme/macarons"); // echarts theme
-import resize from "./mixins/resize";
+import { fetchCountByDate } from '@/api/visitor'
+import echarts from 'echarts'
+require('echarts/theme/macarons') // echarts theme
+import resize from './mixins/resize'
 
 export default {
   mixins: [resize],
   props: {
     className: {
       type: String,
-      default: "chart"
+      default: 'chart'
     },
     width: {
       type: String,
-      default: "100%"
+      default: '100%'
     },
     height: {
       type: String,
-      default: "350px"
+      default: '350px'
     },
     autoResize: {
       type: Boolean,
@@ -31,24 +31,27 @@ export default {
   data() {
     return {
       chart: null
-    };
+    }
   },
   mounted() {
-    this.initChart();
+    this.initChart()
   },
   beforeDestroy() {
     if (!this.chart) {
-      return;
+      return
     }
-    this.chart.dispose();
-    this.chart = null;
+    this.chart.dispose()
+    this.chart = null
   },
   methods: {
     initChart() {
       fetchCountByDate().then(response => {
-        let data = response.data;
-        this.chart = echarts.init(this.$el, "macarons");
+        const data = response.data
+        this.chart = echarts.init(this.$el, 'macarons')
         this.chart.setOption({
+          title: {
+            text: '近30天访问量统计'
+          },
           xAxis: {
             data: data.dates,
             boundaryGap: false,
@@ -60,13 +63,12 @@ export default {
             left: 10,
             right: 10,
             bottom: 20,
-            top: 30,
             containLabel: true
           },
           tooltip: {
-            trigger: "axis",
+            trigger: 'axis',
             axisPointer: {
-              type: "cross"
+              type: 'cross'
             },
             padding: [5, 10]
           },
@@ -77,26 +79,26 @@ export default {
           },
           series: [
             {
-              name: "访问量",
+              name: '访问量',
               itemStyle: {
                 normal: {
-                  color: "#FF005A",
+                  color: '#FF005A',
                   lineStyle: {
-                    color: "#FF005A",
+                    color: '#FF005A',
                     width: 2
                   }
                 }
               },
               smooth: true,
-              type: "line",
+              type: 'line',
               data: data.counts,
               animationDuration: 2800,
-              animationEasing: "cubicInOut"
+              animationEasing: 'cubicInOut'
             }
           ]
-        });
-      });
+        })
+      })
     }
   }
-};
+}
 </script>
