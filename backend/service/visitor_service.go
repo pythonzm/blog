@@ -29,7 +29,7 @@ func (v Visitor) NewVisitor() error {
 	return e
 }
 
-func (v Visitor) GetVisitorCount() (count int8, e error) {
+func (v Visitor) GetVisitorCount() (count uint8, e error) {
 	e = db.Get(&count, "select count('id') from blog_visitor")
 	return
 }
