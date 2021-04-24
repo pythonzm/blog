@@ -56,7 +56,7 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 5,
+        limit: 10,
         category: undefined,
         tag: undefined,
         q: undefined
