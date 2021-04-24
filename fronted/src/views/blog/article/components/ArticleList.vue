@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="search-title" v-if="total === 0">
+    <div v-if="total === 0" class="search-title">
       <p v-if="listQuery.q !== undefined" v-cloak>
         暂无包含关键字 {{ listQuery.q }} 的文章
       </p>
@@ -9,7 +9,7 @@
 
     <div v-else>
       <div class="title-article">
-        <div class="list-card" v-for="item in list" :key="item.id">
+        <div v-for="item in list" :key="item.id" class="list-card">
           <router-link
             class="pan-btn blue-btn"
             :to="{
@@ -37,28 +37,18 @@
 </template>
 
 <script>
-import { fetchList } from "@/api/article";
-import Pagination from "@/components/Pagination";
-import ResizeMixin from "@/blayout/mixin/ResizeHandler";
+import { fetchList } from '@/api/article'
+import Pagination from '@/components/Pagination'
+import ResizeMixin from '@/blayout/mixin/ResizeHandler'
 export default {
-  name: "ArticleList",
+  name: 'ArticleList',
   components: { Pagination },
-  mixins: [ResizeMixin],
-  computed: {
-    device() {
-      return this.$store.state.app.device;
-    },
-    classObj() {
-      return {
-        mobile: this.device === "mobile"
-      };
-    }
-  },
   filters: {
     formatDate(time) {
-      return time.slice(0, time.indexOf(" "));
+      return time.slice(0, time.indexOf(' '))
     }
   },
+  mixins: [ResizeMixin],
   data() {
     return {
       list: null,
@@ -72,32 +62,42 @@ export default {
         q: undefined
       },
       mobile: false
-    };
+    }
+  },
+  computed: {
+    device() {
+      return this.$store.state.app.device
+    },
+    classObj() {
+      return {
+        mobile: this.device === 'mobile'
+      }
+    }
   },
   created() {
-    if (this.$route.query.hasOwnProperty("category")) {
-      this.listQuery.category = this.$route.query.category;
+    if (this.$route.query.hasOwnProperty('category')) {
+      this.listQuery.category = this.$route.query.category
     }
-    if (this.$route.query.hasOwnProperty("tag")) {
-      this.listQuery.tag = this.$route.query.tag;
+    if (this.$route.query.hasOwnProperty('tag')) {
+      this.listQuery.tag = this.$route.query.tag
     }
-    if (this.$route.query.hasOwnProperty("q")) {
-      this.listQuery.q = this.$route.query.q;
+    if (this.$route.query.hasOwnProperty('q')) {
+      this.listQuery.q = this.$route.query.q
     }
-    this.getList();
-    this.mobile = this.device === "mobile" ? true : false;
+    this.getList()
+    this.mobile = this.device === 'mobile'
   },
   methods: {
     getList() {
-      this.listLoading = true;
+      this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items;
-        this.total = response.data.total;
-        this.listLoading = false;
-      });
+        this.list = response.data.items
+        this.total = response.data.total
+        this.listLoading = false
+      })
     }
   }
-};
+}
 </script>
 
 <style>

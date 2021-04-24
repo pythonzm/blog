@@ -48,11 +48,22 @@ func GetArticles(c *gin.Context) {
 		return
 	}
 	if q != "" {
-		articles, e := service.SearchFromES(service.SetQ(q), service.SetLimitPage(limit, page))
-		if e != nil {
-			c.JSON(http.StatusInternalServerError, utils.GenResponse(40033, nil, e))
-			return
+		var articles service.Articles
+		var e error
+		if utils.ESInfo.Enable {
+			articles, e = service.SearchFromES(service.SetQ(q), service.SetLimitPage(limit, page))
+			if e != nil {
+				c.JSON(http.StatusInternalServerError, utils.GenResponse(40033, nil, e))
+				return
+			}
+		} else {
+			articles, e = service.SearchArticle(q, "published", service.SetLimitPage(limit, page), service.SetSearch(true))
+			if e != nil {
+				c.JSON(http.StatusInternalServerError, utils.GenResponse(40033, nil, e))
+				return
+			}
 		}
+
 		c.JSON(http.StatusOK, utils.GenResponse(20000, articles, nil))
 		return
 	}

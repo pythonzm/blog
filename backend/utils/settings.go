@@ -41,9 +41,10 @@ type Redis struct {
 }
 
 type ES struct {
-	Host  string `json:"host"`
-	Port  string `json:"port"`
-	Index string `json:"index"`
+	Enable bool   `json:"enable"`
+	Host   string `json:"host"`
+	Port   string `json:"port"`
+	Index  string `json:"index"`
 }
 
 type Mail struct {
@@ -97,6 +98,7 @@ func init() {
 	RedisInfo.DB = viper.GetInt("redis.db")
 	RedisInfo.CacheTime = viper.GetInt("redis.cacheTime")
 
+	ESInfo.Enable = viper.GetBool("es.enable")
 	ESInfo.Host = viper.GetString("es.host")
 	ESInfo.Port = viper.GetString("es.port")
 	ESInfo.Index = viper.GetString("es.index")

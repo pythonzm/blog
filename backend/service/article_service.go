@@ -142,7 +142,7 @@ func (a *Article) Create() (Article, error) {
 		}
 	}
 	article := Article{int(articleID), a.Title, a.Content, a.Html, a.CategoryID, a.TagID, createTime, a.UpdatedTime, a.Status}
-	if article.Status == "published" {
+	if article.Status == "published" && utils.ESInfo.Enable {
 		if e := article.IndexBlog(); e != nil {
 			utils.WriteErrorLog(fmt.Sprintf("[ %s ] 存入elastic出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
 		}
@@ -189,13 +189,15 @@ func (a *Article) Edit() error {
 			}
 		}
 	}
-	if a.Status == "published" {
-		if e := a.IndexBlog(); e != nil {
-			utils.WriteErrorLog(fmt.Sprintf("[ %s ] 从elastic更新出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
-		}
-	} else {
-		if e := a.DeleteFromES(); e != nil {
-			utils.WriteErrorLog(fmt.Sprintf("[ %s ] 从elastic删除出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+	if utils.ESInfo.Enable {
+		if a.Status == "published" {
+			if e := a.IndexBlog(); e != nil {
+				utils.WriteErrorLog(fmt.Sprintf("[ %s ] 从elastic更新出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+			}
+		} else {
+			if e := a.DeleteFromES(); e != nil {
+				utils.WriteErrorLog(fmt.Sprintf("[ %s ] 从elastic删除出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+			}
 		}
 	}
 	return nil
@@ -329,7 +331,7 @@ func genArticles(baseSql string, opts ...Option) (data Articles, err error) {
 	articles := make([]Article, 0)
 
 	var f string
-	if !options.Admin {
+	if !options.Admin && !strings.Contains(baseSql, "status") {
 		f = " WHERE a.`status`='published'"
 	}
 	offset := (options.Page - 1) * options.Limit
