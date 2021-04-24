@@ -118,7 +118,7 @@ func SetQ(q string) Option {
 func SetSearch(search bool) Option {
 	return func(o *Options) {
 		o.Search = search
-		o.Page = defaultOptions.Page // 如果不是在第一页执行的搜索，比如：page=3，有可能会搜不到数据，必须从第一页开始搜索
+		//o.Page = defaultOptions.Page // 如果不是在第一页执行的搜索，比如：page=3，有可能会搜不到数据，必须从第一页开始搜索
 	}
 }
 
@@ -337,6 +337,7 @@ func genArticles(baseSql string, opts ...Option) (data Articles, err error) {
 	offset := (options.Page - 1) * options.Limit
 	selectSql := fmt.Sprintf(baseSql, "a.id, a.title, a.created_time, a.updated_time, a.`status`") + f + fmt.Sprintf(" ORDER BY a.id DESC limit %d offset %d", options.Limit, offset)
 
+	fmt.Println(selectSql)
 	if err = db.Select(&articles, selectSql); err != nil {
 		return
 	}

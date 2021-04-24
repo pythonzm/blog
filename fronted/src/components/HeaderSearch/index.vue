@@ -12,21 +12,21 @@
       placeholder="输入关键字，然后回车"
       class="header-search-select"
       @keyup.enter.native="toSearch"
-    ></el-input>
+    />
   </div>
 </template>
 
 <script>
 export default {
   name: 'HeaderSearch',
-  data () {
+  data() {
     return {
       search: '',
-      show: false,
+      show: false
     }
   },
   watch: {
-    show (value) {
+    show(value) {
       if (value) {
         document.body.addEventListener('click', this.close)
       } else {
@@ -35,22 +35,22 @@ export default {
     }
   },
   methods: {
-    click () {
+    click() {
       this.show = !this.show
       if (this.show) {
         this.$refs.headerSearch && this.$refs.headerSearch.focus()
       }
     },
-    close () {
+    close() {
       this.$refs.headerSearch && this.$refs.headerSearch.blur()
       this.show = false
     },
-    toSearch () {
+    toSearch() {
       if (this.search === '') {
-        this.$message.error('请正确填写关键字');
+        this.$message.error('请正确填写关键字')
         return
       } else {
-        this.$router.push({ name: 'CTQArticle', query: { q: this.search } })
+        this.$router.push({ name: 'CTQArticle', query: { q: this.search }})
         this.close()
       }
     }
