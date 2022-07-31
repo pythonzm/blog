@@ -177,7 +177,7 @@ export default {
       rules: {
         title: [
           { required: true, message: '标题不能为空', trigger: 'blur' },
-          { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
+          { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
         ],
         category_id: [
           {
