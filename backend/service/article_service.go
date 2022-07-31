@@ -241,7 +241,7 @@ func (a Article) GetAll(opts ...Option) (data Articles, err error) {
 	return
 }
 
-func (a Article) GetArticleCount() (count int8, e error) {
+func (a Article) GetArticleCount() (count int64, e error) {
 	e = db.Get(&count, "select count('id') from blog_article")
 	return
 }
