@@ -9,12 +9,52 @@ h3,
 h4,
 h5,
 h6 {
-  font-size: 1.3rem;
-  line-height: 23px;
-  border-bottom: 1px solid #dbdbdb;
-  margin: 30px 0 13px 0;
+  font-weight: bold;
+  color: #222;
+}
+
+.md-body h1 {
+  font-size: 24px;
+  line-height: 28px;
+  border-bottom: 3px double #999;
+  margin: 52px 0 15px 0;
   padding-bottom: 7px;
-  color: #333;
+  min-height: 28px;
+  margin-top: 14px;
+}
+
+.md-body h2 {
+  font-size: 22px;
+  line-height: 23px;
+  border-bottom: 2px solid #dbdbdb;
+  margin: 20px 0 13px 0;
+  padding-bottom: 7px;
+  min-height: 23px;
+}
+
+.md-body h3 {
+  font-size: 20px;
+  margin: 18px 0 2px;
+  line-height: 18px;
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.md-body h4 {
+  font-size: 18px;
+  margin: 10px 0 2px;
+  line-height: 18px;
+}
+
+.md-body h5 {
+  line-height: 17px;
+  margin: 9px 0 -4px;
+  font-size: 16px;
+}
+
+.md-body h6 {
+  line-height: 17px;
+  margin: 9px 0 -4px;
+  font-size: 14px;
 }
 
 .md-body ul {
