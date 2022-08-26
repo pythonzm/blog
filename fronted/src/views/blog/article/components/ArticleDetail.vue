@@ -53,6 +53,7 @@
 import { fetchArticle } from '@/api/article'
 import Comments from './comment'
 import '@/assets/md.css'
+import handleClipboard from '@/utils/clipboard'
 export default {
   name: 'ArticleDetail',
   components: {
@@ -67,10 +68,17 @@ export default {
     }
   },
   created () {
-    const id = this.$route.query && this.$route.query.id
-    this.fetchData(id)
+    this.$nextTick(() => {
+      const id = this.$route.query && this.$route.query.id
+      this.fetchData(id)
+    })
   },
-
+  updated() {
+    this.$nextTick(() => {
+      const codeBlocks = document.querySelectorAll('[class*="lang-"]')
+      codeBlocks.forEach(this.generateCopyButton)
+    })
+  },
   methods: {
     fetchData (id) {
       fetchArticle(id)
@@ -84,11 +92,31 @@ export default {
           console.log(err)
         })
     },
+    generateCopyButton(parent) {
+      const copyElement = document.createElement('span')
+      copyElement.className = 'code-copy'
+      copyElement.title = '点击复制'
+      copyElement.style.cssText = 'float: right;z-index: 1000;top: 45px;right: 5px;width: 20px;height: 30px;opacity: 1;cursor: pointer;content: url(https://www.svgrepo.com/show/200080/copy.svg)'
+      copyElement.addEventListener('click', handleClipboard(parent.innerText, this.$event))
+      parent.insertBefore(copyElement, parent.firstChild)
+    }
   },
 }
 </script>
 
 <style scoped>
+.code-copy {
+  float: right;
+  z-index: 1000;
+  top: 45px;
+  right: 5px;
+  width: 20px;
+  height: 30px;
+  content: url("https://www.svgrepo.com/show/33852/copy.svg");
+  opacity: 1;
+  cursor: pointer;
+}
+
 .article {
   padding: 30px 10px;
 }
