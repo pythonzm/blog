@@ -152,3 +152,7 @@ h6 {
 .md-body table td {
   border: 1px solid #eaeaea;
 }
+
+pre {
+  position: relative;
+}

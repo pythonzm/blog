@@ -8,26 +8,25 @@
         <div class="article-info">
           <svg-icon icon-class="calendar" />
           发表于 {{ article.created_time }} •
-          <span v-if="article.updated_time !== ''"
-            ><svg-icon icon-class="calendar" /> 更新于
-            {{ article.updated_time }} •</span
-          >
+          <span
+            v-if="article.updated_time !== ''"
+          ><svg-icon icon-class="calendar" /> 更新于
+            {{ article.updated_time }} •</span>
           <svg-icon icon-class="category" />
-          <span class="classify"
-            ><router-link
-              :to="{
-                name: 'CTQArticle',
-                query: { category: category.category_name }
-              }"
-              >{{ category.category_name }}</router-link
-            ></span
-          >
+          <span
+            class="classify"
+          ><router-link
+            :to="{
+              name: 'CTQArticle',
+              query: { category: category.category_name }
+            }"
+          >{{ category.category_name }}</router-link></span>
           •
           <svg-icon icon-class="eye-open" />{{ views }}次围观
         </div>
       </div>
       <div class="article-view">
-        <div v-html="article.html" class="md-body" v-mhighlight v-viewer></div>
+        <div v-mhighlight v-viewer class="md-body" v-html="article.html" />
       </div>
 
       <div class="tags">
@@ -53,26 +52,44 @@
 import { fetchArticle } from '@/api/article'
 import Comments from './comment'
 import '@/assets/md.css'
+import CodeCopy from '@/components/CodeCopy'
+import Vue from 'vue'
 export default {
   name: 'ArticleDetail',
   components: {
     Comments
   },
-  data () {
+  data() {
     return {
       article: {},
       category: {},
       tags: {},
-      views: 0,
+      views: 0
     }
   },
-  created () {
-    const id = this.$route.query && this.$route.query.id
-    this.fetchData(id)
+  created() {
+    this.$nextTick(() => {
+      const id = this.$route.query && this.$route.query.id
+      this.fetchData(id)
+    })
   },
-
+  updated() {
+    setTimeout(() => {
+      document.querySelectorAll('[class*="lang-"]').forEach(el => {
+        if (el.classList.contains('code-copy-added')) return
+        const ComponentClass = Vue.extend(CodeCopy)
+        const instance = new ComponentClass()
+        instance.code = el.innerText
+        instance.parent = el
+        /* 手动挂载 */
+        instance.$mount()
+        el.classList.add('code-copy-added')
+        el.appendChild(instance.$el)
+      })
+    }, 100)
+  },
   methods: {
-    fetchData (id) {
+    fetchData(id) {
       fetchArticle(id)
         .then(response => {
           this.article = response.data.article
@@ -83,12 +100,25 @@ export default {
         .catch(err => {
           console.log(err)
         })
-    },
-  },
+    }
+  }
 }
 </script>
 
 <style scoped>
+.code-copy-added {
+  background-color: #282c34;
+  color: white;
+  padding: 25px 20px;
+  margin: 10px 0;
+  text-align: left;
+  border-radius: 3px;
+  position: relative;
+}
+.code-copy-added:hover .copy-btn {
+  opacity: 1;
+}
+
 .article {
   padding: 30px 10px;
 }
