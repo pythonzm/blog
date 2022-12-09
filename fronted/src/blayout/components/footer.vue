@@ -1,15 +1,20 @@
 <template>
   <div class="footer">
     <p>
-      <span>© 2019-2020 <a href="/">PoorOPS</a></span>
+      <span>© 2019-{{ thisYear }} <a href="/">PoorOPS</a></span>
     </p>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Footer"
-};
+  name: 'Footer',
+  data() {
+    return {
+      thisYear: new Date().getFullYear()
+    }
+  }
+}
 </script>
 
 <style scoped>
