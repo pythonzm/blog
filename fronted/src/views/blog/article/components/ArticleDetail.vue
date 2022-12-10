@@ -54,6 +54,7 @@ import Comments from './comment'
 import '@/assets/md.css'
 import CodeCopy from '@/components/CodeCopy'
 import Vue from 'vue'
+import store from '@/store'
 export default {
   name: 'ArticleDetail',
   components: {
@@ -96,10 +97,56 @@ export default {
           this.category = response.data.category
           this.tags = response.data.tags
           this.views = response.data.views
+          const toc = this.genToc(response.data.article.html)
+          console.log(toc)
+          store.dispatch('app/setToc', toc)
         })
         .catch(err => {
           console.log(err)
         })
+    },
+    genToc(articleHtml) {
+      const toc = articleHtml.match(/<[hH][1-6]>.*?<\/[hH][1-6]>/g)
+      console.log(toc)
+      const levelStack = []
+      let result = ''
+      const addStartUL = () => { result += '<ul class="catalog-list">' }
+      const addEndUL = () => { result += '</ul>\n' }
+      const addLI = (index, itemText) => { result += '<li><a name="link" class="toc-link' + '-#' + index + '" href="#' + index + '">' + itemText + '</a></li>\n' }
+      toc.forEach((item, index) => {
+        const _toc = `<div name='toc-title' id='${index}'>${item} </div>`
+        articleHtml = articleHtml.replace(item, _toc)
+      })
+
+      toc.forEach(function(item, index) {
+        const itemText = item.replace(/<[^>]+>/g, '') // 匹配h标签的文字
+        const itemLabel = item.match(/<\w+?>/)[0] // 匹配h?标签<h?>
+        let levelIndex = levelStack.indexOf(itemLabel) // 判断数组里有无<h?>
+        // 没有找到相应<h?>标签，则将新增ul、li
+        if (levelIndex === -1) {
+          levelStack.unshift(itemLabel)
+          addStartUL()
+          addLI(index, itemText)
+        }
+        // 找到了相应<h?>标签，并且在栈顶的位置则直接将li放在此ul下
+        else if (levelIndex === 0) {
+          addLI(index, itemText)
+        }
+        // 找到了相应<h?>标签，但是不在栈顶位置，需要将之前的所有<h?>出栈并且打上闭合标签，最后新增li
+        else {
+          while (levelIndex--) {
+            levelStack.shift()
+            addEndUL()
+          }
+          addLI(index, itemText)
+        }
+      })
+      // 如果栈中还有<h?>，全部出栈打上闭合标签
+      while (levelStack.length) {
+        levelStack.shift()
+        addEndUL()
+      }
+      return result
     }
   }
 }

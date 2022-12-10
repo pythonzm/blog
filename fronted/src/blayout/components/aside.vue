@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div v-if="ifDetail">
+    <div v-html="articleToc" />
+  </div>
+  <div v-else>
     <el-card ref="ele">
       <div class="user-bio">
         <div class="user-education user-bio-section">
@@ -20,7 +23,7 @@
             <span>扫不出吃亏，扫不出上当</span>
           </div>
           <div class="user-bio-section-body">
-            <img :src="poorops" />
+            <img :src="poorops">
           </div>
         </div>
       </div>
@@ -30,6 +33,9 @@
 
 <script>
 import poorops from '@/assets/img/poorops.jpg'
+import { mapState } from 'vuex'
+// import {onMounted, nextTick, onBeforeUnmount} from 'vue'
+// const rootEl = document.getElementById('article-html')
 export default {
   name: 'Aside',
   props: {
@@ -44,8 +50,21 @@ export default {
   },
   data() {
     return {
-      poorops: poorops
+      poorops: poorops,
+      ifDetail: true
+      // articleHtml: ''
     }
+  },
+  computed: mapState({
+    articleToc: (state) => state.app && state.app.articleToc
+  }),
+  created() {
+    if (!this.$route.query.hasOwnProperty('id')) {
+      this.ifDetail = false
+    }
+  },
+  methods: {
+
   }
 }
 </script>
@@ -97,6 +116,61 @@ export default {
       padding-bottom: 10px;
       margin-bottom: 10px;
       font-weight: bold;
+    }
+  }
+}
+
+.catalog-list {
+  font-weight: 600;
+  padding-left: 10px;
+  position: relative;
+  font-size: 15px;
+  &:first-child::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    bottom: 0;
+    width: 2px;
+    background-color: #ebedef;
+    opacity: .8;
+  }
+  & > li > a {
+    position: relative;
+    padding-left: 16px;
+    line-height: 20px;
+    // @include catalogRound(0, 6px);
+  }
+  ul, li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  ul > li > a {
+    font-size: 14px;
+    color: #333333;
+    padding-left: 36px;
+    font-weight: 500;
+    position: relative;
+    // @include catalogRound(20px, 5px);
+  }
+  ul > ul > li > a {
+    line-height: 20px;
+    font-size: 14px;
+    color: #333333;
+    padding-left: 50px;
+    font-weight: normal;
+    // @include catalogRound;
+  }
+  a {
+    color: #000;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 4px 0 4px 12px;
+    &:hover {
+      background-color: #ebedef;
     }
   }
 }
