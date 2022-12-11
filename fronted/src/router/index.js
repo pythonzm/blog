@@ -1,11 +1,11 @@
-import Vue from "vue";
-import Router from "vue-router";
+import Vue from 'vue'
+import Router from 'vue-router'
 
-Vue.use(Router);
+Vue.use(Router)
 
 /* Layout */
-import Layout from "@/layout";
-import Blayout from "@/blayout";
+import Layout from '@/layout'
+import Blayout from '@/blayout'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -33,218 +33,219 @@ import Blayout from "@/blayout";
  */
 export const constantRoutes = [
   {
-    path: "/login",
-    component: () => import("@/views/admin/login/index"),
+    path: '/login',
+    component: () => import('@/views/admin/login/index'),
     hidden: true
   },
 
   {
-    path: "/404",
-    component: () => import("@/views/404"),
+    path: '/404',
+    component: () => import('@/views/404'),
     hidden: true
   },
   {
-    path: "/",
+    path: '/',
     component: Blayout,
     children: [
       {
-        path: "",
-        name: "Home",
+        path: '',
+        name: 'Home',
         hidden: true,
-        component: () => import("@/views/blog/home"),
-        meta: { title: "主页" }
+        component: () => import('@/views/blog/home'),
+        meta: { title: '主页' }
       }
     ]
   },
   {
-    path: "/articles",
+    path: '/articles',
     component: Blayout,
     children: [
       {
-        path: "",
-        name: "CTQArticle",
+        path: '',
+        name: 'CTQArticle',
         hidden: true,
-        component: () => import("@/views/blog/article/article"),
-        meta: { title: "文章列表" }
+        component: () => import('@/views/blog/article/article'),
+        meta: { title: '文章列表' }
       }
     ]
   },
   {
-    path: "/category",
+    path: '/category',
     component: Blayout,
     children: [
       {
-        path: "",
-        name: "Bcategory",
+        path: '',
+        name: 'Bcategory',
         hidden: true,
-        component: () => import("@/views/blog/category"),
-        meta: { title: "分类" }
+        component: () => import('@/views/blog/category'),
+        meta: { title: '分类' }
       }
     ]
   },
   {
-    path: "/tag",
+    path: '/tag',
     component: Blayout,
     children: [
       {
-        path: "",
-        name: "Btag",
+        path: '',
+        name: 'Btag',
         hidden: true,
-        component: () => import("@/views/blog/tag"),
-        meta: { title: "标签" }
+        component: () => import('@/views/blog/tag'),
+        meta: { title: '标签' }
       }
     ]
   },
   {
-    path: "/about",
+    path: '/about',
     component: Blayout,
     children: [
       {
-        path: "",
-        name: "About",
+        path: '',
+        name: 'About',
         hidden: true,
-        component: () => import("@/views/blog/about"),
-        meta: { title: "关于" }
+        component: () => import('@/views/blog/about'),
+        meta: { title: '关于' }
       }
     ]
   },
   {
-    path: "/admin",
+    path: '/admin',
     component: Layout,
-    redirect: "/admin/dashboard",
+    redirect: '/admin/dashboard',
     children: [
       {
-        path: "dashboard",
-        name: "Dashboard",
-        component: () => import("@/views/admin/dashboard/index"),
-        meta: { title: "概览", icon: "dashboard" }
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: () => import('@/views/admin/dashboard/index'),
+        meta: { title: '概览', icon: 'dashboard' }
       }
     ]
   },
   {
-    path: "/admin/article/create",
+    path: '/admin/article/create',
     component: Layout,
     children: [
       {
-        path: "",
-        name: "CreateArticle",
-        component: () => import("@/views/admin/article/create"),
-        meta: { title: "添加文章", icon: "form" }
+        path: '',
+        name: 'CreateArticle',
+        component: () => import('@/views/admin/article/create'),
+        meta: { title: '添加文章', icon: 'form' }
       }
     ]
   },
 
   {
-    path: "/admin/article",
+    path: '/admin/article',
     component: Layout,
     children: [
       {
-        path: "list",
-        name: "Article",
-        component: () => import("@/views/admin/article/list"),
-        meta: { title: "文章列表", icon: "list" }
+        path: 'list',
+        name: 'Article',
+        component: () => import('@/views/admin/article/list'),
+        meta: { title: '文章列表', icon: 'list' }
       },
       {
-        path: "edit/:id(\\d+)",
-        name: "EditArticle",
+        path: 'edit/:id(\\d+)',
+        name: 'EditArticle',
         hidden: true,
-        component: () => import("@/views/admin/article/edit"),
-        meta: { title: "编辑文章" }
+        component: () => import('@/views/admin/article/edit'),
+        meta: { title: '编辑文章' }
       }
     ]
   },
 
   {
-    path: "/admin/category",
+    path: '/admin/category',
     component: Layout,
     children: [
       {
-        path: "list",
-        name: "Category",
-        component: () => import("@/views/admin/category/index"),
-        meta: { title: "分类管理", icon: "component" }
+        path: 'list',
+        name: 'Category',
+        component: () => import('@/views/admin/category/index'),
+        meta: { title: '分类管理', icon: 'component' }
       }
     ]
   },
   {
-    path: "/admin/tag",
+    path: '/admin/tag',
     component: Layout,
     children: [
       {
-        path: "list",
-        name: "Tag",
-        component: () => import("@/views/admin/tag/index"),
-        meta: { title: "标签管理", icon: "tag" }
+        path: 'list',
+        name: 'Tag',
+        component: () => import('@/views/admin/tag/index'),
+        meta: { title: '标签管理', icon: 'tag' }
       }
     ]
   },
   {
-    path: "/admin/soup",
+    path: '/admin/soup',
     component: Layout,
     children: [
       {
-        path: "list",
-        name: "Soup",
-        component: () => import("@/views/admin/soup/index"),
-        meta: { title: "鸡汤管理", icon: "table" }
+        path: 'list',
+        name: 'Soup',
+        component: () => import('@/views/admin/soup/index'),
+        meta: { title: '鸡汤管理', icon: 'table' }
       }
     ]
   },
   {
-    path: "/admin/comment",
+    path: '/admin/comment',
     component: Layout,
     children: [
       {
-        path: "list",
-        name: "Comment",
-        component: () => import("@/views/admin/comment/index"),
-        meta: { title: "评论管理", icon: "comment" }
+        path: 'list',
+        name: 'Comment',
+        component: () => import('@/views/admin/comment/index'),
+        meta: { title: '评论管理', icon: 'comment' }
       }
     ]
   },
   {
-    path: "/admin/about",
+    path: '/admin/about',
     component: Layout,
     children: [
       {
-        path: "",
-        name: "Aabout",
-        component: () => import("@/views/admin/about/index"),
-        meta: { title: "编辑关于页", icon: "about" }
+        path: '',
+        name: 'Aabout',
+        component: () => import('@/views/admin/about/index'),
+        meta: { title: '编辑关于页', icon: 'about' }
       }
     ]
   },
 
   {
-    path: "/admin/profile",
+    path: '/admin/profile',
     component: Layout,
     children: [
       {
-        path: "",
-        name: "Profile",
-        component: () => import("@/views/admin/profile/index"),
-        meta: { title: "个人中心", icon: "user" }
+        path: '',
+        name: 'Profile',
+        component: () => import('@/views/admin/profile/index'),
+        meta: { title: '个人中心', icon: 'user' }
       }
     ]
   },
 
   // 404 page must be placed at the end !!!
-  { path: "*", redirect: "/404", hidden: true }
-];
+  { path: '*', redirect: '/404', hidden: true }
+]
 
 const createRouter = () =>
   new Router({
     // mode: 'history', // require service support
     scrollBehavior: () => ({ y: 0 }),
-    routes: constantRoutes
-  });
+    routes: constantRoutes,
+    mode: 'history'
+  })
 
-const router = createRouter();
+const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter();
-  router.matcher = newRouter.matcher; // reset router
+  const newRouter = createRouter()
+  router.matcher = newRouter.matcher // reset router
 }
 
-export default router;
+export default router

@@ -69,57 +69,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.el-card {
-  float: right;
-  width: 24%;
-  position: fixed;
-  left: 75%;
-}
-.box-center {
-  margin: 0 auto;
-  display: table;
-}
-
-.text-muted {
-  color: #777;
-  white-space: pre-line;
-  line-height: 1.5em;
-}
-
-.user-profile {
-  .user-name {
-    padding: 15px;
-    font-size: 20px;
-    font-weight: 700;
-  }
-
-  .box-center {
-    padding-top: 10px;
-  }
-}
-
-.user-bio {
-  margin-top: 20px;
-  color: #606266;
-
-  span {
-    padding-left: 4px;
-  }
-
-  .user-bio-section {
-    font-size: 14px;
-    padding: 15px 0;
-
-    .user-bio-section-header {
-      border-bottom: 1px solid #dfe6ec;
-      padding-bottom: 10px;
-      margin-bottom: 10px;
-      font-weight: bold;
-    }
-  }
-}
-
+<style  lang="scss">
 .catalog-list {
   font-weight: 600;
   padding-left: 10px;
@@ -171,6 +121,58 @@ export default {
     padding: 4px 0 4px 12px;
     &:hover {
       background-color: #ebedef;
+    }
+  }
+}
+</style>
+
+<style lang="scss" scoped>
+.el-card {
+  float: right;
+  width: 24%;
+  position: fixed;
+  left: 75%;
+}
+.box-center {
+  margin: 0 auto;
+  display: table;
+}
+
+.text-muted {
+  color: #777;
+  white-space: pre-line;
+  line-height: 1.5em;
+}
+
+.user-profile {
+  .user-name {
+    padding: 15px;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .box-center {
+    padding-top: 10px;
+  }
+}
+
+.user-bio {
+  margin-top: 20px;
+  color: #606266;
+
+  span {
+    padding-left: 4px;
+  }
+
+  .user-bio-section {
+    font-size: 14px;
+    padding: 15px 0;
+
+    .user-bio-section-header {
+      border-bottom: 1px solid #dfe6ec;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+      font-weight: bold;
     }
   }
 }
