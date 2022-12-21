@@ -19,12 +19,12 @@
           class="attachment-full size-full"
           alt="Fork me on GitHub"
           data-recalc-dims="1"
-        >
+        />
       </a>
       <div class="main">
         <BlogMain :style="{ width: widthVar }" />
         <div v-if="device !== 'mobile'">
-          <Aside :soup="soup" />
+          <Aside :key="key" :soup="soup" />
         </div>
       </div>
     </el-main>
@@ -35,15 +35,15 @@
 </template>
 
 <script>
-import { fetchRandSoup } from '@/api/soup'
-import Header from './components/header'
-import BlogMain from './components/BlogMain'
-import Aside from './components/aside'
-import Footer from './components/footer'
-import ResizeMixin from './mixin/ResizeHandler'
-import forkme from '@/assets/img/forkme.png'
+import { fetchRandSoup } from "@/api/soup";
+import Header from "./components/header";
+import BlogMain from "./components/BlogMain";
+import Aside from "./components/aside";
+import Footer from "./components/footer";
+import ResizeMixin from "./mixin/ResizeHandler";
+import forkme from "@/assets/img/forkme.png";
 export default {
-  name: 'Blayout',
+  name: "Blayout",
   components: {
     Header,
     BlogMain,
@@ -54,34 +54,37 @@ export default {
   data() {
     return {
       soup: {},
-      widthVar: '75%',
+      widthVar: "75%",
       mobile: false,
       forkme: forkme
-    }
+    };
   },
   computed: {
     device() {
-      return this.$store.state.app.device
+      return this.$store.state.app.device;
     },
     classObj() {
       return {
-        mobile: this.device === 'mobile'
-      }
+        mobile: this.device === "mobile"
+      };
+    },
+    key() {
+      return this.$route.fullPath;
     }
   },
   mounted() {
-    this.getSoup()
-    this.widthVar = this.device === 'mobile' ? '100%' : '75%'
-    this.mobile = this.device === 'mobile'
+    this.getSoup();
+    this.widthVar = this.device === "mobile" ? "100%" : "75%";
+    this.mobile = this.device === "mobile";
   },
   methods: {
     getSoup() {
       fetchRandSoup().then(response => {
-        this.soup = response.data
-      })
+        this.soup = response.data;
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="article-view">
-        <div v-mhighlight v-viewer class="md-body" v-html="article.html" />
+        <div v-mhighlight v-viewer class="md-body" v-html="articleHtml" />
       </div>
 
       <div class="tags">
@@ -48,7 +48,6 @@
 </template>
 
 <script>
-
 import { fetchArticle } from '@/api/article'
 import Comments from './comment'
 import '@/assets/md.css'
@@ -65,7 +64,20 @@ export default {
       article: {},
       category: {},
       tags: {},
-      views: 0
+      views: 0,
+      articleHtml: '',
+      listHeight: [],
+      linkLists: [],
+      target: []
+    }
+  },
+  watch: {
+    '$route'(to, from) {
+      console.log(to)
+      const data = document.getElementsByClassName(`toc-link-${to.hash}`)[0]
+      this.linkLists.forEach((list) => {
+        data === list ? list.classList.add('active') : list.classList.remove('active')
+      })
     }
   },
   created() {
@@ -89,33 +101,52 @@ export default {
       })
     }, 100)
   },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll, true)
+  },
   methods: {
-    fetchData(id) {
+    async fetchData(id) {
       fetchArticle(id)
         .then(response => {
           this.article = response.data.article
           this.category = response.data.category
           this.tags = response.data.tags
           this.views = response.data.views
-          const toc = this.genToc(response.data.article.html)
-          console.log(toc)
+          this.articleHtml = response.data.article.html
+          const toc = this.genToc()
           store.dispatch('app/setToc', toc)
+          const doc = new DOMParser().parseFromString(this.articleHtml, 'text/html')
+          this.getTitleHeight(doc)
+          this.getCataloglist(doc)
         })
         .catch(err => {
           console.log(err)
         })
     },
-    genToc(articleHtml) {
-      const toc = articleHtml.match(/<[hH][1-6]>.*?<\/[hH][1-6]>/g)
-      console.log(toc)
+    genToc() {
+      const toc = this.articleHtml.match(/<[hH][1-6]>.*?<\/[hH][1-6]>/g)
       const levelStack = []
       let result = ''
-      const addStartUL = () => { result += '<ul class="catalog-list">' }
-      const addEndUL = () => { result += '</ul>\n' }
-      const addLI = (index, itemText) => { result += '<li><a name="link" class="toc-link' + '-#' + index + '" href="#' + index + '">' + itemText + '</a></li>\n' }
+      const addStartUL = () => {
+        result += '<ul class="catalog-list">'
+      }
+      const addEndUL = () => {
+        result += '</ul>\n'
+      }
+      const addLI = (index, itemText) => {
+        result +=
+          '<li><a name="link" class="toc-link' +
+          '-#' +
+          index +
+          '" href="#' +
+          index +
+          '">' +
+          itemText +
+          '</a></li>\n'
+      }
       toc.forEach((item, index) => {
-        const _toc = `<div name='toc-title' id='${index}'>${item} </div>`
-        articleHtml = articleHtml.replace(item, _toc)
+        const _toc = `<div class='toc-title' id='${index}'>${item} </div>`
+        this.articleHtml = this.articleHtml.replace(item, _toc)
       })
 
       toc.forEach(function(item, index) {
@@ -147,6 +178,36 @@ export default {
         addEndUL()
       }
       return result
+    },
+    async getTitleHeight(doc) {
+      const titlelist = doc.getElementsByClassName('toc-title')
+      Array.from(titlelist).forEach((item) => {
+        this.listHeight.push(item.offsetTop)
+      })
+      // 滚动的距离无法取到最后一个，因此在数组最后加上上一个两倍达到效果
+      this.listHeight.push(2 * (titlelist[titlelist.length - 1].offsetTop))
+    },
+    getCataloglist(doc) {
+      const catalogList = doc.getElementsByClassName('catalog-list')
+      this.linkLists = doc.getElementsByName('link')
+      this.target = Array.prototype.slice.call(catalogList)
+    },
+    handleScroll() {
+      const scrollY = window.pageYOffset
+      this.fixed = scrollY > 230
+      for (let i = 0; i < this.listHeight.length - 1; i++) {
+        const h1 = this.listHeight[i]
+        const h2 = this.listHeight[i + 1]
+        if (scrollY >= h1 && scrollY <= h2) {
+          const data = document.getElementsByClassName(`toc-link-#${i}`) // 获取文章滚动到目录的目标元素
+          this.linkLists.forEach((list) => {
+            let top = 0
+            top = i > 7 ? -28 * (i - 7) : 0
+            this.target[0].style.marginTop = `${top}px`
+            data === list ? list.classList.add('active') : list.classList.remove('active') // 其他移除active
+          })
+        }
+      }
     }
   }
 }

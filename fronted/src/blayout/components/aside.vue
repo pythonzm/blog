@@ -1,6 +1,8 @@
 <template>
   <div v-if="ifDetail">
-    <div v-html="articleToc" />
+    <el-card ref="ele">
+      <div v-html="articleToc" />
+    </el-card>
   </div>
   <div v-else>
     <el-card ref="ele">
@@ -23,7 +25,7 @@
             <span>扫不出吃亏，扫不出上当</span>
           </div>
           <div class="user-bio-section-body">
-            <img :src="poorops">
+            <img :src="poorops" />
           </div>
         </div>
       </div>
@@ -32,19 +34,19 @@
 </template>
 
 <script>
-import poorops from '@/assets/img/poorops.jpg'
-import { mapState } from 'vuex'
+import poorops from "@/assets/img/poorops.jpg";
+import { mapState } from "vuex";
 // import {onMounted, nextTick, onBeforeUnmount} from 'vue'
 // const rootEl = document.getElementById('article-html')
 export default {
-  name: 'Aside',
+  name: "Aside",
   props: {
     soup: {
       type: Object,
       default: () => {
         return {
-          content: ''
-        }
+          content: ""
+        };
       }
     }
   },
@@ -53,28 +55,27 @@ export default {
       poorops: poorops,
       ifDetail: true
       // articleHtml: ''
-    }
+    };
   },
   computed: mapState({
-    articleToc: (state) => state.app && state.app.articleToc
+    articleToc: state => state.app && state.app.articleToc
   }),
   created() {
-    if (!this.$route.query.hasOwnProperty('id')) {
-      this.ifDetail = false
+    if (!this.$route.query.hasOwnProperty("id")) {
+      this.ifDetail = false;
     }
   },
-  methods: {
-
-  }
-}
+  methods: {}
+};
 </script>
 
-<style  lang="scss">
+<style lang="scss">
 .catalog-list {
   font-weight: 600;
   padding-left: 10px;
   position: relative;
   font-size: 15px;
+  text-align: left;
   &:first-child::before {
     content: "";
     position: absolute;
@@ -83,7 +84,7 @@ export default {
     bottom: 0;
     width: 2px;
     background-color: #ebedef;
-    opacity: .8;
+    opacity: 0.8;
   }
   & > li > a {
     position: relative;
@@ -91,7 +92,8 @@ export default {
     line-height: 20px;
     // @include catalogRound(0, 6px);
   }
-  ul, li {
+  ul,
+  li {
     padding: 0;
     margin: 0;
     list-style: none;
