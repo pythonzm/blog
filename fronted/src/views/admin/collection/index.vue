@@ -20,34 +20,31 @@
       >
         <span slot-scope="{ node, data }" class="custom-tree-node">
           <span>{{ node.label }}</span>
-          <span>
+          <span style="padding-left: 15px;">
             <el-button
               type="text"
               size="mini"
+              icon="el-icon-plus"
               @click="addSubNode(data)"
-            >
-              添加子节点
-            </el-button>
+            />
             <el-button
               type="text"
               size="mini"
+              icon="el-icon-edit"
               @click="editNode(data)"
-            >
-              编辑节点
-            </el-button>
+            />
             <el-button
               type="text"
               size="mini"
+              icon="el-icon-delete"
               @click="() => remove(node, data)"
-            >
-              删除节点
-            </el-button>
+            />
           </span>
         </span>
       </el-tree>
       <div class="buttons">
         <el-button type="primary" class="sub-button" @click="addMainNode">添加主节点</el-button>
-        <el-button type="success" class="sub-button">发布</el-button>
+        <el-button type="success" class="sub-button" @click="submit">发布</el-button>
       </div>
     </div>
 
@@ -62,50 +59,19 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addNode">确 定</el-button>
+        <el-button type="primary" @click="handleClick">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { fetchCollection, cudCollection } from '@/api/collection'
 export default {
   data() {
     return {
       filterText: '',
-      data: [{
-        label: 'Linux',
-        children: [{
-          label: 'Nginx',
-          children: [{
-            label: '官网',
-            addr: 'https://www.baidu.com'
-          }, {
-            label: 'org',
-            addr: 'https://cn.bing.com'
-          }]
-        }]
-      }, {
-        id: 2,
-        label: '一级 2',
-        children: [{
-          id: 5,
-          label: '二级 2-1'
-        }, {
-          id: 6,
-          label: '二级 2-2'
-        }]
-      }, {
-        id: 3,
-        label: '一级 3',
-        children: [{
-          id: 7,
-          label: '二级 3-1'
-        }, {
-          id: 8,
-          label: '二级 3-2'
-        }]
-      }],
+      data: [],
       defaultProps: {
         children: 'children',
         label: 'label'
@@ -116,7 +82,9 @@ export default {
         addr: ''
       },
       addMainNodeFlag: false,
-      subNodeData: ''
+      subNodeData: '',
+      isEditNode: false,
+      editData: {}
     }
   },
   computed: {
@@ -129,13 +97,16 @@ export default {
       this.$refs.tree.filter(val)
     }
   },
+  created() {
+    this.getCollection()
+  },
   methods: {
     filterNode(value, data) {
       if (!value) return true
       return data.label.indexOf(value) !== -1
     },
     append(data) {
-      const newChild = { label: this.form.label, children: [] }
+      const newChild = { label: this.form.label, addr: this.form.addr, children: [] }
       if (!data.children) {
         this.$set(data, 'children', [])
       }
@@ -163,11 +134,13 @@ export default {
     addSubNode(data) {
       this.dialogFormVisible = true
       this.addMainNodeFlag = false
+      this.isEditNode = false
       this.subNodeData = data
     },
     addMainNode() {
       this.dialogFormVisible = true
       this.addMainNodeFlag = true
+      this.isEditNode = false
     },
     addNode() {
       if (this.addMainNodeFlag) {
@@ -178,22 +151,49 @@ export default {
       } else {
         this.append(this.subNodeData)
       }
-
       this.dialogFormVisible = false
     },
     editNode(data) {
+      this.isEditNode = true
       this.dialogFormVisible = true
       this.addMainNodeFlag = !data.addr
+      this.editData = data
       this.form.label = data.label
       this.form.addr = data.addr
-      this.form = { ...this.form, children: data.children ? data.children : [] }
-      this.$set(data, this.form)
+    },
+    submitEdit() {
+      this.$set(this.editData, 'label', this.form.label)
+      if (!this.addMainNodeFlag) {
+        this.$set(this.editData, 'addr', this.form.addr)
+      }
+
+      this.dialogFormVisible = false
+    },
+    handleClick() {
+      if (this.isEditNode) {
+        this.submitEdit()
+      } else {
+        this.addNode()
+      }
+    },
+    getCollection() {
+      fetchCollection().then(res => {
+        this.data = res.data.collection
+      })
+    },
+    submit() {
+      cudCollection({ collection: this.data }).then(res => {
+        this.$message({
+          type: 'success',
+          message: '发布成功!'
+        })
+      })
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
   .custom-tree-node {
     flex: 1;
     display: flex;

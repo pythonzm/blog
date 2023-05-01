@@ -101,7 +101,7 @@ export const constantRoutes = [
     children: [
       {
         path: '',
-        name: 'Collection',
+        name: 'Bcollection',
         hidden: true,
         component: () => import('@/views/blog/collection'),
         meta: { title: '藏宝阁' }

@@ -16,10 +16,10 @@
       icon-class=" "
     >
       <span slot-scope="{ node,data }" class="custom-tree-node">
-        <svg-icon v-if="!data.children" icon-class="internet" />
+        <svg-icon v-if="!data.children || Object.keys(data.children).length === 0" icon-class="internet" />
         <svg-icon v-else-if="node.expanded" icon-class="folder-open" />
         <svg-icon v-else icon-class="folder" />
-        <el-button v-if="!data.children" type="text" @click="jumpAddr(data)">{{ node.label }}</el-button>
+        <el-button v-if="!data.children || Object.keys(data.children).length === 0" type="text" @click="jumpAddr(data)">{{ node.label }}</el-button>
         <span v-else>{{ node.label }}</span>
       </span>
     </el-tree>
@@ -27,43 +27,12 @@
 </template>
 
 <script>
+import { fetchCollection } from '@/api/collection'
 export default {
   data() {
     return {
       filterText: '',
-      data: [{
-        label: 'Linux',
-        children: [{
-          label: 'Nginx',
-          children: [{
-            label: '官网',
-            addr: 'https://www.baidu.com'
-          }, {
-            label: 'org',
-            addr: 'https://cn.bing.com'
-          }]
-        }]
-      }, {
-        id: 2,
-        label: '一级 2',
-        children: [{
-          id: 5,
-          label: '二级 2-1'
-        }, {
-          id: 6,
-          label: '二级 2-2'
-        }]
-      }, {
-        id: 3,
-        label: '一级 3',
-        children: [{
-          id: 7,
-          label: '二级 3-1'
-        }, {
-          id: 8,
-          label: '二级 3-2'
-        }]
-      }],
+      data: [],
       defaultProps: {
         children: 'children',
         label: 'label'
@@ -75,7 +44,9 @@ export default {
       this.$refs.tree.filter(val)
     }
   },
-
+  created() {
+    this.getCollection()
+  },
   methods: {
     filterNode(value, data) {
       if (!value) return true
@@ -84,6 +55,11 @@ export default {
     jumpAddr(data) {
       window.open(data.addr, '_blank')
       console.log(this.data)
+    },
+    getCollection() {
+      fetchCollection().then(res => {
+        this.data = res.data.collection
+      })
     }
   }
 }
