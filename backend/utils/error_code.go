@@ -52,6 +52,9 @@ const (
 
 	InsertVisitorError  = 40038
 	GetArticleRankError = 40039
+
+	GetCollectionError = 40040
+	CudCollectionError = 40041
 )
 
 var MsgFlags = map[int]string{
@@ -105,6 +108,9 @@ var MsgFlags = map[int]string{
 
 	InsertVisitorError:  "添加访客失败",
 	GetArticleRankError: "获取文章排行榜失败",
+
+	GetCollectionError: "获取藏宝阁列表失败",
+	CudCollectionError: "更新藏宝阁列表失败",
 }
 
 func ErrorText(code int) string {
