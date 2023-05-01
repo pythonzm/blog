@@ -34,6 +34,7 @@ func InitRouter() *gin.Engine {
 		apiv1.GET("/articles/:id", v1.GetArticle)
 		apiv1.GET("/soup/random", v1.GetRandSoup)
 		apiv1.GET("/comments/:id", v1.GetArticleComments)
+		apiv1.GET("/collection", v1.GetCollection)
 		apiv1.POST("/comments", v1.CreateComment)
 
 		apiv1.Use(middleware.JWt())
@@ -58,6 +59,8 @@ func InitRouter() *gin.Engine {
 
 		apiv1.GET("/comments", v1.GetAllComments)
 		apiv1.DELETE("/comments/:id", v1.DeleteComment)
+
+		apiv1.POST("/collection", v1.CudCollection)
 
 		apiv1.POST("/upload", v1.UploadImageAvatar)
 

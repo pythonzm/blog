@@ -18,7 +18,7 @@ database:
   host: "127.0.0.1"
   port: "3306"
   user: "root"
-  password: "123456"
+  password: "111111"
   dbName: "blog"
 redis:
   host: "127.0.0.1"
@@ -32,7 +32,7 @@ es:
   port: "9200"
   index: "blog"
 mail:
-  enable: true  # 是否开启评论邮件通知
+  enable: false  # 是否开启评论邮件通知
   host: "smtp.163.com"
   port: 25
   user: "XXXXX@163.com"

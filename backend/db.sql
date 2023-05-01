@@ -98,3 +98,11 @@ CREATE TABLE `blog_visitor` (
     `visit_time` varchar(255) NOT NULL COMMENT '访问时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `blog_collection` (
+    `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+    `collection` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`collection`)),
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `blog`.`blog_collection` (`id`, `collection`) VALUES (1, '[]');
