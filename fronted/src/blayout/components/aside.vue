@@ -20,7 +20,8 @@
             <span>扫不出吃亏，扫不出上当</span>
           </div>
           <div class="user-bio-section-body">
-            <img :src="poorops" />
+            <img :src="poorops">
+            <img :src="xiaochengxu">
           </div>
         </div>
       </div>
@@ -30,6 +31,7 @@
 
 <script>
 import poorops from '@/assets/img/poorops.jpg'
+import xiaochengxu from '@/assets/img/xiaochengxu.jpg'
 export default {
   name: 'Aside',
   props: {
@@ -44,7 +46,8 @@ export default {
   },
   data() {
     return {
-      poorops: poorops
+      poorops: poorops,
+      xiaochengxu: xiaochengxu
     }
   }
 }
@@ -56,6 +59,10 @@ export default {
   width: 24%;
   position: fixed;
   left: 75%;
+}
+
+img {
+  width: 100px;
 }
 .box-center {
   margin: 0 auto;
@@ -81,7 +88,7 @@ export default {
 }
 
 .user-bio {
-  margin-top: 20px;
+  // margin-top: 20px;
   color: #606266;
 
   span {
