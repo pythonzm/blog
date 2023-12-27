@@ -18,7 +18,7 @@ export default {
   components: {
     BackToTop
   },
-  data () {
+  data() {
     return {
       myBackToTopStyle: {
         'z-index': 10,
@@ -32,5 +32,11 @@ export default {
       }
     }
   },
+  mounted() {
+    const script = document.createElement('script')
+    script.type = 'text/javascript'
+    script.src = 'https://app.embed.im/snow.js'
+    document.body.appendChild(script)
+  }
 }
 </script>
