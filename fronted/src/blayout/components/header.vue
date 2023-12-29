@@ -1,10 +1,8 @@
 <template>
-  <div class="header-container" style="top:0;left:0; right:0;margin:auto">
-    <div v-if="!mobile" class="logo">
+  <div class="header-container">
+    <!-- <div v-if="!mobile" class="logo">
       <a href="/">{{ logo }}</a>
-    </div>
-
-    <search id="header-search" />
+    </div> -->
 
     <el-menu
       :default-active="activeIndex"
@@ -12,6 +10,7 @@
       mode="horizontal"
       active-text-color="rgb(255, 255, 255)"
       router
+      style="display: flex;"
     >
       <el-menu-item
         v-for="(item, key) in navOptions"
@@ -19,7 +18,9 @@
         :index="item.index"
         style="background-color: unset"
       >{{ item.label }}</el-menu-item>
+      <search v-if="!mobile" id="header-search" />
     </el-menu>
+
   </div>
 </template>
 
@@ -52,14 +53,14 @@ export default {
   created() {
     // init the default  selected path
     const path = this.$route.path
-    if (path.indexOf('category') !== -1) {
-      this.activeIndex = '/category'
-    } else if (path.indexOf('tag') !== -1) {
-      this.activeIndex = '/tag'
-    } else if (path.indexOf('about') !== -1) {
-      this.activeIndex = '/about'
-    } else {
-      this.activeIndex = '/'
+    const names = ['category', 'tag', 'collection', 'about']
+    for (const name of names) {
+      if (path.indexOf(name) !== -1) {
+        this.activeIndex = `/${name}`
+        return
+      } else {
+        this.activeIndex = '/'
+      }
     }
   }
 }
@@ -75,21 +76,24 @@ export default {
 
 <style scoped>
 .logo {
-  padding-left: 20px;
-  font-size: 1.4em;
+  padding: 0 20px;
+  /* font-size: 1.4em; */
   color: #fff;
   text-decoration: none;
-  float: left;
+  /* float: left; */
 }
 .header-search {
-  float: right;
+  /* float: right; */
   padding: 0 20px;
 }
-.header-container ul {
-  float: right;
+.header-container {
+  text-align: center;
 }
 .el-menu.el-menu--horizontal {
   border-bottom: unset;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .el-menu {
   background-color: unset;
