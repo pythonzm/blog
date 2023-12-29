@@ -13,6 +13,7 @@
 
 <script>
 import BackToTop from '@/components/BackToTop'
+import {} from '@/assets/external_js/snow.js'
 export default {
   name: 'App',
   components: {
@@ -31,12 +32,6 @@ export default {
         background: '#000'// 按钮的背景颜色 The background color of the button
       }
     }
-  },
-  mounted() {
-    const script = document.createElement('script')
-    script.type = 'text/javascript'
-    script.src = 'https://app.embed.im/snow.js'
-    document.body.appendChild(script)
   }
 }
 </script>
