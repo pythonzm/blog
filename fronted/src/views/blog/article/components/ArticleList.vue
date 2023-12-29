@@ -18,7 +18,7 @@
             }"
           >
             {{ item.title
-            }}<span v-if="!mobile">{{ item.created_time | formatDate }}</span>
+            }}<span v-if="device!=='mobile'">{{ item.created_time | formatDate }}</span>
           </router-link>
         </div>
       </div>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { fetchList } from '@/api/article'
 import Pagination from '@/components/Pagination'
 import ResizeMixin from '@/blayout/mixin/ResizeHandler'
@@ -60,19 +61,13 @@ export default {
         category: undefined,
         tag: undefined,
         q: undefined
-      },
-      mobile: false
+      }
     }
   },
   computed: {
-    device() {
-      return this.$store.state.app.device
-    },
-    classObj() {
-      return {
-        mobile: this.device === 'mobile'
-      }
-    }
+    ...mapGetters([
+      'device'
+    ])
   },
   created() {
     if (this.$route.query.hasOwnProperty('category')) {
@@ -85,7 +80,6 @@ export default {
       this.listQuery.q = this.$route.query.q
     }
     this.getList()
-    this.mobile = this.device === 'mobile'
   },
   methods: {
     getList() {

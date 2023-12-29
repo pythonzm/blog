@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { fetchRandSoup } from '@/api/soup'
 import Header from './components/header'
 import BlogMain from './components/BlogMain'
@@ -61,14 +62,9 @@ export default {
     }
   },
   computed: {
-    device() {
-      return this.$store.state.app.device
-    },
-    classObj() {
-      return {
-        mobile: this.device === 'mobile'
-      }
-    }
+    ...mapGetters([
+      'device'
+    ])
   },
   mounted() {
     this.getSoup()
