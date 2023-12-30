@@ -1,16 +1,15 @@
 <template>
   <div class="header-container">
-    <!-- <div v-if="!mobile" class="logo">
+    <div v-if="!mobile" class="logo">
       <a href="/">{{ logo }}</a>
-    </div> -->
-
+    </div>
+    <search id="header-search" />
     <el-menu
       :default-active="activeIndex"
       class="el-menu-demo"
       mode="horizontal"
       active-text-color="rgb(255, 255, 255)"
       router
-      style="display: flex;"
     >
       <el-menu-item
         v-for="(item, key) in navOptions"
@@ -18,7 +17,7 @@
         :index="item.index"
         style="background-color: unset"
       >{{ item.label }}</el-menu-item>
-      <search v-if="!mobile" id="header-search" />
+
     </el-menu>
 
   </div>
@@ -77,13 +76,13 @@ export default {
 <style scoped>
 .logo {
   padding: 0 20px;
-  /* font-size: 1.4em; */
+  font-size: 1.4em;
   color: #fff;
   text-decoration: none;
-  /* float: left; */
+  float: left;
 }
 .header-search {
-  /* float: right; */
+  float: right;
   padding: 0 20px;
 }
 .header-container {
@@ -91,9 +90,7 @@ export default {
 }
 .el-menu.el-menu--horizontal {
   border-bottom: unset;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  float: right;
 }
 .el-menu {
   background-color: unset;
