@@ -9,8 +9,6 @@ function check() {
   } else {
     before = null
     after = null
-    // delete before;
-    // delete after;
   }
   setTimeout(check, 100)
 }
@@ -22,27 +20,27 @@ window.onload = function() {
     e.preventDefault()
   }, false)
   document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+    if (e.ctrlKey && e.shiftKey && e.code === 73) {
       disabledEvent(e)
     }
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+    if (e.ctrlKey && e.shiftKey && e.code === 74) {
       disabledEvent(e)
     }
-    if (e.keyCode === 83 && (navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey)) {
+    if (e.code === 83 && (navigator.platform.match('Mac') ? e.metaKey : e.ctrlKey)) {
       disabledEvent(e)
     }
-    if (e.ctrlKey && e.keyCode === 85) {
+    if (e.ctrlKey && e.code === 85) {
       disabledEvent(e)
     }
-    if (event.keyCode === 123) {
+    if (e.code === 123) {
       disabledEvent(e)
     }
   }, false)
   function disabledEvent(e) {
     if (e.stopPropagation) {
       e.stopPropagation()
-    } else if (window.event) {
-      window.event.cancelBubble = true
+    } else if (window.Event) {
+      window.Event.stopPropagation = true
     }
     e.preventDefault()
     return false

@@ -16,7 +16,8 @@ import '@/permission' // permission control
 import Highlight from '@/directive/mhighlight'
 import 'viewerjs/dist/viewer.css' // 用于文章图片放大预览
 import Viewer from 'v-viewer'
-import {} from '@/assets/external_js/snow.js'
+import '@/assets/external_js/snow.js'
+
 if (process.env.NODE_ENV === 'production') {
   import('@/assets/external_js/no-debug.js')
 }

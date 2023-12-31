@@ -1,14 +1,10 @@
-import defaultSettings from "@/settings";
+import defaultSettings from '@/settings'
 
-export default function getPageTitle(pageTitle, toPath) {
-  var title;
-  if (toPath.indexOf("admin") !== -1 || toPath.indexOf("login") !== -1) {
-    title = defaultSettings.adminTitle;
-  } else {
-    title = defaultSettings.blogTitle;
-  }
+const title = defaultSettings.title || 'POOROPS'
+
+export default function getPageTitle(pageTitle) {
   if (pageTitle) {
-    return `${pageTitle} - ${title}`;
+    return `${pageTitle} - ${title}`
   }
-  return `${title}`;
+  return `${title}`
 }
