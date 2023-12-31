@@ -13,7 +13,6 @@
 
 <script>
 import BackToTop from '@/components/BackToTop'
-import {} from '@/assets/external_js/snow.js'
 export default {
   name: 'App',
   components: {
