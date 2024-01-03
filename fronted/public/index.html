@@ -19,5 +19,23 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+    <script>
+      var minimalUserResponseInMiliseconds = 200
+      function check() {
+        console.clear()
+        var before = new Date().getTime()
+        debugger; var after = new Date().getTime()
+        if (after - before > minimalUserResponseInMiliseconds) {
+          document.write(' Bingo. ')
+          self.location.replace(window.location.protocol + window.location.href.substring(window.location.protocol.length))
+        } else {
+          before = null
+          after = null
+        }
+        setTimeout(check, 100)
+      }
+
+      check()
+    </script>
   </body>
 </html>
