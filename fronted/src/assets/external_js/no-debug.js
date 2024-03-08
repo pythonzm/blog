@@ -31,9 +31,10 @@ window.onload = function() {
     e.preventDefault()
     return false
   }
-  window.addEventListener('resize', function() {
-    if ((window.outerHeight - window.innerHeight) > 100) {
-      document.write('Bingo')
-    }
-  })
+  // FIXME: 手机网页端查看有问题
+  // window.addEventListener('resize', function() {
+  //   if ((window.outerHeight - window.innerHeight) > 100) {
+  //     document.write('Bingo')
+  //   }
+  // })
 }
