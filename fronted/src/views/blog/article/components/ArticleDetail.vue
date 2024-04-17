@@ -54,6 +54,7 @@ import Comments from './comment'
 import '@/assets/md.css'
 import CodeCopy from '@/components/CodeCopy'
 import Vue from 'vue'
+import store from '@/store'
 export default {
   name: 'ArticleDetail',
   components: {
@@ -64,7 +65,21 @@ export default {
       article: {},
       category: {},
       tags: {},
-      views: 0
+      views: 0,
+      anchors: [],
+      heightTitle: ''
+    }
+  },
+  watch: {
+    // 监听$route对象的变化
+    '$route'(to, from) {
+      // 当路由变化时，更新页面标题
+      console.log(to.fullPath)
+      if (!to.fullPath.includes('id=')) {
+        store.dispatch('anchors/updateAnchors', [])
+      } else {
+        this.generateTOC()
+      }
     }
   },
   created() {
@@ -96,10 +111,38 @@ export default {
           this.category = response.data.category
           this.tags = response.data.tags
           this.views = response.data.views
+          this.generateTOC()
         })
         .catch(err => {
           console.log(err)
         })
+    },
+    generateTOC() {
+      // 使用浏览器DOM API解析HTML内容
+      const parser = new DOMParser()
+      const doc = parser.parseFromString(this.article.html, 'text/html')
+      // 提取所有标题元素
+      const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6')
+      const titles = Array.from(headings).filter((title) => !!title.innerText.trim())
+      if (!titles.length) {
+        store.dispatch('anchors/updateAnchors', [])
+        return
+      }
+      const hTags = Array.from(new Set(titles.map((title) => title.tagName))).sort()
+
+      // 生成目录结构
+      this.anchors = Array.from(headings).map((heading) => {
+        // 确保每个标题都有唯一的ID
+        if (!heading.id) {
+          heading.id = heading.textContent.trim().replace(/\s+/g, '-')
+        }
+        return {
+          id: heading.id,
+          text: heading.textContent,
+          indent: hTags.indexOf(heading.tagName)
+        }
+      })
+      store.dispatch('anchors/updateAnchors', this.anchors)
     }
   }
 }
