@@ -12,10 +12,13 @@
           style="margin-left: 10px;"
           type="success"
           @click="submitForm"
-          >发布
+        >发布
         </el-button>
-        <el-button v-loading="loading" type="warning" @click="draftForm"
-          >存草稿
+        <el-button
+          v-loading="loading"
+          type="warning"
+          @click="draftForm"
+        >存草稿
         </el-button>
       </sticky>
 
@@ -28,7 +31,7 @@
                 :maxlength="100"
                 name="name"
                 required
-                >标题
+              >标题
               </MDinput>
             </el-form-item>
 
@@ -60,7 +63,7 @@
                     icon="el-icon-plus"
                     style="margin-left: 5px;"
                     @click="createCT('category')"
-                  ></el-button>
+                  />
                 </el-col>
 
                 <el-col :span="8">
@@ -90,7 +93,7 @@
                     icon="el-icon-plus"
                     style="margin-left: 5px;"
                     @click="createCT('tag')"
-                  ></el-button>
+                  />
                 </el-col>
               </el-row>
             </div>
@@ -132,8 +135,7 @@
         <el-button
           type="primary"
           @click="ct === 'category' ? newCategory() : newTag()"
-          >确认</el-button
-        >
+        >确认</el-button>
       </div>
     </el-dialog>
   </div>
@@ -168,7 +170,7 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
@@ -216,7 +218,7 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       this.fetchData(id)
@@ -227,7 +229,7 @@ export default {
     this.getTags()
   },
   methods: {
-    fetchData (id) {
+    fetchData(id) {
       fetchArticle(id, { admin: true })
         .then(response => {
           const ids = []
@@ -241,7 +243,7 @@ export default {
           console.log(err)
         })
     },
-    submitForm () {
+    submitForm() {
       this.$refs.postForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -260,7 +262,7 @@ export default {
         }
       })
     },
-    draftForm () {
+    draftForm() {
       this.$refs.postForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -279,17 +281,17 @@ export default {
         }
       })
     },
-    getCategories () {
+    getCategories() {
       fetchCategoryList().then(response => {
         this.categories = response.data
       })
     },
-    getTags () {
+    getTags() {
       fetchTagList().then(response => {
         this.tags = response.data
       })
     },
-    createData (data) {
+    createData(data) {
       createArticle(data).then(response => {
         this.$notify({
           title: '成功',
@@ -299,7 +301,7 @@ export default {
         })
       })
     },
-    editData (id, data) {
+    editData(id, data) {
       editArticle(id, data).then(response => {
         this.$notify({
           title: '成功',
@@ -309,20 +311,59 @@ export default {
         })
       })
     },
-    getHtml () {
+    getHtml() {
       this.postForm.html = this.$refs.editor.getHtml()
     },
-    onAddImageBlob (blob, callback) {
-      let formData = new FormData();
-      formData.append('file', blob);
-      formData.set('t', 'image')
-      uploadImage(formData).then(response => {
-        callback(window.location.protocol + '//' + window.location.host + response.data.ImageFullUrl, blob.name);
-      }).catch(error => {
-        console.log(error);
-      });
+    // onAddImageBlob (blob, callback) {
+    //   let formData = new FormData();
+    //   formData.append('file', blob);
+    //   formData.set('t', 'image')
+    //   uploadImage(formData).then(response => {
+    //     callback(window.location.protocol + '//' + window.location.host + response.data.ImageFullUrl, blob.name);
+    //   }).catch(error => {
+    //     console.log(error);
+    //   });
+    // },
+    onAddImageBlob(blob, callback) {
+      const reader = new FileReader()
+      reader.onload = () => {
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          const ctx = canvas.getContext('2d')
+          canvas.width = img.width
+          canvas.height = img.height
+
+          // 将图片绘制到Canvas上
+          ctx.drawImage(img, 0, 0)
+
+          // 添加水印
+          ctx.font = '50px Arial'
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'
+          ctx.textAlign = 'center'
+          ctx.textBaseline = 'middle'
+          ctx.fillText('https://www.poorops.com', canvas.width / 2, canvas.height / 2)
+
+          // 将带有水印的图像转换为blob对象
+          canvas.toBlob(watermarkedBlob => {
+            const formData = new FormData()
+            formData.append('file', watermarkedBlob)
+            formData.set('t', 'image')
+
+            // 调用上传函数
+            uploadImage(formData).then(response => {
+              callback(window.location.protocol + '//' + window.location.host + response.data.ImageFullUrl, blob.name)
+            }).catch(error => {
+              console.log(error)
+            })
+          }, 'image/jpeg')
+        }
+        img.src = reader.result
+      }
+      reader.readAsDataURL(blob)
     },
-    resetTemp () {
+
+    resetTemp() {
       this.category = {
         category_name: ''
       }
@@ -330,12 +371,12 @@ export default {
         tag_name: ''
       }
     },
-    createCT (ct) {
+    createCT(ct) {
       this.resetTemp()
       this.dialogFormVisible = true
       this.ct = ct
     },
-    newCategory () {
+    newCategory() {
       createCategory(this.category).then(response => {
         this.categories.push(response.data)
         this.dialogFormVisible = false
@@ -347,7 +388,7 @@ export default {
         })
       })
     },
-    newTag () {
+    newTag() {
       createTag(this.tag).then(response => {
         this.tags.push(response.data)
         this.dialogFormVisible = false
