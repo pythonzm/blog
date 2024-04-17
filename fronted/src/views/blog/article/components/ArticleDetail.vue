@@ -125,6 +125,7 @@ export default {
       const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6')
       const titles = Array.from(headings).filter((title) => !!title.innerText.trim())
       if (!titles.length) {
+        store.dispatch('anchors/updateAnchors', [])
         return
       }
       const hTags = Array.from(new Set(titles.map((title) => title.tagName))).sort()
@@ -142,7 +143,6 @@ export default {
         }
       })
       store.dispatch('anchors/updateAnchors', this.anchors)
-      console.log(this.anchors)
     }
   }
 }

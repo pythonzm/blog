@@ -1,7 +1,18 @@
 <template>
   <div>
-    <el-card ref="ele">
-      <!-- <div class="user-bio">
+    <div v-if="anchors.length !== 0" class="anchors">
+      <div class="user-education user-bio-section">
+        <p
+          v-for="anchor in anchors"
+          :key="anchor.id"
+          :style="{ padding: `5px 5px 5px ${anchor.indent * 20 + 5}px` }"
+          :class="anchor.text===heightTitle?'title-active':'title-inactive'"
+          @click="scrollToAnchor(anchor.text)"
+        >{{ anchor.text }}</p>
+      </div>
+    </div>
+    <el-card v-else ref="ele">
+      <div class="user-bio">
         <div class="user-education user-bio-section">
           <div class="user-bio-section-header">
             <svg-icon icon-class="education" />
@@ -11,7 +22,7 @@
             <div class="text-muted">{{ soup.content }}</div>
           </div>
         </div>
-      </div> -->
+      </div>
 
       <div class="user-bio">
         <div class="user-education user-bio-section">
@@ -22,20 +33,6 @@
           <div class="user-bio-section-body">
             <img :src="poorops">
             <img :src="xiaochengxu">
-          </div>
-        </div>
-      </div>
-      <div v-if="anchors.length !== 0" class="user-bio">
-        <div class="user-education user-bio-section">
-          <div class="user-bio-section-header" />
-          <div class="anchors">
-            <p
-              v-for="anchor in anchors"
-              :key="anchor.id"
-              :style="{ padding: `3px 3px 3px ${anchor.indent * 20 + 3}px` }"
-              :class="anchor.text===heightTitle?'title-active':'title-inactive'"
-              @click="scrollToAnchor(anchor.text)"
-            >{{ anchor.text }}</p>
           </div>
         </div>
       </div>
@@ -90,10 +87,11 @@ export default {
 
 <style lang="scss" scoped>
 .title-active {
-  border-left: 2px solid rgb(5, 5, 5);
+  border-left: 2px solid #777;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* 水平偏移量，垂直偏移量，模糊半径，阴影颜色 */
   // padding: 10px; /* 添加内边距以使阴影效果更明显 */
-  background-color: #fffbfb; /* 设置背景色以突出显示阴影效果 */
+  background-color: #000; /* 设置背景色以突出显示阴影效果 */
+  color: #fff;
   cursor: pointer;
   margin: 5px;
 }
@@ -105,7 +103,15 @@ export default {
   background-color: #e4e4e4;
 }
 .anchors {
-  text-align: justify;
+  text-align: left;
+  width: 24%;
+  position: fixed;
+  left: 75%;
+  overflow-y: auto;
+  max-height: 80vh;
+  font-size: small;
+  border: 1px #ccc;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 .el-card {
   float: right;
@@ -126,18 +132,6 @@ img {
   color: #777;
   white-space: pre-line;
   line-height: 1.5em;
-}
-
-.user-profile {
-  .user-name {
-    padding: 15px;
-    font-size: 20px;
-    font-weight: 700;
-  }
-
-  .box-center {
-    padding-top: 10px;
-  }
 }
 
 .user-bio {
