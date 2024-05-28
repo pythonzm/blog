@@ -1,37 +1,35 @@
 <template>
-  <div class="dashboard-container">
-    <div v-if="total === 0" class="search-title">
-      <p v-if="listQuery.q !== undefined" v-cloak>
-        暂无包含关键字 {{ listQuery.q }} 的文章
-      </p>
-      <p v-else>暂无文章！</p>
+  <div v-if="total === 0" class="search-title">
+    <p v-if="listQuery.q !== undefined" v-cloak>
+      暂无包含关键字 {{ listQuery.q }} 的文章
+    </p>
+    <p v-else>暂无文章！</p>
+  </div>
+
+  <div v-else>
+    <div class="title-article">
+      <div v-for="item in list" :key="item.id" class="list-card">
+        <router-link
+          class="pan-btn blue-btn"
+          :to="{
+            name: 'CTQArticle',
+            query: { id: item.id }
+          }"
+        >
+          {{ item.title
+          }}<span v-if="device!=='mobile'">{{ item.created_time | formatDate }}</span>
+        </router-link>
+      </div>
     </div>
 
-    <div v-else>
-      <div class="title-article">
-        <div v-for="item in list" :key="item.id" class="list-card">
-          <router-link
-            class="pan-btn blue-btn"
-            :to="{
-              name: 'CTQArticle',
-              query: { id: item.id }
-            }"
-          >
-            {{ item.title
-            }}<span v-if="device!=='mobile'">{{ item.created_time | formatDate }}</span>
-          </router-link>
-        </div>
-      </div>
-
-      <div class="page">
-        <pagination
-          :total="total"
-          :page.sync="listQuery.page"
-          :limit.sync="listQuery.limit"
-          layout="prev, pager, next"
-          @pagination="getList"
-        />
-      </div>
+    <div class="page">
+      <pagination
+        :total="total"
+        :page.sync="listQuery.page"
+        :limit.sync="listQuery.limit"
+        layout="prev, pager, next"
+        @pagination="getList"
+      />
     </div>
   </div>
 </template>
