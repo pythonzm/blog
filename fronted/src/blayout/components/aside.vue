@@ -31,8 +31,8 @@
             <span>扫不出吃亏，扫不出上当</span>
           </div>
           <div class="user-bio-section-body">
-            <img :src="poorops">
-            <img :src="xiaochengxu">
+            <img :src="poorops" width="100" height="100" alt="gongzhonghao">
+            <img :src="xiaochengxu" width="100" height="100" alt="xiaochengxu">
           </div>
         </div>
       </div>

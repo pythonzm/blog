@@ -16,9 +16,8 @@
           width="149"
           height="149"
           :src="forkme"
-          class="attachment-full size-full"
           alt="Fork me on GitHub"
-          data-recalc-dims="1"
+          loading="lazy"
         >
       </a>
       <div class="main">
