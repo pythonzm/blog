@@ -64,8 +64,8 @@ export const constantRoutes = [
         path: '',
         name: 'CTQArticle',
         hidden: true,
-        component: () => import('@/views/blog/article/article'),
-        meta: { title: '文章列表' }
+        component: () => import('@/views/blog/article/article')
+        // meta: { title: '文章列表' }
       }
     ]
   },
