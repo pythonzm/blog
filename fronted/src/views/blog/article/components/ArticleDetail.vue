@@ -1,50 +1,53 @@
 <template>
-  <div id="article">
-    <div class="article-wrap">
-      <div class="article-message">
-        <p class="article-title">
-          {{ article.title }}
-        </p>
-        <div class="article-info">
-          <svg-icon icon-class="calendar" />
-          发表于 {{ article.created_time }} •
-          <span
-            v-if="article.updated_time !== ''"
-          ><svg-icon icon-class="calendar" /> 更新于
-            {{ article.updated_time }} •</span>
-          <svg-icon icon-class="category" />
-          <span
-            class="classify"
-          ><router-link
-            :to="{
-              name: 'CTQArticle',
-              query: { category: category.category_name }
-            }"
-          >{{ category.category_name }}</router-link></span>
-          •
-          <svg-icon icon-class="eye-open" />{{ views }}次围观
-        </div>
-      </div>
-      <div class="article-view">
-        <div v-mhighlight v-viewer class="md-body" v-html="article.html" />
-      </div>
 
-      <div class="tags">
-        <div
-          v-for="(tag, index) in tags"
-          :key="index"
-          class="tag"
-          @click="
-            $router.push({ name: 'CTQArticle', query: { tag: tag.tag_name } })
-          "
-        >
-          <svg-icon icon-class="tag" />
-          {{ tag.tag_name }}
-        </div>
+  <div class="article-wrap">
+    <div class="article-message">
+      <p class="article-title">
+        {{ article.title }}
+      </p>
+      <div class="article-info">
+        <svg-icon icon-class="calendar" />
+        发表于 {{ article.created_time }} •
+        <span
+          v-if="article.updated_time !== ''"
+        ><svg-icon icon-class="calendar" /> 更新于
+          {{ article.updated_time }} •</span>
+        <svg-icon icon-class="category" />
+        <span
+          class="classify"
+        ><router-link
+          :to="{
+            name: 'CTQArticle',
+            query: { category: category.category_name }
+          }"
+        >{{ category.category_name }}</router-link></span>
+        •
+        <svg-icon icon-class="eye-open" />{{ views }}次围观
       </div>
-      <Comments />
     </div>
+    <div class="article-view">
+      <div v-mhighlight v-viewer class="md-body" v-html="article.html" />
+    </div>
+
+    <div class="tags">
+      <div
+        v-for="(tag, index) in tags"
+        :key="index"
+        class="tag"
+        @click="
+    $router.push({ name: 'CTQArticle', query: { tag: tag.tag_name } })
+    "
+      >
+        <svg-icon icon-class="tag" />
+        {{ tag.tag_name }}
+      </div>
+    </div>
+    <Comments />
+    <script type="application/ld+json" v-html="jsonld">
+      {}
+    </script>
   </div>
+
 </template>
 
 <script>
@@ -67,7 +70,8 @@ export default {
       tags: {},
       views: 0,
       anchors: [],
-      heightTitle: ''
+      heightTitle: '',
+      jsonld: {}
     }
   },
   watch: {
@@ -112,6 +116,21 @@ export default {
           this.tags = response.data.tags
           this.views = response.data.views
           this.generateTOC()
+          document.title = `${this.article.title} - POOROPS`
+          const created_time = this.convertToISO8601(this.article.created_time)
+          const updated_time = this.article.updated_time ? this.convertToISO8601(this.article.updated_time) : created_time
+          this.jsonld = {
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            'headline': this.article.title,
+            'datePublished': created_time,
+            'dateModified': updated_time,
+            'author': {
+              '@type': 'Person',
+              'name': 'POOROPS',
+              'url': window.location.href
+            }
+          }
         })
         .catch(err => {
           console.log(err)
@@ -143,6 +162,11 @@ export default {
         }
       })
       store.dispatch('anchors/updateAnchors', this.anchors)
+    },
+    convertToISO8601(dateString, timezoneOffset = '+08:00') {
+      const date = new Date(dateString)
+      const isoDateString = date.toISOString()
+      return isoDateString.slice(0, -1) + timezoneOffset
     }
   }
 }
@@ -162,9 +186,6 @@ export default {
   opacity: 1;
 }
 
-.article {
-  padding: 30px 10px;
-}
 .article-wrap {
   position: relative;
   padding: 30px;
