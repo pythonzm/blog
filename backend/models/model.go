@@ -3,6 +3,8 @@ package models
 import (
 	"backend/utils"
 	"fmt"
+	"github.com/algolia/algoliasearch-client-go/v3/algolia/opt"
+	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	"github.com/elastic/go-elasticsearch/v8"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gomodule/redigo/redis"
@@ -13,6 +15,7 @@ import (
 var DB *sqlx.DB
 var RedisPool *redis.Pool
 var ESClient *elasticsearch.Client
+var AlgoliaIndex *search.Index
 
 func init() {
 	DB = sqlx.MustConnect(utils.DBInfo.Mode, fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4",
@@ -49,5 +52,12 @@ func init() {
 			esAddr,
 		},
 	})
+	algoliaClient := search.NewClient(utils.AlgoliaInfo.AppID, utils.AlgoliaInfo.ApiKey)
+	AlgoliaIndex = algoliaClient.InitIndex(utils.AlgoliaInfo.Index)
+	_, _ = AlgoliaIndex.SetSettings(search.Settings{
+		AttributesForFaceting: opt.AttributesForFaceting(
+			"id",
+			"filterOnly(id)",
+		),
+	})
 }
-

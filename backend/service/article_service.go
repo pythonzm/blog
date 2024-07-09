@@ -142,9 +142,18 @@ func (a *Article) Create() (Article, error) {
 		}
 	}
 	article := Article{int(articleID), a.Title, a.Content, a.Html, a.CategoryID, a.TagID, createTime, a.UpdatedTime, a.Status}
-	if article.Status == "published" && utils.ESInfo.Enable {
-		if e := article.IndexBlog(); e != nil {
-			utils.WriteErrorLog(fmt.Sprintf("[ %s ] 存入elastic出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+	if article.Status == "published" {
+		if utils.ESInfo.Enable {
+			if e := article.IndexBlog(); e != nil {
+				utils.WriteErrorLog(fmt.Sprintf("[ %s ] 存入elastic出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+			}
+		}
+		if utils.AlgoliaInfo.Enable {
+			algoliaRecord := a.convertToAlgolia(int(articleID))
+			if e := algoliaRecord.AddRecord(); e != nil {
+				utils.WriteErrorLog(fmt.Sprintf("[ %s ] 存入Algolia出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+			}
+
 		}
 	}
 
@@ -165,8 +174,17 @@ func (a *Article) Delete() error {
 		utils.WriteErrorLog(fmt.Sprintf("[ %s ] 删除阅读量失败, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
 	}
 	// 从ES中删除
-	if e := a.DeleteFromES(); e != nil {
-		utils.WriteErrorLog(fmt.Sprintf("[ %s ] 从elastic中删除出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+	if utils.ESInfo.Enable {
+		if e := a.DeleteFromES(); e != nil {
+			utils.WriteErrorLog(fmt.Sprintf("[ %s ] 从elastic中删除出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+		}
+	}
+	// 从Algolia中删除
+	if utils.AlgoliaInfo.Enable {
+		algoliaRecord := a.convertToAlgolia(a.ID)
+		if e := algoliaRecord.DeleteRecord(); e != nil {
+			utils.WriteErrorLog(fmt.Sprintf("[ %s ] 删除Algolia记录出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+		}
 	}
 	return nil
 }
@@ -197,6 +215,18 @@ func (a *Article) Edit() error {
 		} else {
 			if e := a.DeleteFromES(); e != nil {
 				utils.WriteErrorLog(fmt.Sprintf("[ %s ] 从elastic删除出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+			}
+		}
+	}
+	if utils.AlgoliaInfo.Enable {
+		algoliaRecord := a.convertToAlgolia(a.ID)
+		if a.Status == "published" {
+			if e := algoliaRecord.UpdateRecord(); e != nil {
+				utils.WriteErrorLog(fmt.Sprintf("[ %s ] 更新Algolia记录出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
+			}
+		} else {
+			if e := algoliaRecord.DeleteRecord(); e != nil {
+				utils.WriteErrorLog(fmt.Sprintf("[ %s ] 删除Algolia记录出错, %v\n", time.Now().Format(utils.AppInfo.TimeFormat), e))
 			}
 		}
 	}
@@ -553,4 +583,13 @@ func (a Article) DeleteFromES() error {
 		return fmt.Errorf("[%s] %s: %s", res.Status(), e["error"].(map[string]interface{})["type"], e["error"].(map[string]interface{})["reason"])
 	}
 	return nil
+}
+
+func (a *Article) convertToAlgolia(articleID int) *tools.AlgoliaArticle {
+	return &tools.AlgoliaArticle{
+		ObjectID: fmt.Sprintf("blog-%d", articleID),
+		ID:       articleID,
+		Title:    a.Title,
+		Content:  a.Content,
+	}
 }

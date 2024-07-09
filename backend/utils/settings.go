@@ -47,6 +47,13 @@ type ES struct {
 	Index  string `json:"index"`
 }
 
+type Algolia struct {
+	Enable bool   `json:"enable"`
+	AppID  string `json:"app_id"`
+	ApiKey string `json:"api_key"`
+	Index  string `json:"index"`
+}
+
 type Mail struct {
 	Enable   bool   `json:"enable"`
 	Host     string `json:"host"`
@@ -61,6 +68,7 @@ var DBInfo = &DataBase{}
 var AppInfo = &App{}
 var RedisInfo = &Redis{}
 var ESInfo = &ES{}
+var AlgoliaInfo = &Algolia{}
 var MailInfo = &Mail{}
 
 func init() {
@@ -102,6 +110,11 @@ func init() {
 	ESInfo.Host = viper.GetString("es.host")
 	ESInfo.Port = viper.GetString("es.port")
 	ESInfo.Index = viper.GetString("es.index")
+
+	AlgoliaInfo.Enable = viper.GetBool("algolia.enable")
+	AlgoliaInfo.AppID = viper.GetString("algolia.appID")
+	AlgoliaInfo.ApiKey = viper.GetString("algolia.apiKey")
+	AlgoliaInfo.Index = viper.GetString("algolia.index")
 
 	MailInfo.Enable = viper.GetBool("mail.enable")
 	MailInfo.Host = viper.GetString("mail.host")

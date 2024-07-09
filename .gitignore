@@ -17,4 +17,5 @@ node_modules
 *.log
 package-lock.json
 backend/logs/*.log
+backend/conf/config.yml
 .vscode

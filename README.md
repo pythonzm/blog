@@ -2,10 +2,9 @@
 
 > 整体就是以黑白为主，不会做手机适配，所以手机浏览布局会有问题，如果哪位大佬感兴趣做一下手机适配就非常感谢了
 
-## [线上地址](https://www.poorops.com)  
-## 搜索功能使用elastic做的全文检索，由于租的机器内存比较小，elastic装上跑着有点儿费劲，线上就没有使用搜索功能
+## [线上地址：https://www.poorops.com](https://www.poorops.com)
 
-## [Docker快速部署(生产环境)](https://github.com/pythonzm/blog/wiki/Docker-部署)
+## [Docker快速部署](https://github.com/pythonzm/blog/wiki/Docker-部署)
 
 ## 标准部署
 
@@ -32,7 +31,8 @@
   > 更多goose使用方法，参考：https://github.com/pressly/goose
   
 ### 启动后端
-首先修改conf/config.yml中的配置信息
+1. 重命名配置文件 mv conf/config.yml.example conf/config.yml
+2. 修改conf/config.yml中的配置信息
 
 `go run main.go`
   
@@ -52,18 +52,6 @@
   前台界面：$YOURIP:9528/#/
   
   后台界面: $YOURIP:9528/#/admin     默认用户名密码：admin/12346
-  
-## TODO LIST
-  美化界面
 
-### 添加文章
-![image](https://github.com/pythonzm/blog/blob/master/screenshots/add_article.png)
-
-### 文章列表
-![image](https://github.com/pythonzm/blog/blob/master/screenshots/article_list.png)
-
-### 前台首页
-![image](https://github.com/pythonzm/blog/blob/master/screenshots/home.png)
-
-### 文章详情页
-![image](https://github.com/pythonzm/blog/blob/master/screenshots/article.png)
+## 2024-07-09更新
+搜索功能接入Algolia
