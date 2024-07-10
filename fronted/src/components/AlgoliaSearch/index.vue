@@ -11,10 +11,13 @@ import algoliasearch from 'algoliasearch/lite'
 import instantsearch from 'instantsearch.js'
 import { searchBox, hits, pagination } from 'instantsearch.js/es/widgets'
 import 'instantsearch.css/themes/satellite.css'
+import defaultSettings from '@/settings'
 
-const searchClient = algoliasearch('Q0SQS2P524', '5a7f4455a1571eb040b804b62ac44b00')
+const { algoliaAppID, algoliaApiKey, algoliaIndexName } = defaultSettings
+
+const searchClient = algoliasearch(algoliaAppID, algoliaApiKey)
 const search = instantsearch({
-  indexName: 'blog_article',
+  indexName: algoliaIndexName,
   searchClient: searchClient,
   insights: true,
   searchFunction(helper) {

@@ -3,6 +3,7 @@
     <div v-if="!mobile" class="logo">
       <a href="/">{{ logo }}</a>
     </div>
+    <HeaderSearch v-if="!algoliaSearch" id="header-search" />
     <el-menu
       :default-active="activeIndex"
       mode="horizontal"
@@ -16,17 +17,20 @@
         :index="item.index"
         style="background-color: unset;"
       >{{ item.label }}</el-menu-item>
-      <div style="padding: 0 10px;">
+      <div v-if="algoliaSearch" style="padding: 0 10px;">
         <svg-icon icon-class="search" class="search" @click="dialogVisible = true" />
       </div>
 
     </el-menu>
 
     <el-dialog
+      v-if="algoliaSearch"
       :visible.sync="dialogVisible"
       append-to-body
       :show-close="showClose"
       :fullscreen="mobile"
+      @opened="focusAlgolia"
+      @closed="blurAlgolia"
     >
       <AlgoliaSearch class="el-dialog-div" />
     </el-dialog>
@@ -34,12 +38,16 @@
 </template>
 
 <script>
-// import Search from '@/components/HeaderSearch'
+import HeaderSearch from '@/components/HeaderSearch'
 import AlgoliaSearch from '@/components/AlgoliaSearch'
+import defaultSettings from '@/settings'
+
+const { algoliaSearch } = defaultSettings
 export default {
   name: 'Header',
   components: {
-    AlgoliaSearch
+    AlgoliaSearch,
+    HeaderSearch
   },
   props: {
     mobile: {
@@ -59,7 +67,8 @@ export default {
       ],
       activeIndex: '/',
       dialogVisible: false,
-      showClose: false
+      showClose: false,
+      algoliaSearch
     }
   },
   created() {
@@ -73,6 +82,14 @@ export default {
       } else {
         this.activeIndex = '/'
       }
+    }
+  },
+  methods: {
+    focusAlgolia() {
+      document.getElementsByClassName('ais-SearchBox-input')[0].focus()
+    },
+    blurAlgolia() {
+      document.getElementsByClassName('ais-SearchBox-input')[0].blur()
     }
   }
 }

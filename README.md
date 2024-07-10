@@ -31,8 +31,8 @@
   > 更多goose使用方法，参考：https://github.com/pressly/goose
   
 ### 启动后端
-1. 重命名配置文件 mv conf/config.yml.example conf/config.yml
-2. 修改conf/config.yml中的配置信息
+1. 重命名配置文件 mv backend/conf/config.yml.example backend/conf/config.yml
+2. 修改 backend/conf/config.yml 中的配置信息
 
 `go run main.go`
   
@@ -54,4 +54,7 @@
   后台界面: $YOURIP:9528/#/admin     默认用户名密码：admin/12346
 
 ## 2024-07-09更新
-搜索功能接入Algolia
+搜索功能接入Algolia，默认按照文章标题搜索
+如果要开启Algolia搜索，需要同时在前端和后端开启
+* 前端开启：编辑 fronted\src\settings.js 中相关配置
+* 后端开启：编辑 backend\conf\config.yml 中相关配置
