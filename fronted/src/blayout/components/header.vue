@@ -3,32 +3,51 @@
     <div v-if="!mobile" class="logo">
       <a href="/">{{ logo }}</a>
     </div>
-    <search id="header-search" />
+    <HeaderSearch v-if="!algoliaSearch" id="header-search" />
     <el-menu
       :default-active="activeIndex"
-      class="el-menu-demo"
       mode="horizontal"
       active-text-color="rgb(255, 255, 255)"
       router
+      style="display: inline-flex;"
     >
       <el-menu-item
         v-for="(item, key) in navOptions"
         :key="key"
         :index="item.index"
-        style="background-color: unset"
+        style="background-color: unset;"
       >{{ item.label }}</el-menu-item>
+      <div v-if="algoliaSearch" style="padding: 0 10px;">
+        <svg-icon icon-class="search" class="search" @click="dialogVisible = true" />
+      </div>
 
     </el-menu>
 
+    <el-dialog
+      v-if="algoliaSearch"
+      :visible.sync="dialogVisible"
+      append-to-body
+      :show-close="showClose"
+      :fullscreen="mobile"
+      @opened="focusAlgolia"
+      @closed="blurAlgolia"
+    >
+      <AlgoliaSearch class="el-dialog-div" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import Search from '@/components/HeaderSearch'
+import HeaderSearch from '@/components/HeaderSearch'
+import AlgoliaSearch from '@/components/AlgoliaSearch'
+import defaultSettings from '@/settings'
+
+const { algoliaSearch } = defaultSettings
 export default {
   name: 'Header',
   components: {
-    Search
+    AlgoliaSearch,
+    HeaderSearch
   },
   props: {
     mobile: {
@@ -46,7 +65,10 @@ export default {
         { label: '藏宝阁', index: '/collection' },
         { label: '关于', index: '/about' }
       ],
-      activeIndex: '/'
+      activeIndex: '/',
+      dialogVisible: false,
+      showClose: false,
+      algoliaSearch
     }
   },
   created() {
@@ -61,6 +83,14 @@ export default {
         this.activeIndex = '/'
       }
     }
+  },
+  methods: {
+    focusAlgolia() {
+      document.getElementsByClassName('ais-SearchBox-input')[0].focus()
+    },
+    blurAlgolia() {
+      document.getElementsByClassName('ais-SearchBox-input')[0].blur()
+    }
   }
 }
 </script>
@@ -71,9 +101,21 @@ export default {
   height: 25px;
   line-height: 25px;
 }
+.el-dialog__header {
+  display: none;
+}
 </style>
 
 <style scoped>
+.search {
+  color: gray;
+  cursor: pointer;
+}
+
+.search:hover {
+  color: #fff;
+}
+
 .logo {
   padding: 0 20px;
   font-size: 1.4em;
@@ -97,5 +139,9 @@ export default {
 }
 .el-menu--horizontal > .el-menu-item:hover {
   color: #fff;
+}
+.el-dialog-div {
+  max-height: 70vh;
+  overflow: auto;
 }
 </style>

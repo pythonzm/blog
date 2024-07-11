@@ -17,6 +17,7 @@ func EncodeMD5(value string) string {
 func WriteErrorLog(s string) {
 	file, _ := os.OpenFile("logs/error.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0664)
 	_, e := file.WriteString(s)
+	_ = fmt.Errorf("%s", s)
 	if e != nil {
 		fmt.Println(e)
 	}

@@ -31,6 +31,11 @@ es:
   host: "127.0.0.1"
   port: "9200"
   index: "blog"
+algolia:
+  enable: false  # 是否开启algolia搜索文章
+  appID: "YOUR_APPID"
+  apiKey: "YOUR_APIKEY"
+  index: "YOUR_INDEX_NAME"
 mail:
   enable: false  # 是否开启评论邮件通知
   host: "smtp.163.com"
