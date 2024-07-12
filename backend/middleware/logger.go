@@ -25,7 +25,7 @@ var (
 func CustomLogger() gin.HandlerFunc {
 	gin.DisableConsoleColor()
 
-	file, e = os.OpenFile("logs/gin.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0664)
+	file, e = os.OpenFile("logs/gin.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0664)
 	if e != nil {
 		panic(e)
 	}
