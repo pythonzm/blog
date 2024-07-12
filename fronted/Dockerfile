@@ -5,7 +5,7 @@ RUN echo "${ALPINE_MIRROR}/latest-stable/main" > /etc/apk/repositories;
 RUN echo "${ALPINE_MIRROR}/latest-stable/community" >> /etc/apk/repositories;
 
 RUN apk update && \
-    apk add git python python-dev build-base
+    apk add git python3 python3-dev build-base
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --registry=https://registry.npm.taobao.org
