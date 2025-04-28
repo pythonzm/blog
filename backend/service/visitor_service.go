@@ -22,6 +22,12 @@ type CountByDate struct {
 	Date  string
 }
 
+var (
+	lowerBotKeywords    = []string{"bot", "spider", "crawler", "ahrefsbot", "yandexbot", "bingbot", "duckduckbot", "slurp", "baiduspider", "sogou"}
+	lowerMobileKeywords = []string{"mobile", "android", "iphone", "ipad", "ipod", "blackberry", "iemobile", "opera mini"}
+	lowerDesktopSysKeys = []string{"windows nt", "macintosh", "x11", "ubuntu"} // 系统关键词
+)
+
 func (v Visitor) NewVisitor() error {
 	visitTime := time.Now().Format(utils.AppInfo.TimeFormat)
 	visitDate := strings.Split(visitTime, " ")[0]
@@ -43,7 +49,7 @@ func (v Visitor) GetCountByDate() (map[string][]string, error) {
 	res := make([]CountByDate, 0)
 	for rows.Next() {
 		var r CountByDate
-		e = rows.StructScan(&r)
+		rows.StructScan(&r)
 		res = append(res, r)
 	}
 
@@ -60,32 +66,29 @@ func (v Visitor) GetCountByDate() (map[string][]string, error) {
 }
 
 func (v Visitor) GetCountByUA() (data []map[string]string, e error) {
-	visitors := make([]Visitor, 0)
+	uas := map[string]int{"Bot": 0, "Mobile": 0, "Desktop": 0, "Other": 0}
 
-	if e = db.Select(&visitors, "SELECT * FROM blog_visitor"); e != nil {
-		return
+	rows, err := db.Query("SELECT ua FROM blog_visitor")
+	if err != nil {
+		return nil, err
 	}
-	uas := map[string]int{"IE": 0, "Opera": 0, "Chrome": 0, "Firefox": 0, "Android": 0, "iPhone": 0, "WeChat": 0}
 
-	for _, visitor := range visitors {
-		switch {
-		case strings.Contains(visitor.Ua, "Trident"):
-			uas["IE"] += 1
-		case strings.Contains(visitor.Ua, "Presto"):
-			uas["Opera"] += 1
-		case strings.Contains(visitor.Ua, "Chrome"):
-			uas["Chrome"] += 1
-		case strings.Contains(visitor.Ua, "Firefox"):
-			uas["Firefox"] += 1
-		case strings.Contains(visitor.Ua, "Android"):
-			uas["Android"] += 1
-		case strings.Contains(visitor.Ua, "iPhone"):
-			uas["iPhone"] += 1
-		case strings.Contains(visitor.Ua, "MicroMessenger"):
-			uas["WeChat"] += 1
-		default:
-			uas[visitor.Ua] += 1
+	defer rows.Close()
+
+	for rows.Next() {
+		var ua string
+		if err = rows.Scan(&ua); err != nil {
+			return nil, err
 		}
+
+		lowerUA := strings.ToLower(ua)
+
+		category := classifyUA(lowerUA)
+		uas[category]++
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
 	}
 
 	for key, value := range uas {
@@ -94,4 +97,17 @@ func (v Visitor) GetCountByUA() (data []map[string]string, e error) {
 		}
 	}
 	return
+}
+
+func classifyUA(lowerUA string) string {
+	if utils.IfContainStr(lowerUA, lowerBotKeywords) {
+		return "Bot"
+	}
+	if utils.IfContainStr(lowerUA, lowerMobileKeywords) {
+		return "Mobile"
+	}
+	if utils.IfContainStr(lowerUA, lowerDesktopSysKeys) {
+		return "Desktop"
+	}
+	return "Other"
 }

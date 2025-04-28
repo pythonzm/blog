@@ -3,9 +3,10 @@ package middleware
 import (
 	"backend/utils"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Level int
@@ -25,6 +26,7 @@ var (
 func CustomLogger() gin.HandlerFunc {
 	gin.DisableConsoleColor()
 
+	os.MkdirAll("logs", os.ModePerm)
 	file, e = os.OpenFile("logs/gin.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0664)
 	if e != nil {
 		panic(e)

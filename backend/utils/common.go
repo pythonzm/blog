@@ -24,12 +24,10 @@ func WriteErrorLog(s string) {
 }
 
 func IfContainStr(s string, substrs []string) bool {
-	r := false
 	for _, substr := range substrs {
 		if strings.Contains(s, substr) {
-			r = true
-			break
+			return true
 		}
 	}
-	return r
+	return false
 }

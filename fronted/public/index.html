@@ -1,47 +1,46 @@
 <!DOCTYPE html>
 <html lang="zh">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-    />
-    <meta name="keywords" content="技术博客,K8S,poorops,运维,devops,云原生,python,golang">
-    <meta
-      name="description"
-      content="poorops的个人博客网站，包含Kubernetes、运维、devops、云原生、python、golang等相关知识，以及生产环境下遇到的一些问题或坑，不定期更新文章，欢迎关注。">
-    <!-- <link rel="icon" href="<%= BASE_URL %>favicon.ico" /> -->
-    <link rel="icon" type="image/svg+xml" href="<%= BASE_URL %>favicon.svg">
-    <link rel="icon" type="image/png" href="<%= BASE_URL %>favicon.png">
-    <title><%= webpackConfig.name %></title>
-  </head>
-  <body>
-    <noscript>
-      <strong
-        >We're sorry but <%= webpackConfig.name %> doesn't work properly without
-        JavaScript enabled. Please enable it to continue.</strong
-      >
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-    <script>
-      var minimalUserResponseInMiliseconds = 200
-      function check() {
-        console.clear()
-        var before = new Date().getTime()
-        debugger; var after = new Date().getTime()
-        if (after - before > minimalUserResponseInMiliseconds) {
-          document.write(' Bingo. ')
-          self.location.replace(window.location.protocol + window.location.href.substring(window.location.protocol.length))
-        } else {
-          before = null
-          after = null
-        }
-        setTimeout(check, 100)
-      }
 
-      check()
-    </script>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="keywords" content="技术博客,K8S,poorops,运维,devops,云原生,python,golang">
+  <meta name="description"
+    content="poorops的个人博客网站，包含Kubernetes、运维、devops、云原生、python、golang等相关知识，以及生产环境下遇到的一些问题或坑，不定期更新文章，欢迎关注。">
+  <!-- <link rel="icon" href="<%= BASE_URL %>favicon.ico" /> -->
+  <link rel="icon" type="image/svg+xml" href="<%= BASE_URL %>favicon.svg">
+  <link rel="icon" type="image/png" href="<%= BASE_URL %>favicon.png">
+  <title>
+    <%= webpackConfig.name %>
+  </title>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but <%= webpackConfig.name %> doesn't work properly without
+        JavaScript enabled. Please enable it to continue.</strong>
+  </noscript>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+  <script>
+    var minimalUserResponseInMiliseconds = 200
+    function check() {
+      console.clear()
+      var before = new Date().getTime()
+      debugger; var after = new Date().getTime()
+      if (after - before > minimalUserResponseInMiliseconds) {
+        document.write(' Bingo. ')
+        self.location.replace(window.location.protocol + window.location.href.substring(window.location.protocol.length))
+      } else {
+        before = null
+        after = null
+      }
+      setTimeout(check, 100)
+    }
+
+    check()
+  </script>
+</body>
+
 </html>

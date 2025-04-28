@@ -15,7 +15,7 @@ replace (
 
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
-	github.com/algolia/algoliasearch-client-go/v3 v3.31.2 // indirect
+	github.com/algolia/algoliasearch-client-go/v3 v3.31.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/elastic/go-elasticsearch/v8 v8.0.0-20191120063812-3b3cf00736fa
 	github.com/gin-gonic/gin v1.7.0
