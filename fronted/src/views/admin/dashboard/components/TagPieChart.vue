@@ -53,24 +53,45 @@ export default {
 
         this.chart.setOption({
           tooltip: {
-            trigger: "item",
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
-          },
-          legend: {
-            left: "center",
-            bottom: "10",
-            data: names
+            show: true,
+            formatter: function (params) {
+              return params.data.name + ": " + params.data.value;
+            }
           },
           series: [
             {
               name: "标签汇总",
-              type: "pie",
-              roseType: "radius",
-              radius: [15, 95],
-              center: ["50%", "38%"],
-              data: data,
-              animationEasing: "cubicInOut",
-              animationDuration: 2600
+              type: "graph",
+              layout: 'force',
+              roam: true,
+              label: {
+                show: true,
+                position: 'right',
+                formatter: '{b}',
+                fontSize: 10
+              },
+              force: {
+                repulsion: 120,  // 节点之间的斥力
+                gravity: 0.03,
+                edgeLength: [50, 150]
+              },
+              edgeSymbol: ['none', 'arrow'],
+              edgeSymbolSize: 5,
+              itemStyle: {
+                borderColor: '#fff',
+                borderWidth: 1,
+                shadowBlur: 5,
+                shadowColor: 'rgba(0, 0, 0, 0.1)'
+              },
+              lineStyle: {
+                color: 'rgba(150, 150, 150, 0.3)',
+                width: 1
+              },
+              data: data.map(item => ({
+                ...item,
+                symbolSize: 10 + item.value * 0.8,  // 节点大小跟value挂钩
+                draggable: true
+              })),
             }
           ]
         });

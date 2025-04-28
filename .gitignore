@@ -19,3 +19,4 @@ package-lock.json
 backend/logs/*.log
 backend/conf/config.yml
 .vscode
+backend/backend
