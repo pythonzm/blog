@@ -11,7 +11,8 @@
       type="search"
       placeholder="输入关键字，然后回车"
       class="header-search-select"
-      @keyup.enter.native="toSearch"
+      @keyup.native.enter.stop.prevent="toSearch"
+      @keydown.native.stop
     />
   </div>
 </template>
