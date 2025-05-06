@@ -7,7 +7,7 @@ var embedimSparkles = document.getElementById("embedim--sparkles");
 if (!embedimSparkles) {
 
     // 定义创建单个闪烁效果的函数
-    let createSparkle = function(x, y) {
+    let createSparkle = function (x, y) {
         // 创建一个新的 div 元素作为闪烁体
         const sparkle = document.createElement("div");
 
@@ -114,8 +114,6 @@ if (!embedimSparkles) {
 
     // 监听触摸移动事件 (针对移动设备)
     document.addEventListener("touchmove", e => {
-        // 阻止默认的滚动行为 (如果需要的话)
-        e.preventDefault();
         // 获取第一个触摸点
         const touch = e.touches[0];
         // 更新光标位置 (这里有个未定义的 'cursor' 变量，原始代码可能有误或依赖其他部分)

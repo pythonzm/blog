@@ -3,28 +3,36 @@
     <div v-if="!mobile" class="logo">
       <a href="/">{{ logo }}</a>
     </div>
-    <HeaderSearch v-if="!algoliaSearch" id="header-search" />
-    <el-menu
-      :default-active="activeIndex"
-      mode="horizontal"
-      active-text-color="rgb(255, 255, 255)"
-      router
-      style="display: inline-flex;"
-    >
-      <el-menu-item
-        v-for="(item, key) in navOptions"
-        :key="key"
-        :index="item.index"
-        style="background-color: unset;"
-      >{{ item.label }}</el-menu-item>
-      <div v-if="algoliaSearch" style="padding: 0 10px;">
-        <svg-icon icon-class="search" class="search" @click="dialogVisible = true" />
-      </div>
 
-    </el-menu>
+    <div class="nav-wrapper">
+      <el-menu
+        :default-active="activeIndex"
+        mode="horizontal"
+        active-text-color="#fff"
+        router
+        class="nav-menu"
+      >
+        <el-menu-item
+          v-for="(item, key) in navOptions"
+          :key="key"
+          :index="item.index"
+          style="background-color: unset;"
+        >{{ item.label }}</el-menu-item>
+
+        <el-menu-item class="search-item">
+          <svg-icon
+            v-if="algoliaSearch"
+            class-name="search-icon"
+            icon-class="search"
+            @click="dialogVisible = true"
+          />
+
+          <HeaderSearch v-else id="header-search" />
+        </el-menu-item>
+      </el-menu>
+    </div>
 
     <el-dialog
-      v-if="algoliaSearch"
       :visible.sync="dialogVisible"
       append-to-body
       :show-close="showClose"
@@ -107,12 +115,12 @@ export default {
 </style>
 
 <style scoped>
-.search {
-  color: gray;
-  cursor: pointer;
+.search-icon {
+  font-size: 18px;
+  color: #909399;
 }
 
-.search:hover {
+.search-icon:hover {
   color: #fff;
 }
 
@@ -121,27 +129,67 @@ export default {
   font-size: 1.4em;
   color: #fff;
   text-decoration: none;
-  float: left;
+  flex-shrink: 0;
 }
 .header-search {
-  float: right;
-  padding: 0 20px;
+  flex-shrink: 0;
 }
 .header-container {
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
 }
 .el-menu.el-menu--horizontal {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  flex: 1; 
+  justify-content: space-between;
+  align-items: center;
+  background-color: unset;
   border-bottom: unset;
-  float: right;
+}
+.el-menu.el-menu--horizontal>.el-menu-item:not(.is-disabled):hover {
+  background-color: unset;
 }
 .el-menu {
   background-color: unset;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
-.el-menu--horizontal > .el-menu-item:hover {
-  color: #fff;
+.el-menu-item {
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 0 15px;
 }
+
 .el-dialog-div {
   max-height: 70vh;
   overflow: auto;
+}
+.nav-wrapper {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.nav-menu .el-menu-item {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.search-item {
+  cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .header-container .el-menu-item {
+    font-size: 14px;
+  }
+  .nav-wrapper {
+    width: 100%;
+  }
 }
 </style>
