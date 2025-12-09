@@ -27,7 +27,6 @@ func Login(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusUnauthorized, utils.GenResponse(40001, nil, nil))
-	return
 }
 
 func Logout(c *gin.Context) {
@@ -41,7 +40,6 @@ func GetUserInfo(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, userInfo, nil))
-	return
 }
 
 func GetUserAbout(c *gin.Context) {
@@ -51,7 +49,6 @@ func GetUserAbout(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, about, nil))
-	return
 }
 
 func EditUser(c *gin.Context) {
@@ -86,5 +83,4 @@ func EditUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, utils.GenResponse(20000, u, nil))
-	return
 }

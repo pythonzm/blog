@@ -8,12 +8,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/elastic/go-elasticsearch/v8/esapi"
-	"github.com/elastic/go-elasticsearch/v8/esutil"
-	"github.com/gomodule/redigo/redis"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/elastic/go-elasticsearch/v8/esapi"
+	"github.com/elastic/go-elasticsearch/v8/esutil"
+	"github.com/gomodule/redigo/redis"
 )
 
 type Article struct {

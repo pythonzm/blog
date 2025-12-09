@@ -25,7 +25,7 @@
     "element-ui": "2.13.2",
     "highlight.js": "^9.15.10",
     "instantsearch.css": "^8.2.1",
-    "instantsearch.js": "^4.73.0",
+    "instantsearch.js": "4.78.1",
     "js-cookie": "2.2.0",
     "marked": "^0.7.0",
     "normalize.css": "7.0.0",

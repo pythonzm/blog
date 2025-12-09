@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="ca" v-for="tag in list" :key="tag.id">
-      <mallki class-name="mallki-text" :text="tag.tag_name" />
+      <Mallki class-name="mallki-text" :text="tag.tag_name" />
     </div>
   </div>
 </template>
