@@ -22,12 +22,13 @@ func MD5ImageName(name string) string {
 }
 
 func GenImageAvatarInfo(t, n string) (i ImageAvatarInfo) {
-	if t == "avatar" {
+	switch t {
+	case "avatar":
 		i.ImageRelPath = ""
 		i.ImageFullUrl = ""
 		i.AvatarRelPath = filepath.Join(AppInfo.UploadBasePath, AppInfo.AvatarRelPath, n)
 		i.AvatarFullUrl = fmt.Sprintf(`%s/%s/%s/%s`, AppInfo.ApiBaseUrl, AppInfo.StaticBasePath, AppInfo.AvatarRelPath, n)
-	} else if t == "image" {
+	case "image":
 		i.ImageRelPath = filepath.Join(AppInfo.UploadBasePath, AppInfo.ImageRelPath, today(), n)
 		i.ImageFullUrl = fmt.Sprintf(`%s/%s/%s/%s/%s`, AppInfo.ApiBaseUrl, AppInfo.StaticBasePath, AppInfo.ImageRelPath, today(), n)
 		i.AvatarRelPath = ""
@@ -60,4 +61,3 @@ func MkDir(src string) error {
 	err := os.MkdirAll(src, os.ModeDir)
 	return err
 }
-

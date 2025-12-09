@@ -3,9 +3,10 @@ package v1
 import (
 	"backend/service"
 	"backend/utils"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 func GetAllCategories(c *gin.Context) {
@@ -24,7 +25,6 @@ func GetCategoryCount(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, count, nil))
-	return
 }
 
 func CreateCategory(c *gin.Context) {

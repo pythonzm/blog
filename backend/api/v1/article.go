@@ -3,9 +3,10 @@ package v1
 import (
 	"backend/service"
 	"backend/utils"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 func GetArticles(c *gin.Context) {
@@ -75,7 +76,6 @@ func GetArticles(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, data, nil))
-	return
 }
 
 func GetArticle(c *gin.Context) {
@@ -89,7 +89,6 @@ func GetArticle(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, articleDetail, nil))
-	return
 }
 
 func GetArticleCount(c *gin.Context) {
@@ -100,7 +99,6 @@ func GetArticleCount(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, count, nil))
-	return
 }
 
 func GetArticleCountByCategory(c *gin.Context) {
@@ -111,7 +109,6 @@ func GetArticleCountByCategory(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, count, nil))
-	return
 }
 
 func GetArticleCountByTag(c *gin.Context) {
@@ -122,7 +119,6 @@ func GetArticleCountByTag(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, count, nil))
-	return
 }
 
 func GetArticleRank(c *gin.Context) {
@@ -133,7 +129,6 @@ func GetArticleRank(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, count, nil))
-	return
 }
 
 func CreateArticle(c *gin.Context) {
@@ -149,7 +144,6 @@ func CreateArticle(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, a, nil))
-	return
 }
 
 func DeleteArticle(c *gin.Context) {
@@ -165,7 +159,6 @@ func DeleteArticle(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, article, nil))
-	return
 }
 
 func EditArticle(c *gin.Context) {
@@ -186,5 +179,4 @@ func EditArticle(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, article, nil))
-	return
 }

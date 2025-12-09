@@ -3,9 +3,10 @@ package v1
 import (
 	"backend/service"
 	"backend/utils"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 func GetAllTags(c *gin.Context) {
@@ -25,7 +26,6 @@ func GetTagCount(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, count, nil))
-	return
 }
 
 func CreateTag(c *gin.Context) {

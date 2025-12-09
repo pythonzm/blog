@@ -3,13 +3,14 @@ package models
 import (
 	"backend/utils"
 	"fmt"
+	"time"
+
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/opt"
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	"github.com/elastic/go-elasticsearch/v8"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gomodule/redigo/redis"
 	"github.com/jmoiron/sqlx"
-	"time"
 )
 
 var DB *sqlx.DB

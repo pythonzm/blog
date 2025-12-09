@@ -3,8 +3,9 @@ package v1
 import (
 	"backend/service"
 	"backend/utils"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // t的选项是avatar或image
@@ -31,5 +32,4 @@ func UploadImageAvatar(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, imageInfo, nil))
-	return
 }

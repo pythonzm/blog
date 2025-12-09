@@ -3,8 +3,9 @@ package service
 import (
 	"backend/utils"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 type User struct {

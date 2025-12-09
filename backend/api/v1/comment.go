@@ -3,9 +3,10 @@ package v1
 import (
 	"backend/service"
 	"backend/utils"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 func GetArticleComments(c *gin.Context) {
@@ -18,7 +19,6 @@ func GetArticleComments(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, comments, nil))
-	return
 }
 
 func CreateComment(c *gin.Context) {
@@ -34,7 +34,6 @@ func CreateComment(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, co, nil))
-	return
 }
 
 func GetAllComments(c *gin.Context) {
@@ -84,5 +83,4 @@ func GetRencentComments(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, data, nil))
-	return
 }

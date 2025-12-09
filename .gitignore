@@ -20,3 +20,5 @@ backend/logs/*.log
 backend/conf/config.yml
 .vscode
 backend/backend
+.idx
+backend/.idea

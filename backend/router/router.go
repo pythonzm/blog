@@ -1,11 +1,12 @@
 package router
 
 import (
-	"backend/api/v1"
+	v1 "backend/api/v1"
 	"backend/middleware"
 	"backend/utils"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func InitRouter() *gin.Engine {
@@ -14,7 +15,6 @@ func InitRouter() *gin.Engine {
 	r.HandleMethodNotAllowed = true
 	r.NoMethod(func(c *gin.Context) {
 		c.JSON(http.StatusMethodNotAllowed, gin.H{"result": false, "error": "Method Not Allowed"})
-		return
 	})
 	r.Use(middleware.CustomLogger(), middleware.CorsMiddleware(), middleware.Visitor())
 	r.Use(gin.Recovery())

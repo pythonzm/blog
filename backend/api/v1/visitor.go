@@ -15,7 +15,6 @@ func GetVisitorCount(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, count, nil))
-	return
 }
 
 func GetCountByDate(c *gin.Context) {
@@ -26,7 +25,6 @@ func GetCountByDate(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, res, nil))
-	return
 }
 
 func GetCountByUA(c *gin.Context) {
@@ -37,5 +35,4 @@ func GetCountByUA(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, utils.GenResponse(20000, res, nil))
-	return
 }

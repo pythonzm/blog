@@ -3,6 +3,7 @@ package tools
 import (
 	"backend/models"
 	"fmt"
+
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/opt"
 )
 
