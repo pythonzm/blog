@@ -61,6 +61,10 @@ module.exports = {
     }
   },
   chainWebpack(config) {
+    config.plugin('html').tap(args => {
+      args[0].antiDebug = defaultSettings.antiDebug !== false && process.env.NODE_ENV === 'production'
+      return args
+    })
     config.plugins.delete('preload') // TODO: need test
     config.plugins.delete('prefetch') // TODO: need test
 

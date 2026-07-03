@@ -23,6 +23,7 @@
   </noscript>
   <div id="app"></div>
   <!-- built files will be auto injected -->
+  <% if (htmlWebpackPlugin.options.antiDebug) { %>
   <script>
     var minimalUserResponseInMiliseconds = 200
     function check() {
@@ -41,6 +42,7 @@
 
     check()
   </script>
+  <% } %>
 </body>
 
 </html>

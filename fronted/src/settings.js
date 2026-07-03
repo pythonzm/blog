@@ -35,5 +35,11 @@ module.exports = {
    * @type {string}
    * @description Whether use the algolia search service
    */
-  algoliaIndexName: ''
+  algoliaIndexName: '',
+
+  /**
+   * @type {boolean} true | false
+   * @description Whether to enable console anti-debugging script in production to block F12 inspector
+   */
+  antiDebug: true
 }
