@@ -10,7 +10,6 @@
 import algoliasearch from 'algoliasearch/lite'
 import instantsearch from 'instantsearch.js'
 import { searchBox, hits, pagination } from 'instantsearch.js/es/widgets'
-import 'instantsearch.css/themes/satellite.css'
 import defaultSettings from '@/settings'
 
 const { algoliaAppID, algoliaApiKey, algoliaIndexName } = defaultSettings
@@ -73,6 +72,8 @@ export default {
 </script>
 
 <style>
+@import '~instantsearch.css/themes/satellite.css';
+
 .ais-SearchBox { margin: 1em 0; }
 .ais-Hits-item:hover {
   background-color: rgb(218 215 236)
