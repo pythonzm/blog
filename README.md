@@ -56,7 +56,7 @@
 ## 2024-07-09更新
 搜索功能接入Algolia，默认按照文章标题搜索
 如果要开启Algolia搜索，需要同时在前端和后端开启
-* 前端开启：编辑 `fronted/src/settings.js` 中相关配置，并在 `fronted/` 目录下创建 `.env.local` 配置文件存放敏感凭证（见下方配置说明）。
+* 前端开启：在 `fronted/` 目录下复制 `.env` 命名为 `.env.local` 配置文件存放敏感凭证（见下方配置说明）。
 * 后端开启：编辑 `backend/conf/config.yml` 中相关配置。
 
 ---
