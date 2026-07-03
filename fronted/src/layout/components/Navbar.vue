@@ -11,7 +11,7 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar" />
+          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -30,12 +30,12 @@
       </el-dropdown>
     </div>
     <el-dialog :visible.sync="dialogFormVisible" title="修改密码" append-to-body>
-      <el-form :model="form" status-icon :rules="rules" ref="form">
+      <el-form ref="form" :model="form" status-icon :rules="rules">
         <el-form-item label="新密码" :label-width="formLabelWidth" prop="password">
-          <el-input v-model="form.password" type="password" autocomplete="off"></el-input>
+          <el-input v-model="form.password" type="password" autocomplete="off" />
         </el-form-item>
         <el-form-item label="确认密码" :label-width="formLabelWidth" prop="c_password">
-          <el-input v-model="form.c_password" type="password" autocomplete="off"></el-input>
+          <el-input v-model="form.c_password" type="password" autocomplete="off" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

@@ -7,6 +7,8 @@
 
 body {
   height: 100%;
+  width: 100%;
+  overflow-x: hidden;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -20,11 +22,15 @@ label {
 
 html {
   height: 100%;
+  width: 100%;
+  overflow-x: hidden;
   box-sizing: border-box;
 }
 
 #app {
   height: 100%;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 *,

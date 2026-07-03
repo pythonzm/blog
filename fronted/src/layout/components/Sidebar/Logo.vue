@@ -7,11 +7,11 @@
         class="sidebar-logo-link"
         to="/admin"
       >
-        <img v-if="logo" :src="logo" class="sidebar-logo" />
+        <img v-if="logo" :src="logo" class="sidebar-logo">
         <h1 v-else class="sidebar-title">{{ title }}</h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/admin">
-        <img v-if="logo" :src="logo" class="sidebar-logo" />
+        <img v-if="logo" :src="logo" class="sidebar-logo">
         <h1 class="sidebar-title">{{ title }}</h1>
       </router-link>
     </transition>
@@ -28,7 +28,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       title: this.$store.state.settings.title,
       logo: logo

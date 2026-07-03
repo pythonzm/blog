@@ -76,14 +76,14 @@
 </template>
 
 <script>
-import { fetchArticleCount } from "@/api/article";
-import { fetchCategoryCount } from "@/api/category";
-import { fetchTagCount } from "@/api/tag";
-import { fetchVisitorCount } from "@/api/visitor";
-import CountTo from "vue-count-to";
+import { fetchArticleCount } from '@/api/article'
+import { fetchCategoryCount } from '@/api/category'
+import { fetchTagCount } from '@/api/tag'
+import { fetchVisitorCount } from '@/api/visitor'
+import CountTo from 'vue-count-to'
 
 export default {
-  name: "Dashboard",
+  name: 'Dashboard',
   components: {
     CountTo
   },
@@ -94,39 +94,39 @@ export default {
       categoryCount: 0,
       tagCount: 0,
       visitorCount: 0
-    };
+    }
   },
   created() {
-    this.getCount();
+    this.getCount()
   },
   methods: {
     getCount() {
-      this.listLoading = true;
+      this.listLoading = true
       fetchArticleCount().then(response => {
-        this.articleCount = response.data;
-      });
+        this.articleCount = response.data
+      })
       fetchCategoryCount().then(response => {
-        this.categoryCount = response.data;
-      });
+        this.categoryCount = response.data
+      })
       fetchTagCount().then(response => {
-        this.tagCount = response.data;
-      });
+        this.tagCount = response.data
+      })
       fetchVisitorCount().then(response => {
-        this.visitorCount = response.data;
-      });
-      this.listLoading = false;
+        this.visitorCount = response.data
+      })
+      this.listLoading = false
     },
     jump(to) {
-      if (to === "article") {
-        this.$router.push({ name: "Article" });
-      } else if (to === "category") {
-        this.$router.push({ name: "Category" });
-      } else if (to === "tag") {
-        this.$router.push({ name: "Tag" });
+      if (to === 'article') {
+        this.$router.push({ name: 'Article' })
+      } else if (to === 'category') {
+        this.$router.push({ name: 'Category' })
+      } else if (to === 'tag') {
+        this.$router.push({ name: 'Tag' })
       }
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

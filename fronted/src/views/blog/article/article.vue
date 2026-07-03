@@ -1,8 +1,8 @@
 <template>
-  <div v-if="ifDetail">
+  <div v-if="ifDetail" class="article-route-wrapper">
     <article-detail />
   </div>
-  <div v-else>
+  <div v-else class="article-route-wrapper">
     <article-list />
   </div>
 </template>
@@ -14,15 +14,22 @@ import ArticleDetail from './components/ArticleDetail'
 export default {
   name: 'Article',
   components: { ArticleList, ArticleDetail },
-  data () {
+  data() {
     return {
       ifDetail: true
     }
   },
-  created () {
-    if (!this.$route.query.hasOwnProperty('id')) {
+  created() {
+    if (!('id' in this.$route.query)) {
       this.ifDetail = false
     }
   }
 }
 </script>
+
+<style scoped>
+.article-route-wrapper {
+  width: 100%;
+  box-sizing: border-box;
+}
+</style>

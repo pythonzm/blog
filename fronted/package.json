@@ -23,6 +23,7 @@
     "core-js": "^3.6.5",
     "echarts": "^4.2.1",
     "element-ui": "2.13.2",
+    "gsap": "^3.15.0",
     "highlight.js": "^9.15.10",
     "instantsearch.css": "^8.2.1",
     "instantsearch.js": "4.78.1",

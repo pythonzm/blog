@@ -9,11 +9,10 @@
 </template>
 
 <script>
-import { truncate } from 'fs';
 export default {
   name: 'BlogMain',
   computed: {
-    key () {
+    key() {
       return this.$route.fullPath
     }
   }
@@ -21,6 +20,11 @@ export default {
 </script>
 
 <style scoped>
+.blog-main {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .fixed-header + .blog-main {
   padding-top: 50px;
 }

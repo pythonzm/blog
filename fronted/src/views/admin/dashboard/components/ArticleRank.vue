@@ -14,23 +14,23 @@
 </template>
 
 <script>
-import { fetchArticleRank } from "@/api/article";
+import { fetchArticleRank } from '@/api/article'
 
 export default {
   data() {
     return {
       list: null
-    };
+    }
   },
   created() {
-    this.fetchData();
+    this.fetchData()
   },
   methods: {
     fetchData() {
       fetchArticleRank().then(response => {
-        this.list = response.data;
-      });
+        this.list = response.data
+      })
     }
   }
-};
+}
 </script>

@@ -9,8 +9,7 @@
           icon="upload"
           style="position: absolute;bottom: 15px;margin-left: 40px;"
           @click="imagecropperShow = true"
-          >选择头像</el-button
-        >
+        >选择头像</el-button>
 
         <image-cropper
           v-show="imagecropperShow"
@@ -46,7 +45,7 @@ import { editUser } from '@/api/user'
 
 export default {
   components: { ImageCropper, PanThumb },
-  data () {
+  data() {
     return {
       user: {},
       imagecropperShow: false,
@@ -64,19 +63,19 @@ export default {
       'introduction'
     ])
   },
-  created () {
+  created() {
     this.getUser()
   },
 
   methods: {
-    getUser () {
+    getUser() {
       this.user = {
         nickname: this.nickname,
         avatar: this.avatar,
         introduction: this.introduction
       }
     },
-    onSubmit () {
+    onSubmit() {
       editUser(this.user).then(response => {
         this.$message({
           message: response.msg,
@@ -84,12 +83,12 @@ export default {
         })
       })
     },
-    cropSuccess (resData) {
+    cropSuccess(resData) {
       this.imagecropperShow = false
       this.imagecropperKey = this.imagecropperKey + 1
       this.user.avatar = resData.AvatarFullUrl
     },
-    close () {
+    close() {
       this.imagecropperShow = false
     }
   }

@@ -19,23 +19,23 @@
 </template>
 
 <script>
-import { fetchRecentComments } from "@/api/comment";
+import { fetchRecentComments } from '@/api/comment'
 
 export default {
   data() {
     return {
       list: null
-    };
+    }
   },
   created() {
-    this.fetchData();
+    this.fetchData()
   },
   methods: {
     fetchData() {
       fetchRecentComments().then(response => {
-        this.list = response.data;
-      });
+        this.list = response.data
+      })
     }
   }
-};
+}
 </script>

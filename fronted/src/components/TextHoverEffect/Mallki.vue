@@ -6,7 +6,8 @@
         name: 'CTQArticle',
         query: { tag: text }
       }"
-      >{{ text }}<span :data-letters="text"/> <span :data-letters="text"
+    >{{ text }}<span :data-letters="text" /> <span
+      :data-letters="text"
     /></router-link>
   </div>
 </template>
@@ -21,7 +22,7 @@ export default {
     text: {
       type: String,
       default: ''
-    },
+    }
   }
 }
 </script>

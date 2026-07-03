@@ -1,42 +1,56 @@
 <template>
-  <div>
-    <div v-if="anchors.length !== 0" class="anchors">
-      <div class="user-education user-bio-section">
+  <div class="aside-wrapper">
+    <!-- 文章目录 -->
+    <div v-if="anchors.length !== 0" class="anchors-card">
+      <div class="aside-section-header">
+        <i class="el-icon-notebook-2" style="margin-right: 6px; color: #1e293b;" />
+        <span>目录导航</span>
+      </div>
+      <div class="anchors-list">
         <p
           v-for="anchor in anchors"
           :key="anchor.id"
-          :style="{ padding: `5px 5px 5px ${anchor.indent * 20 + 5}px` }"
-          :class="anchor.text===heightTitle?'title-active':'title-inactive'"
+          :style="{ paddingLeft: `${anchor.indent * 12 + 12}px` }"
+          :class="anchor.text === heightTitle ? 'anchor-active' : 'anchor-inactive'"
           @click="scrollToAnchor(anchor.text)"
-        >{{ anchor.text }}</p>
+        >
+          <span class="anchor-bullet" />
+          {{ anchor.text }}
+        </p>
       </div>
     </div>
-    <el-card v-else ref="ele">
-      <div class="user-bio">
-        <div class="user-education user-bio-section">
-          <div class="user-bio-section-header">
-            <svg-icon icon-class="education" />
-            <span>每日一汤</span>
-          </div>
-          <div class="user-bio-section-body">
-            <div class="text-muted">{{ soup.content }}</div>
-          </div>
+
+    <!-- 侧边栏内容 -->
+    <div v-else class="bio-cards">
+      <div class="aside-card soup-card">
+        <div class="aside-section-header">
+          <i class="el-icon-chat-line-round" style="margin-right: 6px; color: #1e293b;" />
+          <span>每日一汤</span>
+        </div>
+        <div class="soup-body">
+          <span class="quote-mark">“</span>
+          <p class="soup-text">{{ soup.content }}</p>
+          <span class="quote-mark-end">”</span>
         </div>
       </div>
 
-      <div class="user-bio">
-        <div class="user-education user-bio-section">
-          <div class="user-bio-section-header">
-            <svg-icon icon-class="wx" />
-            <span>扫不出吃亏，扫不出上当</span>
+      <div class="aside-card qr-card">
+        <div class="aside-section-header">
+          <i class="el-icon-mobile-phone" style="margin-right: 6px; color: #1e293b;" />
+          <span>扫码关注</span>
+        </div>
+        <div class="qr-container">
+          <div class="qr-item">
+            <img :src="poorops" alt="公众号">
+            <p class="qr-label">微信公众号</p>
           </div>
-          <div class="user-bio-section-body">
-            <img :src="poorops" width="100" height="100" alt="gongzhonghao">
-            <img :src="xiaochengxu" width="100" height="100" alt="xiaochengxu">
+          <div class="qr-item">
+            <img :src="xiaochengxu" alt="小程序">
+            <p class="qr-label">微信小程序</p>
           </div>
         </div>
       </div>
-    </el-card>
+    </div>
   </div>
 </template>
 
@@ -86,71 +100,193 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.title-active {
-  border-left: 2px solid #777;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* 水平偏移量，垂直偏移量，模糊半径，阴影颜色 */
-  // padding: 10px; /* 添加内边距以使阴影效果更明显 */
-  background-color: #000; /* 设置背景色以突出显示阴影效果 */
-  color: #fff;
-  cursor: pointer;
-  margin: 5px;
+.aside-wrapper {
+  width: 100%;
 }
-.title-inactive {
-  cursor: pointer;
-  margin: 3px;
-}
-.title-inactive:hover {
-  background-color: #e4e4e4;
-}
-.anchors {
+
+.aside-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: left;
-  width: 24%;
-  position: fixed;
-  left: 75%;
-  overflow-y: auto;
-  max-height: 80vh;
-  font-size: small;
-  border: 1px #ccc;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-}
-.el-card {
-  float: right;
-  width: 24%;
-  position: fixed;
-  left: 75%;
+
+  &:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    border-color: rgba(30, 41, 59, 0.15);
+  }
 }
 
-img {
-  width: 100px;
-}
-.box-center {
-  margin: 0 auto;
-  display: table;
-}
-
-.text-muted {
-  color: #777;
-  white-space: pre-line;
-  line-height: 1.5em;
+.aside-section-header {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 12px;
+  margin-bottom: 14px;
 }
 
-.user-bio {
-  // margin-top: 20px;
-  color: #606266;
+// 每日一汤卡片
+.soup-card {
+  background: linear-gradient(to bottom right, #ffffff, #fdfeff);
 
-  span {
-    padding-left: 4px;
+  .soup-body {
+    position: relative;
+    padding: 8px 12px;
   }
 
-  .user-bio-section {
-    font-size: 14px;
-    padding: 15px 0;
+  .quote-mark {
+    font-size: 32px;
+    font-family: Georgia, serif;
+    color: #cbd5e1;
+    opacity: 0.6;
+    line-height: 1;
+    position: absolute;
+    top: -10px;
+    left: -4px;
+  }
 
-    .user-bio-section-header {
-      border-bottom: 1px solid #dfe6ec;
-      padding-bottom: 10px;
-      margin-bottom: 10px;
-      font-weight: bold;
+  .quote-mark-end {
+    font-size: 32px;
+    font-family: Georgia, serif;
+    color: #cbd5e1;
+    opacity: 0.6;
+    line-height: 1;
+    position: absolute;
+    bottom: -22px;
+    right: -4px;
+  }
+
+  .soup-text {
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.6;
+    margin: 4px 0;
+    font-style: italic;
+    white-space: pre-line;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+// 关注二维码卡片
+.qr-card {
+  .qr-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 8px 0;
+  }
+
+  .qr-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    img {
+      width: 105px;
+      height: 105px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      padding: 4px;
+      background: #ffffff;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        border-color: #1e293b;
+        box-shadow: 0 4px 12px rgba(30, 41, 59, 0.1);
+      }
+    }
+
+    .qr-label {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 8px;
+      margin-bottom: 0;
+      font-weight: 500;
+    }
+  }
+}
+
+// 文章目录卡片
+.anchors-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+
+  .anchors-list {
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 4px;
+
+    /* 自定义滚动条 */
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+  }
+
+  p {
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 8px 0;
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 6px 12px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .anchor-bullet {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #94a3b8;
+    margin-right: 8px;
+    display: inline-block;
+    transition: all 0.2s ease;
+  }
+
+  .anchor-inactive {
+    color: #64748b;
+
+    &:hover {
+      background-color: #f1f5f9;
+      color: #1e293b;
+
+      .anchor-bullet {
+        background: #1e293b;
+        transform: scale(1.2);
+      }
+    }
+  }
+
+  .anchor-active {
+    background-color: rgba(30, 41, 59, 0.06);
+    color: #0f172a;
+    font-weight: 600;
+
+    .anchor-bullet {
+      background: #0f172a;
+      transform: scale(1.4);
     }
   }
 }

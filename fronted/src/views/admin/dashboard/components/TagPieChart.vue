@@ -3,65 +3,65 @@
 </template>
 
 <script>
-import { fetchArticleCountByTag } from "@/api/article";
-import echarts from "echarts";
-require("echarts/theme/macarons"); // echarts theme
-import resize from "./mixins/resize";
+import { fetchArticleCountByTag } from '@/api/article'
+import echarts from 'echarts'
+require('echarts/theme/macarons') // echarts theme
+import resize from './mixins/resize'
 
 export default {
   mixins: [resize],
   props: {
     className: {
       type: String,
-      default: "chart"
+      default: 'chart'
     },
     width: {
       type: String,
-      default: "100%"
+      default: '100%'
     },
     height: {
       type: String,
-      default: "300px"
+      default: '300px'
     }
   },
   data() {
     return {
       chart: null
-    };
+    }
   },
   mounted() {
     this.$nextTick(() => {
-      this.initChart();
-    });
+      this.initChart()
+    })
   },
   beforeDestroy() {
     if (!this.chart) {
-      return;
+      return
     }
-    this.chart.dispose();
-    this.chart = null;
+    this.chart.dispose()
+    this.chart = null
   },
   methods: {
     initChart() {
       fetchArticleCountByTag().then(response => {
-        let data = response.data;
-        let names = new Array();
+        const data = response.data
+        const names = new Array()
         for (const item of data) {
-          names.push(item.name);
+          names.push(item.name)
         }
-        this.chart = echarts.init(this.$el, "macarons");
+        this.chart = echarts.init(this.$el, 'macarons')
 
         this.chart.setOption({
           tooltip: {
             show: true,
-            formatter: function (params) {
-              return params.data.name + ": " + params.data.value;
+            formatter: function(params) {
+              return params.data.name + ': ' + params.data.value
             }
           },
           series: [
             {
-              name: "标签汇总",
-              type: "graph",
+              name: '标签汇总',
+              type: 'graph',
               layout: 'force',
               roam: true,
               label: {
@@ -71,7 +71,7 @@ export default {
                 fontSize: 10
               },
               force: {
-                repulsion: 120,  // 节点之间的斥力
+                repulsion: 120, // 节点之间的斥力
                 gravity: 0.03,
                 edgeLength: [50, 150]
               },
@@ -89,14 +89,14 @@ export default {
               },
               data: data.map(item => ({
                 ...item,
-                symbolSize: 10 + item.value * 0.8,  // 节点大小跟value挂钩
+                symbolSize: 10 + item.value * 0.8, // 节点大小跟value挂钩
                 draggable: true
-              })),
+              }))
             }
           ]
-        });
-      });
+        })
+      })
     }
   }
-};
+}
 </script>

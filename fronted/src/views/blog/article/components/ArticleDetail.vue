@@ -1,73 +1,97 @@
 <template>
-
   <div class="article-wrap">
     <div class="article-message">
-      <p class="article-title">
+      <h1 class="article-title">
         {{ article.title }}
-      </p>
+      </h1>
       <div class="article-info">
-        <svg-icon icon-class="calendar" />
-        发表于 {{ article.created_time }} •
-        <span
-          v-if="article.updated_time !== ''"
-        ><svg-icon icon-class="calendar" /> 更新于
-          {{ article.updated_time }} •</span>
-        <svg-icon icon-class="category" />
-        <span
-          class="classify"
-        ><router-link
-          :to="{
-            name: 'CTQArticle',
-            query: { category: category.category_name }
-          }"
-        >{{ category.category_name }}</router-link></span>
-        •
-        <svg-icon icon-class="eye-open" />{{ views }}次围观
+        <span class="meta-item">
+          <i class="el-icon-date" />
+          发表于 {{ article.created_time | formatDateTime }}
+        </span>
+        <span v-if="article.updated_time" class="meta-divider">•</span>
+        <span v-if="article.updated_time" class="meta-item">
+          <i class="el-icon-edit" />
+          更新于 {{ article.updated_time | formatDateTime }}
+        </span>
+        <span class="meta-divider">•</span>
+        <span class="meta-item classify-badge">
+          <i class="el-icon-folder-opened" />
+          <router-link
+            :to="{
+              name: 'CTQArticle',
+              query: { category: category.category_name }
+            }"
+          >{{ category.category_name }}</router-link>
+        </span>
+        <span class="meta-divider">•</span>
+        <span class="meta-item">
+          <i class="el-icon-view" />
+          {{ views }} 次阅读
+        </span>
+        <span class="meta-divider">•</span>
+        <span class="meta-item">
+          <i class="el-icon-time" />
+          预计阅读 {{ getReadTime(article.content) }} 分钟
+        </span>
       </div>
-    </div>
-    <div class="article-view">
-      <div v-mhighlight v-viewer class="md-body" v-html="article.html" />
     </div>
 
-    <div class="tags">
-      <div
-        v-for="(tag, index) in tags"
-        :key="index"
-        class="tag"
-        @click="
-    $router.push({ name: 'CTQArticle', query: { tag: tag.tag_name } })
-    "
-      >
-        <svg-icon icon-class="tag" />
-        {{ tag.tag_name }}
+    <div class="article-view">
+      <div v-mhighlight v-viewer class="md-body markdown-content" v-html="article.html" />
+    </div>
+
+    <div v-if="tags && tags.length > 0" class="tags-container">
+      <div class="tags-label">
+        <i class="el-icon-price-tag" />
+        标签：
+      </div>
+      <div class="tags-list">
+        <div
+          v-for="(tag, index) in tags"
+          :key="index"
+          class="tag-capsule"
+          @click="$router.push({ name: 'CTQArticle', query: { tag: tag.tag_name } })"
+        >
+          {{ tag.tag_name }}
+        </div>
       </div>
     </div>
-    <Comments />
+
+    <div class="comments-section">
+      <Comments />
+    </div>
+
     <script type="application/ld+json" v-html="jsonld">
       {}
     </script>
   </div>
-
 </template>
 
 <script>
-
 import { fetchArticle } from '@/api/article'
 import Comments from './comment'
 import '@/assets/md.css'
 import CodeCopy from '@/components/CodeCopy'
 import Vue from 'vue'
 import store from '@/store'
+
 export default {
   name: 'ArticleDetail',
   components: {
     Comments
   },
+  filters: {
+    formatDateTime(time) {
+      if (!time) return ''
+      return time.includes(' ') ? time.split(' ')[0] : time
+    }
+  },
   data() {
     return {
       article: {},
       category: {},
-      tags: {},
+      tags: [],
       views: 0,
       anchors: [],
       heightTitle: '',
@@ -75,10 +99,7 @@ export default {
     }
   },
   watch: {
-    // 监听$route对象的变化
     '$route'(to, from) {
-      // 当路由变化时，更新页面标题
-      console.log(to.fullPath)
       if (!to.fullPath.includes('id=')) {
         store.dispatch('anchors/updateAnchors', [])
       } else {
@@ -100,12 +121,14 @@ export default {
         const instance = new ComponentClass()
         instance.code = el.innerText
         instance.parent = el
-        /* 手动挂载 */
         instance.$mount()
         el.classList.add('code-copy-added')
         el.appendChild(instance.$el)
       })
     }, 100)
+  },
+  destroyed() {
+    store.dispatch('anchors/updateAnchors', [])
   },
   methods: {
     fetchData(id) {
@@ -113,7 +136,7 @@ export default {
         .then(response => {
           this.article = response.data.article
           this.category = response.data.category
-          this.tags = response.data.tags
+          this.tags = response.data.tags || []
           this.views = response.data.views
           this.generateTOC()
           document.title = `${this.article.title} - POOROPS`
@@ -137,10 +160,8 @@ export default {
         })
     },
     generateTOC() {
-      // 使用浏览器DOM API解析HTML内容
       const parser = new DOMParser()
       const doc = parser.parseFromString(this.article.html, 'text/html')
-      // 提取所有标题元素
       const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6')
       const titles = Array.from(headings).filter((title) => !!title.innerText.trim())
       if (!titles.length) {
@@ -149,9 +170,7 @@ export default {
       }
       const hTags = Array.from(new Set(titles.map((title) => title.tagName))).sort()
 
-      // 生成目录结构
       this.anchors = Array.from(headings).map((heading) => {
-        // 确保每个标题都有唯一的ID
         if (!heading.id) {
           heading.id = heading.textContent.trim().replace(/\s+/g, '-')
         }
@@ -167,130 +186,276 @@ export default {
       const date = new Date(dateString)
       const isoDateString = date.toISOString()
       return isoDateString.slice(0, -1) + timezoneOffset
+    },
+    getReadTime(content) {
+      if (!content) return 0
+      const count = content.length
+      return Math.ceil(count / 400) || 1
     }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .code-copy-added {
-  background-color: #282c34;
-  color: white;
-  padding: 25px 20px;
-  margin: 10px 0;
+  background-color: #1e293b;
+  color: #f8fafc;
+  padding: 30px 20px 20px;
+  margin: 16px 0;
   text-align: left;
-  border-radius: 3px;
+  border-radius: 8px;
   position: relative;
+  border: 1px solid #334155;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 .code-copy-added:hover .copy-btn {
   opacity: 1;
 }
 
 .article-wrap {
-  position: relative;
-  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  padding: 40px;
   width: 100%;
-  background-color: #fff;
-  box-shadow: 0 0 5px 0 rgba(38, 42, 48, 0.1);
-}
-.article-message {
-  display: flex;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.article-title {
-  font-size: 26px;
-  font-weight: 700;
-  margin: 0;
-}
-.article-info {
-  font-size: 14px;
-  margin: 20px 0;
-  color: #666;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-svg {
-  margin: 0 5px;
-}
-.article-view {
-  position: relative;
-  width: 100%;
-  margin-top: 10px;
+  box-sizing: border-box;
   text-align: left;
 }
-.tags {
-  width: 100%;
-  padding: 10px 0;
+
+.article-message {
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 24px;
+  margin-bottom: 30px;
+}
+
+.article-title {
+  font-size: 30px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.35;
+  margin: 0 0 16px 0;
+}
+
+.article-info {
   display: flex;
-  flex-direction: row;
   align-items: center;
   flex-wrap: wrap;
-  border-bottom: 1px solid #eee;
-}
-.tag {
-  color: #fff;
-  padding: 5px;
-  background-color: #262a30;
-  font-size: 12px;
-  margin-right: 5px;
-  border-radius: 5px;
-  position: relative;
-  line-height: 1;
-  transition: all 0.3s;
-  cursor: pointer;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  gap: 12px;
+  font-size: 13.5px;
+  color: #64748b;
+
+  .meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .meta-divider {
+    color: #e2e8f0;
+  }
+
+  .classify-badge {
+    a {
+      color: #1e293b;
+      font-weight: 600;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: #0f172a;
+      }
+    }
+  }
 }
 
-.classify {
-  color: #444;
-  border-bottom: 1px solid #262a30;
-  cursor: pointer;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  margin-right: 5px;
-}
-.cl-wrapper {
-  position: relative;
-}
-
-.cl-wrapper ul,
-.cl-wrapper li {
-  margin: 0;
-  -moz-padding-start: 12px;
-  -webkit-padding-start: 12px;
-  list-style: none;
-}
-
-.cl-wrapper li > .cl-link.cl-link-active {
-  color: rgba(66, 185, 131, 0.9);
-  transition: 0.5s;
-}
-
-.cl-wrapper li > .cl-transform.cl-link-active {
-  transform: translate(3px);
-}
-
-.cl-wrapper .cl-link {
-  cursor: pointer;
-  color: rgba(52, 73, 94, 0.5);
-  font-size: 13px;
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.cl-wrapper .cl-marker {
-  position: absolute;
-  top: 0;
-  left: 0;
+.article-view {
   width: 100%;
-  height: 100%;
-  z-index: -1;
+  margin-top: 10px;
 }
 
-.cl-wrapper .cl-marker path {
-  transition: all 0.3s ease;
+// 高级Markdown样式覆写
+.markdown-content {
+  font-size: 16px;
+  color: #334155;
+  line-height: 1.8;
+  word-break: break-word;
+
+  ::v-deep {
+    p {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      color: #0f172a;
+      font-weight: 700;
+      margin-top: 32px;
+      margin-bottom: 16px;
+      line-height: 1.3;
+    }
+
+    h1 {
+      font-size: 24px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 8px;
+    }
+
+    h2 {
+      font-size: 20px;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 6px;
+    }
+
+    h3 {
+      font-size: 18px;
+      border-bottom: none;
+    }
+
+    a {
+      color: #1e293b !important;
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(30, 41, 59, 0.4);
+      transition: all 0.2s ease;
+
+      &:hover {
+        color: #0f172a !important;
+        border-bottom-style: solid;
+      }
+    }
+
+    blockquote {
+      background: linear-gradient(to right, #f8fafc, rgba(248, 250, 252, 0.2));
+      border-left: 4px solid #1e293b;
+      color: #475569;
+      padding: 12px 20px;
+      margin: 20px 0;
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+    }
+
+    code {
+      background-color: #f1f5f9;
+      color: #e11d48;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    }
+
+    pre {
+      background-color: #1e293b;
+      padding: 16px 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 20px 0;
+
+      code {
+        background-color: transparent;
+        color: #f8fafc;
+        padding: 0;
+        border-radius: 0;
+        font-size: 14px;
+      }
+    }
+
+    img {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin: 16px auto;
+      display: block;
+    }
+
+    ul, ol {
+      padding-left: 20px;
+      margin-bottom: 20px;
+
+      li {
+        margin-bottom: 6px;
+      }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 14.5px;
+
+      th {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: #0f172a;
+        font-weight: 600;
+        padding: 10px 12px;
+      }
+
+      td {
+        border: 1px solid #e2e8f0;
+        padding: 10px 12px;
+        color: #475569;
+      }
+
+      tr:nth-child(even) {
+        background-color: #fafbfc;
+      }
+    }
+  }
+}
+
+.tags-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 24px 0;
+  margin-top: 30px;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+
+  .tags-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-left: 8px;
+  }
+}
+
+.tag-capsule {
+  background-color: #f1f5f9;
+  color: #475569;
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    background-color: rgba(30, 41, 59, 0.08);
+    color: #1e293b;
+    transform: translateY(-1px);
+  }
+}
+
+.comments-section {
+  margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+  .article-wrap {
+    padding: 20px;
+  }
+
+  .article-title {
+    font-size: 24px;
+  }
 }
 </style>

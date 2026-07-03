@@ -7,8 +7,7 @@
           style="margin-left: 10px;"
           type="success"
           @click="submitForm"
-          >发布</el-button
-        >
+        >发布</el-button>
       </sticky>
       <el-form-item style="margin-bottom: 30px;">
         <markdown-editor
@@ -32,19 +31,19 @@ export default {
     MarkdownEditor,
     Sticky
   },
-  data () {
+  data() {
     return {
       loading: false,
       postForm: {
         about: ''
-      },
+      }
     }
   },
-  created () {
+  created() {
     this.fetchData()
   },
   methods: {
-    fetchData () {
+    fetchData() {
       getAbout()
         .then(response => {
           this.postForm.about = response.data
@@ -53,7 +52,7 @@ export default {
           console.log(err)
         })
     },
-    submitForm () {
+    submitForm() {
       this.loading = true
       editUser(this.postForm).then(response => {
         this.$notify({
@@ -64,7 +63,7 @@ export default {
         })
       })
       this.loading = false
-    },
-  },
+    }
+  }
 }
 </script>

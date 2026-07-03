@@ -7,8 +7,7 @@
         type="primary"
         icon="el-icon-edit"
         @click="handleCreate"
-        >添加鸡汤</el-button
-      >
+      >添加鸡汤</el-button>
     </div>
 
     <el-table
@@ -86,8 +85,7 @@
         <el-button
           type="primary"
           @click="dialogStatus === 'create' ? createData() : updateData()"
-          >确认</el-button
-        >
+        >确认</el-button>
       </div>
     </el-dialog>
   </div>
@@ -100,14 +98,14 @@ import Pagination from '@/components/Pagination'
 export default {
   name: 'Soup',
   components: { Pagination },
-  data () {
+  data() {
     return {
       list: null,
       total: 0,
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 10,
+        limit: 10
       },
       temp: {
         content: ''
@@ -120,14 +118,14 @@ export default {
       },
       rules: {
         content: [{ required: true, message: '内容不能为空', trigger: 'blur' }]
-      },
+      }
     }
   },
-  created () {
+  created() {
     this.getList()
   },
   methods: {
-    getList () {
+    getList() {
       this.listLoading = true
       fetchSoupList(this.listQuery).then(response => {
         this.list = response.data.items
@@ -135,7 +133,7 @@ export default {
         this.listLoading = false
       })
     },
-    handleCreate () {
+    handleCreate() {
       this.resetTemp()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
@@ -143,7 +141,7 @@ export default {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    createData () {
+    createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           createSoup(this.temp).then(response => {
@@ -159,7 +157,7 @@ export default {
         }
       })
     },
-    handleUpdate (row) {
+    handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
@@ -167,7 +165,7 @@ export default {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    updateData () {
+    updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           editSoup(this.temp.id, this.temp).then(() => {
@@ -189,7 +187,7 @@ export default {
         }
       })
     },
-    deleteRow (index, rows, id) {
+    deleteRow(index, rows, id) {
       this.$confirm('此操作将永久删除该内容, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -208,11 +206,11 @@ export default {
           // pass
         })
     },
-    resetTemp () {
+    resetTemp() {
       this.temp = {
         content: ''
       }
-    },
+    }
   }
 }
 </script>

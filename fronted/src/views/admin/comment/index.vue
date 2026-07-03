@@ -12,8 +12,7 @@
         type="primary"
         icon="el-icon-search"
         @click="getList"
-        >搜索</el-button
-      >
+      >搜索</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -76,8 +75,7 @@
             @click.native.prevent="
               deleteRow(scope.$index, list, scope.row.comment.id)
             "
-            >删除</el-button
-          >
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -99,14 +97,14 @@ export default {
   name: 'Comment',
   components: { Pagination },
   filters: {
-    statusFilter (valid) {
+    statusFilter(valid) {
       return valid ? 'info' : 'success'
     },
-    isRootFilter (valid) {
+    isRootFilter(valid) {
       return valid ? '否' : '是'
     }
   },
-  data () {
+  data() {
     return {
       list: null,
       total: 0,
@@ -115,14 +113,14 @@ export default {
         page: 1,
         limit: 10,
         title: undefined
-      },
+      }
     }
   },
-  created () {
+  created() {
     this.getList()
   },
   methods: {
-    getList () {
+    getList() {
       this.listLoading = true
       fetchAll(this.listQuery).then(response => {
         this.list = response.data.items
@@ -130,7 +128,7 @@ export default {
         this.listLoading = false
       })
     },
-    deleteRow (index, rows, id) {
+    deleteRow(index, rows, id) {
       this.$confirm('此操作将永久删除该内容, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -148,7 +146,7 @@ export default {
         .catch(() => {
           // pass
         })
-    },
+    }
   }
 }
 </script>
