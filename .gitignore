@@ -22,3 +22,7 @@ backend/conf/config.yml
 backend/backend
 .idx
 backend/.idea
+
+# Local environment variables overrides
+.env.local
+.env.*.local

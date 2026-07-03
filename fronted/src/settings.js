@@ -17,25 +17,25 @@ module.exports = {
    * @type {boolean} true | false
    * @description Whether use the algolia search service
    */
-  algoliaSearch: false,
+  algoliaSearch: true,
 
   /**
    * @type {string}
    * @description the algolia search appID
    */
-  algoliaAppID: '',
+  algoliaAppID: process.env.VUE_APP_ALGOLIA_APP_ID || '',
 
   /**
    * @type {string}
    * @description the algolia search api key
    */
-  algoliaApiKey: '',
+  algoliaApiKey: process.env.VUE_APP_ALGOLIA_API_KEY || '',
 
   /**
    * @type {string}
-   * @description Whether use the algolia search service
+   * @description the algolia search index name
    */
-  algoliaIndexName: '',
+  algoliaIndexName: process.env.VUE_APP_ALGOLIA_INDEX_NAME || 'blog_article',
 
   /**
    * @type {boolean} true | false
